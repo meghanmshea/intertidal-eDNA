@@ -1,0 +1,975 @@
+---
+title: "Environmental DNA (eDNA) metabarcoding differentiates between micro-habitats within the rocky intertidal"
+author: "Meghan M. Shea"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+#Install & Load Requires Packages
+#Check if all required packages have been installed and loaded, and if not, install and load them. 
+
+packages <- c("tidyverse", 
+              "patchwork", 
+              "stringr", 
+              "BiocManager", 
+              "remotes", 
+              "nVennR", 
+              "rsvg", 
+              "grImport2", 
+              "purrr", 
+              "eulerr", 
+              "indicspecies", 
+              "sjmisc",
+              "viridis",
+              "ape",
+              "colourvalues",
+              "usedist",
+              "patchwork",
+              "cluster")
+
+install.packages(setdiff(packages, rownames(installed.packages())))
+
+if(!require("phyloseq", quietly=TRUE))
+  BiocManager::install("phyloseq")
+
+if(!require("ampvis2", quietly=TRUE))
+  remotes::install_github("kasperskytte/ampvis2")
+
+packages = append(packages, c("phyloseq", "ampvis2"))
+
+invisible(lapply(packages, library, character.only = TRUE))
+
+```
+
+### Materials and Methods
+
+#### 2.1 Detailed Protocols
+
+To improve reproducibility (e.g. Dickie et al., 2018; Shea et al., 2023) and aid in the initiation of new eDNA biomonitoring projects, we have published detailed, step-by-step protocols for many of the methods described, including specific materials used, photographs, and additional methodological notes not possible to include here. See Shea (2023) for sample collection and filtering, Shea (2023) for DNA extractions, Shea (2023) for PCR amplification, and Shea (2023) for shipping samples. 
+
+#### 2.2 Sampling Site
+
+To better understand the spatial and temporal scales of eDNA detections in a complex coastal environment, we sought a rocky intertidal field location that had consistent, large, accessible tide pools that were fully isolated from one another at some low tides but interconnected during other parts of their exposure period. We selected the intertidal at Pillar Point, a headlands promontory to the west of Pillar Point Harbor in San Mateo County, California, USA. Pillar Point is a popular recreational intertidal site that is directly adjacent to the Pillar Point State Marine Conservation Area (no specific use scientific collection permit required). 
+
+Within Pillar Point, we sampled at three discrete locations: two individual tide pools with a range of physical connectivity (Tide Pool 1, S1: 37.495342°, -122.498731°; Tide Pool 2, S2: 37.495000°, -122.498947°) and an equidistant location (Nearshore, N: 37.4952833°, -122.4992056°) where there was well-mixed offshore water for the duration of the tidal cycle (Figure 2; not produced in R). Each site was approximately 40 meters from all other sites. Tide Pool 1 and Tide Pool 2 are fully isolated at tidal heights of around 0 m (mean low low water, MLLW) or lower, and substantially connected at around 0.25 m or higher. On the day we sampled, this meant water actively flowed between the locations at the start (11:30 am PST) and end (17:00 pm PST) of the sampling period, but that the sites were disconnected at low tide in the middle of the sampling period. 
+
+#### 2.3 Sample Collection & Filtration
+
+We collected 1 L surface samples from each location every 30 minutes for the duration of time the intertidal was exposed on 28 January 2022, using single-use enteral feeding pouches (Covidien, Dublin, Ireland). Sampling commenced at 11:30 am PST; the exact times of sample collection, in relation to the tide, are shown in Figure 3. Following the approach used by Gold et al. (2021b), we attached a sterile 0.22 um pore size Sterivex cartridge (MilliporeSigma, Burlington, MA, USA) to the tubing of each feeding pouch, allowing samples to be immediately gravity filtered in the field. While gravity filtering (1-2 hours per sample), samples were shaded with an awning to prevent any degradation by sunlight (Andruszkiewicz et al., 2017). 
+
+
+```{r Figure 3}
+Tides = read.table("Data/28-Jan-2022-TideChart.txt", header = TRUE, sep = "", dec = ".", skip=13)
+
+Tides$datetime <- lubridate::ymd_hm(paste(Tides$Date, Tides$Time), tz = "US/Pacific")
+
+
+xmin = Tides$datetime[47]
+xmax = Tides$datetime[69]
+ymin = -.5
+ymax = .5
+
+box_color = "#EDEDED"
+
+
+p1 <- ggplot(data=Tides, aes(x=datetime, y = Pred, group=1)) + 
+  annotate("rect", xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, fill = box_color) +
+  geom_line() +
+  coord_cartesian(xlim = c(Tides$datetime[1], Tides$datetime[96])) +
+  theme_classic(base_size = 16) +
+  theme(
+    panel.background = element_rect(fill = "transparent", colour = NA_character_), 
+    # necessary to avoid drawing panel outline
+    plot.background = element_rect(fill = "transparent", colour = NA_character_),
+    # necessary to avoid drawing plot outline
+    axis.text.x = element_text(color="black"),
+    axis.ticks = element_line(color = "black"),
+    axis.text.y = element_text(color="black"),
+    panel.border = element_rect(colour = "black", fill=NA, linewidth=1)
+  ) +
+  xlab("Time (PST)") +
+  ylab("MLLW Tide Prediction (m)") +
+  scale_x_datetime(date_breaks = "2 hour", date_labels = "%H:00", expand = c(0, 0), position = "top")
+
+
+p2 <- ggplot(data=Tides, aes(x=datetime, y = Pred, group=1)) + 
+  geom_line() +
+  coord_cartesian(xlim = c(xmin, xmax), ylim = c(ymin, ymax)) +
+  theme_classic(base_size = 16) + 
+  theme(panel.background = element_rect(fill = box_color), 
+        plot.background = element_rect(fill = "transparent", colour = NA_character_), 
+        axis.text.x = element_text(color="black"),
+        axis.ticks = element_line(color = "black"),
+        axis.text.y = element_text(color="black"),
+        panel.border = element_rect(colour = "black", fill=NA, linewidth=1)) +
+  xlab("") +
+  ylab("MLLW Tide Prediction (m)") +
+  scale_x_datetime(date_breaks = "30 min", date_labels = "%H:%M", expand = c(0, 0))
+
+p_patch <- p1 / p2 & ylab(NULL) & theme(plot.margin = margin(5.5, 5.5, 5.5, 0), plot.background = element_rect(fill = "transparent", colour = NA_character_))
+
+# Use the tag label as a y-axis label
+p_patch = wrap_elements(p_patch) +
+  labs(tag = "MLLW Tide Prediction (m)") +
+  theme(
+    plot.tag = element_text(size = rel(1.2), angle = 90),
+    plot.tag.position = "left",
+    plot.background = element_rect(fill = "transparent", colour = NA_character_)
+  )
+
+p_patch
+
+ggsave(
+  plot = p_patch,
+  filename = "Figures/tide_chart_final.png",
+  bg = "transparent"
+)
+```
+
+At three time points (see Figure 3; additional items added outside of R) at the beginning and end of the sampling period as well as at low tide, we collected triplicate 1 L samples from each location as biological replicates. At the beginning and end of the sampling period, we also filtered 1 L MilliQ water via the procedure described above to serve as negative field controls. Additionally, using an Orion Model 1230 meter (Orion Research Inc., Beverly, MA, USA), we recorded temperature and salinity in each location directly after samples were collected. 
+
+Once finished filtering, Sterivex cartridges were dried by pushing air through them using a sterile 3 mL syringe, capped, placed in sterile Whirl-Pak bags (Whirl-Pak, Madison, WI, USA). Then, samples were stored in a cooler on ice until transported back to the laboratory at the end of the sampling period. Samples were transferred to a -20C freezer for up to 18 days, at which time they were processed to extract nucleic acids from the captured materials.  
+
+#### 2.4 DNA Extraction & Library Preparation
+
+Within 18 days of collection, we extracted DNA from the Sterivex cartridge using the DNeasy Blood and Tissue Kit (Qiagen, Germantown, MD, USA) and the modifications described in Spens et al. (2017). In short, we incubated the filter cartridge overnight with proteinase K and ATL. Then, we extracted the liquid from the cartridge with a syringe and mixed it with equal volumes of AL buffer and 0C ethanol before proceeding with the manufacturer’s extraction protocol. One negative extraction control (DNA-grade water in place of a sample) was included in each of four batches of extractions. Extracted samples to be PCR amplified were stored at -20C for up to 6 months. 
+
+We PCR amplified the extracted DNA in triplicate within 6 months of storage, using the mlCOIintF/ jgHCO2198 primer set targeting a 313 bp fragment of the mitochondrial COI region optimized by Leray et al. (2013) (Forward: GGWACWGGWTGAACWGTWTAYCCYCC; Reverse: TAIACYTCIGGRTGICCRAARAAYCA) with Nextera modifications. Following Curd et al. (2019), we used a 25 l PCR reaction mixture consisting of 12.5 l of Qiagen Multiplex Mix (Qiagen, Germantown, MD, USA), 2.5 l each of the forward and reverse primers at 2 M (Integrated DNA Technologies, Inc., Coralville, IA, USA), 6.5 l of PCR-grade water, and 1 l of undiluted DNA template. The PCR thermocycling touchdown profile began with an initial denaturation at 95 for 15 minutes to activate the DNA polymerase, followed by 13 cycles of denaturation (94 for 30 seconds), annealing (starting at 69.5 for 30 seconds, with the temperature decreased by 1.5 each cycle), and extension (72 for 1 minute). Then, an additional 35 cycles were run with the same denaturation and extension steps as above with an annealing temperature of 50, followed by a final extension at 72 for 10 minutes. PCR reactions were prepared in a designated DNA-free hood until the template was added. 
+
+PCR amplification was conducted in two batches; in each batch, we included one no-template negative PCR control (DNA-grade water used as template). Additionally, we extracted DNA from tissue from five organisms across a range of phyla we expected to amplify with the mlCOIintF/ jgHCO2198 primers, but not expected to be present at Pillar Point in particular (Mytilus edulis, Mizuhopecten yessoensis, Xiphias gladius, Mercenaria mercenaria, Lutjanus campechanus) using the standard tissue extraction protocol detailed in the DNeasy Blood and Tissue Kit (Qiagen, Germantown, MD, USA). These tissues were obtained from a local grocery store and it was assumed that they were labeled correctly, although previous work has indicated mislabeling in seafood stores can occur (e.g. Willette et al., 2017). Extracts from the 5 tissue samples were combined in equimolar amounts to form a mock community used as a positive PCR control in each batch. Triplicate PCR amplicons from both samples and controls were not subsequently pooled, but were carried through the remaining library preparation and sequencing steps as technical replicates. We electrophoresed and visualized a subset of PCR products on a 1.5% agarose gel stained with GelRed® (Biotium, Fremont, CA, USA) to ensure successful amplification and correct product sizes as well as lack of contamination. 
+
+Post-PCR library preparation and sequencing was conducted at the Georgia Genomics and Bioinformatics Core (GGBC, UG Athens, GA, RRID:SCR_010994). In short, provided PCR amplicons were cleaned using AMPure XP magnetic beads (Beckman Coulter, Indianapolis, IN, USA), barcoded with Nextera adapters (Illumina, San Diego, CA, USA) during a second PCR (3 min at 95 °C; 15 cycles of 30 sec at 95 °C, 30 sec at 67 °C, and 30 sec at 72 °C; and 4 min at 72 °C), cleaned again using AMPureXP magnetic beads, and pooled in equimolar ratio. The resulting library was sequenced on a MiSeq PE 2x250bp (500 cycles) using Reagent Kit V2 with 25% PhiX spike-in (Illumina, San Diego, CA, USA). Given our technical replication of samples and controls, our final library included 6 negative field controls (1 at beginning and end of field sampling, amplified in triplicate), 12 negative extraction controls (1 in each of 4 extraction sets, amplified in triplicate), 2 positive PCR controls (1 in each of 2 amplification batches), 2 no-template negative PCR controls (1 in each of 2 amplification batches), and 159 samples (53 field samples, amplified in triplicate). 
+
+#### 2.5 Bioinformatics
+
+We processed sequencing data using the Anacapa Toolkit, which contains two core modules: one for quality control and ASV parsing, and one for classifying taxonomy (Curd et al., 2019). Briefly, we ran the first module using default parameters, which uses cutadapt (version 1.16) (Martin, 2011) for adapter and primer trimming, FastX-Toolkit (version: 0.0.13) (citation) for quality trimming, and dada2 (version 1.6) (Callahan et al., 2016) for assigning ASVs. For the second module, we utilized the MIDORI2 reference database, a quality controlled and updated database built from GenBank release 253 (12/20/2022) that has been technically validated (Leray et al., 2022). Following Gold et al. (2022), we adjusted the identity and query coverage to 95% (default: 80%) to account for the relative incompleteness of the broad COI reference database compared to more taxonomically-specific databases (Curd et al., 2019). The second module relies on Bowtie 2 (version 2.3.5) (Langmead and Salzberg, 2012) and a modified instance of BLCA (Gao et al., 2017) as dependencies. Following Gold et al. (2021a) we only kept taxonomic assignments that had a bootstrap confidence cutoff score of 60 or higher in BLCA, to avoid spurious assignments from the incomplete reference database. We modified the Anacapa Container (Ogden, 2018), a Singularity container with all the needed dependencies for executing the Anacapa Toolkit, to enable the pipeline to be run in a high-performance computing environment requiring two-step authentication; the updated container, scripts, and reference database with the required Bowtie 2 index library needed to reproduce our bioinformatics process can be found on Dryad (link/citation).  
+
+Raw ASVs, taxonomy assignments, and metadata were converted into interchangeable ampvis2 (version 2.7.34) (Andersen et al., 2018) and phyloseq (version 1.42.0) (McMurdie and Holmes, 2013) objects in R (version 4.2.2) to facilitate decontamination and further analyses. Singletons were removed using ampvis2, and samples were further decontaminated using phyloseq by removing all ASVs that appeared in any negative field control, negative extraction control, or no-template negative PCR control, a choice made due to the very low number of overlapping ASVs between samples and negative controls (Supplemental Information X). Samples were rarified to the minimum number of reads of any sample using ampvis2. Subsequent analyses were robust to all three decontamination steps. 
+
+```{r Importing Anacapa, warning = FALSE}
+
+#Read PERCENT CONFIDENCE ASV/Taxonomy Table
+#This code is used for importing the ASV_taxonomy_detailed.txt file produced by the Anacapa Toolkit
+
+setwd("Data/Anacapa Pipeline Output/Tide Pool 5184 - 31 January 2023")
+
+AnacapaOutput = read.table("CO1/CO1_taxonomy_tables/Summary_by_percent_confidence/60/CO1_ASV_raw_taxonomy_60.txt", header = TRUE, sep = "\t", dec = ".")
+
+
+#Format ASV Table
+#Extract just the needed ASV information from the taxonomy table
+
+endcol = ncol(AnacapaOutput) - 1
+asvmat = AnacapaOutput[,2:endcol]
+rownames(asvmat) <- AnacapaOutput[,1]
+
+#Format Taxonomy Table
+#Extract just the needed taxonomy information from the taxonomy table
+
+endcol = ncol(AnacapaOutput)
+taxmat = AnacapaOutput[,endcol]
+taxmat = str_split_fixed(taxmat, ";",7)
+
+#Remove unwanted characters 
+colnames(taxmat) <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
+
+rownames(taxmat) <- rownames(asvmat)
+
+#Read Metadata
+
+setwd("./Metadata-Added")
+
+EnviroData = read.table("PillarPoint_SampleInfo_EnviroData.txt", 
+                        header = TRUE, 
+                        sep = "\t", 
+                        dec = ".", 
+                        strip.white = TRUE)
+
+FieldSampling = read.table("PillarPoint_SampleInfo_FieldSampling.txt", header = TRUE, sep = "\t", dec = ".", strip.white = TRUE)
+FieldSampling = FieldSampling[,1:4]
+
+Sequencing = read.table("PillarPoint_SampleInfo_Sequencing.txt", header = TRUE, sep = "\t", dec = ".", strip.white = TRUE)
+
+#Format Metadata
+
+sampledata = merge(FieldSampling, EnviroData, all=T)
+sampledata = sampledata %>% drop_na(Dereplicated_Sample_Name) 
+#removing one sample that has enviro data reading but the field sample was not processed
+
+sampledata = merge(Sequencing,sampledata, all=T)
+
+rownames(sampledata) <- sampledata[,"X"]
+
+sampledata$Dereplicated_Sample_Name = as.factor(sampledata$Dereplicated_Sample_Name)
+sampledata$Type = as.factor(sampledata$Type)
+sampledata$PCR = as.factor(sampledata$PCR)
+sampledata$Time = as.factor(sampledata$Time)
+sampledata$Location = as.factor(sampledata$Location)
+sampledata$Extraction = as.factor(sampledata$Extraction)
+sampledata$SiteByTime = as.factor(paste(sampledata$Location, sampledata$Time))
+
+
+###Pre-Processing
+
+#No Pre-Processing
+
+#Combine into Ampvis Object
+asvmat_amp = tibble::rownames_to_column(asvmat, "ASV")
+sampledata_amp = tibble::rownames_to_column(sampledata, "Sample")
+taxmat_amp = tibble::rownames_to_column(as.data.frame(taxmat), "ASV")
+amp = amp_load(asvmat_amp, metadata = sampledata_amp, taxonomy = taxmat_amp)
+
+amp_nocontrols = amp_filter_samples(amp, Type %in% c("sample"))
+amp_controls = amp_filter_samples(amp, Type %in% c("control"))
+amp_FB = amp_filter_samples(amp_controls, Location %in% c("FB"))
+
+
+
+#Singletons Removed
+
+#Combine into Ampvis Object
+amp_NS = amp_load(asvmat_amp, metadata = sampledata_amp, taxonomy = taxmat_amp, pruneSingletons = TRUE)
+
+amp_nocontrols_NS = amp_filter_samples(amp_NS, Type %in% c("sample"))
+amp_controls_NS = amp_filter_samples(amp_NS, Type %in% c("control"))
+
+
+###Decontamination
+
+#Full Decontamination
+###any OTU that appears in a blank is removed from all samples
+
+full_decontamination <-function(amp) {
+  physeq = phyloseq(otu_table(as.matrix(amp$abund), taxa_are_rows = TRUE), tax_table(as.matrix(amp$tax)), sample_data(amp$metadata))
+  
+  physeq_controls <- physeq %>%
+    subset_samples(Type == "control") %>%
+    prune_taxa(taxa_sums(.) >0, .)
+  
+  badASV = taxa_names(physeq_controls)
+  allASV = taxa_names(physeq)
+  allASV <- allASV[!(allASV %in% badASV)]
+  physeq_FD = prune_taxa(allASV, physeq)
+  
+  av2_otutable <- data.frame(otu_table(physeq_FD)@.Data)
+  
+  av2_taxtable <- data.frame(tax_table(physeq_FD)@.Data)
+  
+  av2_metadata <- data.frame(sample_data(physeq_FD))
+  
+  amp_return <- amp_load(av2_otutable, metadata = av2_metadata, taxonomy = av2_taxtable)
+  
+  amp_return= amp_filter_samples(amp_return, Type %in% c("sample"))
+  
+  return(amp_return)
+}
+
+amp_nocontrols_FD = full_decontamination(amp)
+
+amp_nocontrols_NS_FD = full_decontamination(amp_NS)
+
+###Rarefaction
+
+rarefaction <- function(amp) {
+  set.seed(0)
+  reads <- colSums(amp$abund)
+  minreads <- min(reads)
+  amp_R = amp_subset_samples(amp, rarefy = minreads)
+  return(amp_R)
+}
+  
+amp_nocontrols_R = rarefaction(amp_nocontrols)
+
+amp_nocontrols_NS_R = rarefaction(amp_nocontrols_NS)
+
+amp_nocontrols_FD_R = rarefaction(amp_nocontrols_FD)
+
+amp_nocontrols_NS_FD_R = rarefaction(amp_nocontrols_NS_FD)
+```
+
+To ensure the accuracy of taxonomic assignments, we analyzed occurrence data from the Global Biodiversity Information Facility to investigate whether identified species had occurrence records in the California Current System and known ranges that encompassed Pillar Point, using the spocc (version 1.2.0) (Chamberlain, 2021) package. A phylogenetic tree based on taxonomic assignments was created using the taxize (version 0.9.100) (Chamberlain and Szöcs, 2013) and treedataverse (version 0.0.1) (citation) packages. 
+
+#### Data Analysis
+
+To understand whether eDNA signals could be distinguished by location, we first analyzed individual-level differences between locations; that is, whether ASVs or individual taxa (agglomerated species-level taxonomic assignments) were unique to, or associated with, particular locations. We calculated and visualized unique ASVs and taxa using the nVennR (version 0.2.3) (Pérez-Silva et al., 2018) and eulerr (version 7.0.0) (Larsson, 2022) packages. However, with metabarcoding data in particular, taxa or ASVs that are unique to a given location are not necessarily ecologically meaningful; they could include rare taxa present elsewhere but not amplified and exclude taxa that are well correlated with particular locations but sometimes detected at others. Thus, we also analyzed ASVs and taxa using an indicator species framework (Dufrêne and Legendre, 1997). In this framework, the null hypothesis is that the frequency of a taxon’s or ASV’s presence in samples from a particular location is not higher that the frequency of that taxon’s or ASV’s presence in samples from other locations. For each location, we identified all statistically-significant indicator taxa and ASVs with indicator value indices above 0.7—that is, indicators that are well-associated with a site group even if they are detected in samples from other sites—based on presence-absence data per sample using the indicspecies package (version 1.7.12) (Cáceres and Legendre, 2009). 
+
+We followed our individual-level analyses with approaches to test whether community composition varied by location. We calculated a Jaccard dissimilarity matrix across all samples using vegan (version 2.6.4) (Oksanen et al., 2022). Then, we tested for differences in community composition among locations using a permutational multivariate analysis of variance (PERMANOVA) with the model eDNA Presence ~ Location + Time + Biological Replicates using the adonis function in vegan. We confirmed that locational differences found via PERMANOVA were not a result of differences in dispersions by testing for homogeneity of dispersions using the betadisper function in vegan. We also visualized Jaccard dissimilarity using non-metric multidimensional scaling (NMDS) using the metaMDS function in vegan. We coupled these analyses with a partitioning among medoids algorithm (Kaufman and Rousseeuw, 1990) implemented with the pam function in the cluster package (version 2.1.4) (Maechler et al., 2022). Rather than assuming location clusters a priori, we validated the optimal number of clusters for a given dataset by finding the number of clusters (k) that maximized the average silhouette width, a measure of how well-structured the clusters are. Finally, to better understand how the difference between locations varied over the time sampled, for each time point, we calculated the Jaccard dissimilarity between each unique combination of replicates within each site, and then the pairwise Jaccard dissimilarity between each unique combination of samples across the three pairs of sites: S1-N, S2-N, and S1-S2.
+
+To further understand whether differences in eDNA detections corresponded with underlying ecological gradients, we compared the unique and indicator taxa identified at each site to their ecological zonation in a highly regarded field guide to the Pacific intertidal, Between Pacific Tides (Ricketts et al., 1985). To account for potential variations in taxonomic names between Between Pacific Tides and the MIDORI2 reference database, we used the World Register of Marine Species (WoRMS) to identify all synonymized names for each unique and indicator taxon identified, and we searched Between Pacific Tides for all synonyms. We compared the proportion of high and middle intertidal species identified across each location using a chi-squared test with p-values computed via Monte Carlo simulation. 
+
+### Results
+
+#### 3.1 Sequencing Results & Taxonomic Diversity
+
+
+```{r}
+
+#Gather information about full Anacapa Toolkit results before any processing
+total_ASVs = nrow(amp$abund)
+total_reads = sum(amp$abund)
+
+samples = length(amp$metadata$Type[amp$metadata$Type == "sample"])
+controls = length(amp$metadata$Type[amp$metadata$Type == "control"])
+
+#Check positive PCR controls
+amp_MC = amp_filter_samples(amp, Location %in% c("MC"))
+
+df = merge(amp_MC$abund, amp_MC$tax, by = 'row.names')
+df = df[,c(2:3, 10)]
+colnames(df) = c("MC1", "MC2", "Species")
+agg_df <- df %>% group_by(Species) %>% summarise(MC1_Reads = sum(MC1), MC2_Reads = sum(MC2)) %>% arrange(desc(MC1_Reads))
+agg_df[agg_df == ""] = "No Taxonomic Assignment"
+
+agg_df
+
+amp_no_MC = amp_filter_samples(amp, !(Location %in% c("MC")))
+intersect(rownames(amp_MC$abund), rownames(amp_no_MC$abund))
+
+#Check intersection between samples and controls
+overlap = length(intersect(rownames(amp_controls$abund), rownames(amp_nocontrols$abund)))
+
+```
+Using the Anacapa Toolkit, we identified `r total_ASVs` ASVs from `r total_reads` reads across `r samples` samples and `r controls` controls (positive PCR controls, negative field controls, negative extraction controls, and no-template negative PCR controls). All expected taxa amplified in each positive PCR control, and no ASVs present in the positive PCR controls occurred in any other samples, providing no evidence of index hopping. Before application of any decontamination steps, only `r overlap` ASVs were shared between the samples and negative field, extraction, and PCR controls. 
+
+```{r}
+#Establish processed data set used throughout analyses
+
+data_amp = amp_nocontrols_NS_FD_R
+
+data_physeq = phyloseq(otu_table(as.matrix(data_amp$abund), taxa_are_rows = TRUE), tax_table(as.matrix(data_amp$tax)), sample_data(data_amp$metadata))
+
+data_amp_taxa = data_amp
+data_amp_taxa$abund = aggregate_abund(data_amp$abund, data_amp$tax, tax_aggregate = "Species", format = "abund")
+
+```
+
+
+```{r}
+#Gather information about processed Anacapa Toolkit 
+
+processed_ASVs = nrow(data_amp$abund)
+processed_reads = sum(data_amp$abund)
+
+#Sum across all samples
+total = as.data.frame(rowSums(data_amp$abund))
+
+
+ #Transform summed ampvis2 object into phyloseq object which has better functions for these specific tasks
+  ASV = otu_table(as.matrix(total), taxa_are_rows = TRUE)
+  TAX = tax_table(as.matrix(data_amp$tax[,1:7]))
+  physeq_summed = phyloseq(ASV, TAX)
+  
+  kingdom = as.data.frame(tax_table(physeq_summed)[,1])
+  
+  #summarize number of unassigned ASVs
+   unassigned_ASVs = kingdom %>% group_by(Kingdom) %>% summarise(n = n()) %>% mutate (freq = n / sum(n))
+  
+  
+  unique_phyla = unique(tax_table(physeq_summed)[,2])
+  unique_phyla = unique_phyla[unique_phyla != ""]
+  phyla = length(unique_phyla)
+  
+  unique_class = unique(tax_table(physeq_summed)[,3])
+  unique_class = unique_class[unique_class != ""]
+  class = length(unique_class)
+  
+  unique_order = unique(tax_table(physeq_summed)[,4])
+  unique_order = unique_order[unique_order != ""]
+  order = length(unique_order)
+  
+  unique_family = unique(tax_table(physeq_summed)[,5])
+  unique_family = unique_family[unique_family != ""]
+  family = length(unique_family)
+  
+  unique_genus = unique(tax_table(physeq_summed)[,6])
+  unique_genus = unique_genus[unique_genus != ""]
+  genus = length(unique_genus)
+  
+  unique_species = unique(tax_table(physeq_summed)[,7])
+  unique_species = unique_species[unique_species != ""]
+  species = length(unique_species)
+  
+  #Remove all unclassified ASVs and condense to phylum level
+  physeq_totalreads = tax_glom(physeq_summed, taxrank="Phylum", NArm=TRUE)
+  Phyla_Reads = data.frame(Phyla = tax_table(physeq_totalreads)[,2], Reads = rowSums(otu_table(physeq_totalreads)))
+    
+
+```
+
+
+Focused on just the `r samples` samples, we removed singletons and all `r overlap` ASVs that overlapped with negative controls (Supplemental Information X), and we rarefied samples to the minimum number of reads of any sample, leaving `r processed_ASVs` ASVs and `r processed_reads` reads. `r sprintf("%0.1f%%", unassigned_ASVs[unassigned_ASVs$Kingdom == "",]$freq * 100)` of ASVs were unassigned, and the remainder included representatives from `r phyla` phyla, `r class` classes, `r order` orders, `r family` families, `r genus` genera, and `r species` species (Figure 4). A breakdown of the relative proportions of reads and ASVs assigned to each phyla can be found in Table 1. To ensure the accuracy of these taxonomic identifications, we confirmed that 306 of 415 identified species (73.7%) have occurrence records in the California Current System (CCS) and known ranges that encompass Pillar Point. (Supplemental Information X).
+
+```{r Table 1}
+
+##NEED TO FIX TABLE
+
+ #merge all samples together
+  #make abundance of each one
+  #glom by phylum
+  
+  physeq_totalASVs = physeq_summed
+  
+  otu_table(physeq_totalASVs)[otu_table(physeq_totalASVs)>0] <- 1
+  physeq_totalASVs = tax_glom(physeq_totalASVs, taxrank="Phylum", NArm=TRUE)
+  
+  
+  Phyla_ASVs = data.frame(Phyla = tax_table(physeq_totalASVs)[,2], ASVs = rowSums(otu_table(physeq_totalASVs)))
+  
+  
+  physeq_speciesbyphyla = physeq_summed
+  physeq_speciesbytaxa = tax_glom(physeq_summed, taxrank="Species", NArm=TRUE)
+  otu_table(physeq_speciesbytaxa)[otu_table(physeq_speciesbytaxa)>0] <- 1
+  physeq_speciesbytaxa = tax_glom(physeq_speciesbytaxa, taxrank="Phylum", NArm=TRUE)
+  
+  Phyla_Species =  data.frame(Phyla = tax_table(physeq_speciesbytaxa)[,2], Species = rowSums(otu_table(physeq_speciesbytaxa)))
+
+  
+  list = list(Phyla_Reads, Phyla_ASVs, Phyla_Species)
+  full = list %>% reduce(full_join, by='Phylum')
+  full[is.na(full)] <- 0
+  
+
+  full_sorted = full[order(-full$Reads),]
+  
+  full_sorted = full_sorted %>% 
+    mutate(Reads_Percent = scales::label_percent()(Reads/sum(Reads))) %>%
+    mutate(ASVs_Percent = scales::label_percent()(ASVs/sum(ASVs))) %>%
+    mutate(Species_Percent = scales::label_percent()(Species/sum(Species)))
+  
+  full_sorted
+
+  write.csv(full_sorted, "Data/TaxonDiversity.csv", row.names=TRUE)
+```
+
+```{r Figure 4 -- Phylogenetic Tree}
+
+#NEED TO ADD THIS
+```
+
+```{r GBIF}
+
+#NEED TO ADD THIS
+```
+
+
+#### 3.2 Individual-Level Differences Between Locations
+
+```{r}
+
+#Subset ampvis2 data by location
+
+amp_S1 = amp_filter_samples(data_amp, Location %in% c("S1"))
+amp_S2 = amp_filter_samples(data_amp, Location %in% c("S2"))
+amp_N = amp_filter_samples(data_amp, Location %in% c("O"))
+
+#List the unique taxa at each location
+
+S1_taxa = unique(amp_S1$tax$Species)
+S2_taxa = unique(amp_S2$tax$Species)
+N_taxa = unique(amp_N$tax$Species)
+
+#List the unique ASVs at each locaton
+
+S1_ASV = unique(amp_S1$tax$OTU)
+S2_ASV = unique(amp_S2$tax$OTU)
+N_ASV = unique(amp_N$tax$OTU)
+
+
+#Using nVennR, calculate overlaps between locations
+
+V_taxa <- plotVenn(list(S1 = S1_taxa, S2 = S2_taxa, N = N_taxa))
+V_ASV <- plotVenn(list(S1 = S1_ASV, S2 = S2_ASV, N = N_ASV))
+
+
+
+#Using eulerr, create euler diagrams for taxa and ASVs
+
+#format overlap correctly for eulerr using nVennR output 
+
+overlap_euler = function(venn) {
+  overlap = sapply(listVennRegions(venn), length)
+  overlap_names=names(overlap)
+  overlap_names = gsub(".*\\((.*)\\).*", "\\1",overlap_names)
+  overlap_names = gsub(", ", "&",overlap_names)
+  names(overlap) = overlap_names
+  return(overlap)
+}
+
+add_quantity_line_break = function(v) {
+  tags <- v$children$canvas.grob$children$diagram.grob.1$children$tags$children
+  
+  tags <- do.call(grid::gList, lapply(tags, function(x) {
+    x$children[[2]]$label <- sub(" \\%)", "%)", x$children[[2]]$label)
+    before = sub("\\(.*", "", x$children[[2]]$label)
+    after = gsub(".*\\(", "(", x$children[[2]]$label)
+    italics = bquote(atop(.(before),italic(.(after))))
+    x$children[[2]]$label <- italics
+    x$children[[2]]$just <- NULL
+    x}))
+  
+  v$children$canvas.grob$children$diagram.grob.1$children$tags <- tags
+  
+  return(v)
+}
+
+
+E_taxa <- euler(overlap_euler(V_taxa), shape = "ellipse")
+E_taxa_plot = plot(E_taxa, quantities = list(type = c("counts", "percent"), cex=2), legend = list(side ="right", nrow = 1, ncol = 3, cex = 2.5))
+E_taxa_plot = add_quantity_line_break(E_taxa_plot)
+
+
+E_ASV <- euler(overlap_euler(V_ASV), shape="ellipse")
+E_ASV_plot = plot(E_ASV, quantities = list(type = c("counts", "percent"), cex=2), legend = list(side ="right", nrow = 1, ncol = 3, cex = 2.5))
+E_ASV_plot = add_quantity_line_break(E_ASV_plot)
+
+```
+
+Across both taxa (n=415) and ASVs (n=27,038), all three locations had unique elements, suggesting that there was not complete mixing of eDNA across micro-habitats. 33.2% of taxa and 80% of ASVs were unique to one of the three locations (Figure 5). At both the taxa and ASV level, S1 had more unique elements than S2 and nearshore, although this effect was more pronounced across ASVs. ASVs and taxa shared across pairs of two locations were the least common elements. 
+
+```{r}
+
+#FIX to make look better in R markdown
+E_taxa_plot
+
+E_ASV_plot
+
+```
+
+
+
+```{r, warning = FALSE}
+
+#Function for creating indicator species heatmap from physeq data
+
+indicator_heatmap <- function(physeq, asv) {
+  
+  #If analyzing by taxa, remove all unclassified ASVs and condense to species assignments
+  if(asv == FALSE) {
+    physeq = tax_glom(physeq, taxrank="Species", NArm=TRUE)
+    tax_table(physeq) = gsub("\\_.*","",tax_table(physeq))
+  }
+  
+  #Convert to presence/absence data
+  otu_table(physeq)[otu_table(physeq) >0] <- 1
+  
+  
+  #Use indicspecies package to get top taxa
+  indval = multipatt(t(otu_table(physeq)),t(sample_data(physeq)[,"Location"]), control = how(nperm=999), duleg = TRUE)
+  top_N = rownames(indval$sign %>% filter(p.value < 0.05) %>% filter(s.O == 1)  %>% filter(stat > .7))
+  top_S1 = rownames(indval$sign %>% filter(p.value < 0.05) %>% filter(s.S1 == 1)  %>% filter(stat > .7))
+  top_S2 = rownames(indval$sign %>% filter(p.value < 0.05) %>% filter(s.S2 == 1)  %>% filter(stat > .7))
+  
+  indicators_all = c(top_N, top_S1, top_S2)
+  
+  #Merge samples by site/time before plotting 
+  physeq_merge = merge_samples(physeq, "SiteByTime")
+  
+  #Update metadata accordingly
+  updated_metadata = as.matrix(sample_data(physeq)[, c("SiteByTime", "Time", "Location", "T", "S")])
+  updated_metadata = as.data.frame(updated_metadata)
+  updated_metadata$SiteByTime = as.factor(updated_metadata$SiteByTime)
+  updated_metadata$Time = as.factor(updated_metadata$Time)
+  updated_metadata$Location = as.factor(updated_metadata$Location)
+  updated_metadata = distinct(updated_metadata)
+  rownames(updated_metadata) = updated_metadata[,'SiteByTime']
+  sample_data(physeq_merge) <- sample_data(updated_metadata)
+
+  #Divide all merged samples by the number of samples they represent 
+  otu_table(physeq_merge) = otu_table(physeq_merge)/3
+  
+  otu_table(physeq_merge)[grepl('11:30', rownames(otu_table(physeq_merge)))] = otu_table(physeq_merge)[grepl('11:30', rownames(otu_table(physeq_merge)))]/3
+  
+  otu_table(physeq_merge)[grepl('14:00', rownames(otu_table(physeq_merge)))] = otu_table(physeq_merge)[grepl('14:00', rownames(otu_table(physeq_merge)))]/3
+ 
+   otu_table(physeq_merge)[grepl('17:00', rownames(otu_table(physeq_merge)))] = otu_table(physeq_merge)[grepl('17:00', rownames(otu_table(physeq_merge)))]/3
+  
+  #Add labels to the indicator species for plotting
+  indicators_only <-prune_taxa(colnames(otu_table(physeq_merge)) %in% indicators_all, physeq_merge)
+  
+  add_indicator_label <- function(X) {
+    if (X %in% top_N) { return("N")}
+    else if (X %in% top_S1) { return("S1")}
+    else if (X %in% top_S2) {return ("S2")}
+    else {return("NA")}
+  }
+  
+  indicators<- sapply(rownames(tax_table(indicators_only)), add_indicator_label)
+
+  tax_table(indicators_only) = cbind(tax_table(indicators_only), indicators)
+  
+  loc_labs = c("N", "S1", "S2")
+  names(loc_labs) = c("O", "S1", "S2")
+  
+  #Plot
+  plot = plot_heatmap(indicators_only, 
+                      method = NULL, 
+                      distance = NULL, 
+                      trans = NULL, 
+                      taxa.order = rev(indicators_all), 
+                      taxa.label = "Species", 
+                      sample.label = "Time", 
+                      sample.order = "Time") + 
+    facet_grid(indicators~Location, 
+               scales="free", 
+               space = "free", 
+               switch = "y", 
+               labeller = labeller(Location = loc_labs)) +
+    scale_fill_gradient(low = "black", high = "#B5D7E4") + 
+    theme_grey(base_size = 14) + 
+    theme(plot.title = element_text(hjust = 0.5)) +
+    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) +
+    theme(strip.placement = "outside", axis.text.x=element_text(size=12))  +
+    theme(strip.text = element_text(size = rel(1))) +
+    theme(legend.text=element_text(size=12), legend.key.height = unit(1.5, "cm")) +
+    theme(panel.background = element_blank(), panel.grid.major = element_blank()) +
+    labs(fill = "Proportion of \nPositive Detects", title = "Locations") +
+    theme(axis.ticks = element_line(color = "black"),
+          axis.text.y = element_text(color="black", face = "italic"), 
+          axis.text.x = element_text(color="black")) 
+  
+  plot$scales$scales[[2]]$name <- "Indicators"
+  
+  return(list(plot = plot, 
+              top_N = top_N, 
+              top_S1 = top_S1, 
+              top_S2 = top_S2, 
+              all_indicators = indicators_all, 
+              full_output = indval))
+}
+
+heatmap_taxa = indicator_heatmap(data_physeq, FALSE)
+heatmap_ASV = indicator_heatmap(data_physeq, TRUE)
+
+indicator_ASVs = data_amp$tax[heatmap_ASV$all_indicators,]
+unassigned_indicator_ASVs = indicator_ASVs %>% group_by(Kingdom) %>% summarise(n = n()) %>% mutate (freq = n / sum(n))
+  
+```
+
+
+```{r Figure 6}
+
+heatmap_taxa$plot
+
+
+#ADD FIGURE SAVING
+
+```
+```{r Supplemental Figure X}
+
+heatmap_ASV$plot
+
+```
+
+Using an indicator species framework produced similar trends to the analysis of unique taxa and ASVs; all three locations had indicator taxa and ASVs, and S1 had more indicator elements than other locations. By taxa, we identified `r length(heatmap_taxa$all_indicators)` indicator taxa:  `r length(heatmap_taxa$top_S1)` for S1, `r length(heatmap_taxa$top_S2)` for S2, and `r length(heatmap_taxa$top_N)` for nearshore (Figure 6). By ASVs, we found more indicators overall. We identified `r length(heatmap_ASV$all_indicators)` indicator ASVs: `r length(heatmap_ASV$top_S1)` for S1, `r length(heatmap_ASV$top_S2)` for S2, and `r length(heatmap_ASV$top_N)` for nearshore (Supplemental Figure X). Most (`r sprintf("%0.1f%%", unassigned_indicator_ASVs[unassigned_indicator_ASVs$Kingdom == "",]$freq * 100)`) indicator ASVs had no taxonomic assignment, but the ones that did included several species beyond the original indicator taxa, at S1 (Scorpaenichthys marmoratus, Corallina confusa, Leathesia difformis, Bossiella frondescens, Myrionema balticum, Bossiella plumosa), S2 (Bossiella frondescens, Smithora naiadum), and nearshore (Mazzaella splendens, Strongylocentrotus purpuratus, Halichondria panicea, Smithora naiadum). 
+
+#### 3.3.	Community-Level Differences between Locations
+
+```{r}
+#Calculate Jaccard dissimilarity matrices
+jaccard_full = vegdist(t(data_amp$abund), binary = TRUE, method = "jaccard")
+jaccard_taxa = vegdist(t(data_amp_taxa$abund), binary = TRUE, method = "jaccard")
+```
+
+```{r}
+
+#Calculate jaccard dissimilarity 
+
+#PERMANOVA on full data set
+permutest(betadisper(jaccard_full, data_amp$metadata$Location))
+adonis2(jaccard_full ~ Location + Time + Dereplicated_Sample_Name , data = data_amp$metadata)
+
+#PERMANOVA on taxa data set
+permutest(betadisper(jaccard_taxa, data_amp_taxa$metadata$Location))
+adonis2(jaccard_taxa ~ Location + Time + Dereplicated_Sample_Name, data = data_amp_taxa$metadata)
+
+```
+
+```{r}
+
+#NMDS
+
+#Check the stress vs. dimension plot
+
+# Function that performs a NMDS for 1-10 dimensions and plots the nr of dimensions vs the stress
+NMDS.scree <- function(x) { #where x is the name of the data frame variable
+  plot(rep(1, 10), replicate(10, metaMDS(x, autotransform = F, k = 1)$stress), xlim = c(1, 10),ylim = c(0, 0.30), xlab = "# of Dimensions", ylab = "Stress", main = "NMDS stress plot")
+  for (i in 1:10) {
+    points(rep(i + 1,10),replicate(10, metaMDS(x, autotransform = F, k = i + 1)$stress))
+  }
+}
+
+# Use NMDS.scree function to choose the optimal nr of dimensions
+NMDS.scree(jaccard_full)
+NMDS.scree(jaccard_taxa)
+
+
+#Establish functions for PAM clustering algorithm
+
+PAM_validation <- function(dist) {
+  
+  k_list <- c()
+  avg_sil_width <- c(0)
+  for (x in 1:(nrow(as.matrix(dist))-1)){
+    PAM = pam(dist, k=x, diss = TRUE)
+    avg_sil_width <- c(avg_sil_width, PAM$silinfo$avg.width)
+    k_list <- c(k_list, x)
+  }
+  
+  PAM_validation <- data.frame (k = k_list, sil_width = avg_sil_width, x_max = which.max(avg_sil_width))
+  return(PAM_validation)
+}
+
+PAM_validation_viz <- function(PAM_validation) {
+  plot = ggplot(data = PAM_validation, 
+                aes(x=k, y = sil_width)) + 
+    geom_line() + 
+    geom_point() + 
+    xlab("K") + 
+    ylab("Average Silhouette Width") + 
+    ggtitle("Cluster Validation using Average Silhouette Width") + 
+    geom_segment(aes(x= x_max[1], 
+                     y = 0, 
+                     xend = x_max[1], 
+                     yend = sil_width[x_max[1]], 
+                     color = "red"), 
+                 linetype = 2, 
+                 show.legend = FALSE)
+  return(plot)
+}
+
+PAM_silhouette_viz_3 <- function(PAM, sample_data) {
+  PAM_df = data.frame(PAM$silinfo$widths)
+  PAM_df <- cbind(PAM_df, X = row.names(PAM_df))
+  PAM_df <- merge(PAM_df, sample_data, by = "X")
+  PAM_df$cluster <- as.factor(PAM_df$cluster)
+  
+  ggplot(data = PAM_df, 
+         aes(x=sil_width, y = reorder(X, sil_width), fill = Location)) + 
+    geom_point(aes(shape=Location, color=Time), size = 3, position=position_jitter (height = 30, width = 0)) + 
+    scale_shape_manual(values = c(16, 15, 17)) + 
+    facet_grid(cluster ~ ., scales = "free_y", space = "free_y") +
+    scale_color_viridis(discrete=TRUE, begin = 0, end = .97, direction = -1) + 
+    xlab("Silhouette Width") + 
+    ylab("") + 
+    geom_vline (xintercept = PAM$silinfo$avg.width, linetype = "dashed", color = "red") + 
+    theme_classic(base_size = 14) + 
+    theme(axis.text.x = element_text(angle = 90)) + 
+    ggtitle("PAM Clustering Visualization") + 
+    theme(axis.text.y = element_blank(), 
+          axis.ticks.y = element_blank(), 
+          panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(), 
+          panel.border=element_rect(colour="black",size=1, fill = NA)) + 
+    scale_y_discrete(expand = expansion(add = 40))
+}
+
+
+NMDS_PAM <- function(amp, jaccard, dim, PAM_logical) {
+  set.seed(0)
+  NMDS = metaMDS(jaccard, dim, trymax = 100, tidy = TRUE)
+  
+  NMDS_stress = stressplot(NMDS)
+  
+  data.scores <- as.data.frame(scores(NMDS))
+  data.scores$X <- rownames(data.scores)
+  data.scores <- merge(data.scores, amp$metadata)
+  
+  annotations1 <- data.frame(
+    xpos = c(Inf), ypos =  c(-Inf), 
+    annotateText = c(paste("Stress:", round(NMDS$stress, 3))),
+    hjustvar = c(1),  
+    vjustvar = c(-.5))
+  
+  plot1 = ggplot(data=data.scores, aes(x=NMDS1, y=NMDS2)) + 
+    theme_light() + 
+    geom_point(aes(shape=Location, color=Time), size = 3) + 
+    scale_shape_manual(values = c(16, 15, 17)) + 
+    theme(text = element_text(size = 14)) +
+    ggtitle ("A) nNMDS Ordination (Jaccard Dissimilarity)") +
+    scale_color_viridis(discrete=TRUE, begin = 0, end = .97, direction = -1) +
+    stat_ellipse(aes(group=Location), type = "t",linetype = 2, alpha = 1) 
+  
+
+  plot1 = plot1 + 
+    theme_classic(base_size = 14) + 
+    geom_text(data = annotations1, aes(x=xpos, y=ypos, hjust = hjustvar, vjust=vjustvar, label = annotateText ))
+  
+   if(PAM_logical == TRUE) {
+  validated_k = PAM_validation(jaccard)
+  PAM_validation = PAM_validation_viz(validated_k)
+  
+  PAM = pam(jaccard, k=validated_k$x_max[1], diss = TRUE)
+  plot2 = PAM_silhouette_viz_3(PAM, amp$metadata) 
+  
+  return(list(NMDS = plot1, PAM = plot2, NMDS_stress = NMDS_stress, PAM_validation = PAM_validation))
+  
+}
+
+  return(plot1)
+}
+
+
+
+NMDS_PAM_full = NMDS_PAM(data_amp, jaccard_full, 2, TRUE)
+NMDS_PAM_full$NMDS_stress
+NMDS_PAM_full$PAM_validation
+
+
+NMDS_PAM_taxa = NMDS_PAM(data_amp_taxa, jaccard_taxa, 2, TRUE)
+NMDS_PAM_taxa$NMDS_stress
+NMDS_PAM_taxa$PAM_validation
+
+
+```
+
+Community composition also differed across locations, as supported by multiple analyses. Variation in community composition was significantly explained by location, even when accounting for variation due to time of sampling and variation between replicates (ASVs: PERMANOVA  p < 0.001, betadisper p > 0.5; Taxa: PERMANOVA  p < 0.001, betadisper p > 0.5). As visualized using NMDS ordination, S1 and S2 samples collected around low tide were most dissimilar from the offshore samples (Figures 7A, 7C). These patterns persisted in the optimal clusters identified using the partitioning among medoids (PAM) algorithm, without assuming a priori that location drives the clusters (Figure 7B, 7D). When analyzed by ASV, PAM identified three optimal clusters, primarily composed of: 1) nearshore samples with additional samples from S1 and S2 at early time points, 2) the remaining S1 samples, and 3) the remaining S2 samples (Figure 7B). When analyzing by taxa, PAM additionally differentiated between samples from the three locations collected at early time points. Thus, multiple analyses with different initial assumptions all demonstrated differentiable eDNA signals across micro-habitats. 
+
+```{r Figure 7}
+
+(NMDS_PAM_full$NMDS + theme(legend.position = "none") + ggtitle("A)")) + 
+  (NMDS_PAM_full$PAM  + theme(legend.position = "none") + ggtitle("B)")) + 
+  (NMDS_PAM_taxa$NMDS + theme(legend.position = "none") + ggtitle("C)")) + 
+  (NMDS_PAM_taxa$PAM + ggtitle("D)")) + 
+  plot_layout(guides = 'collect', widths = c(1,2))
+
+#Add figuring saving
+```
+
+```{r}
+
+distmat <- as.matrix(jaccard_full)
+
+#Calculate Pairwise Dissimilarity Values Within and Across Sites
+
+Jaccard = c()
+Combo = c()
+Time = c()
+summary = data.frame(Jaccard, Combo, Time)
+
+one = c("S1", "S2", "O", "S1", "S2", "S1")
+one_names = c("S1", "S2", "N", "S1", "S2", "S1")
+two = c("S1", "S2", "O", "O", "O", "S2")
+two_names = c("S1", "S2", "N", "N", "N", "S2")
+
+for(x in levels(data_amp$metadata$Time)){
+  subset = filter(data_amp$metadata, data_amp$metadata$Time == x)
+  
+  for(i in 1: length(one)) {
+    name = paste(one_names[i], two_names[i], sep = ":")
+    data = distmat[subset$X[subset$Location == one[i]], subset$X[subset$Location == two[i]]]
+    Jaccard = vector()
+    
+    if (!(0 %in% dim(data))) {
+      for (row in 1:nrow(data)) {
+        for (col in 1:ncol(data)){
+           if (col > row) {
+            Jaccard = c(Jaccard, data[row,col])
+          }
+        }
+      }
+    }
+    Combo <- rep(name, length(Jaccard))
+    Time <- rep(x, length(Jaccard))
+    
+    summary <- rbind(summary, data.frame(Jaccard, Combo, Time))
+  }
+}
+
+
+##PLOTTING
+
+#Define palette for colors and fills to keep coloring consistent even as I experiment with changing levels
+colors = turbo(8)
+
+palette = c("Within Site" = "#30123BFF", 
+            "S1:N" ="#1AE4B6FF" , 
+            "S2:N" = "#FABA39FF", 
+            "S1:S2" = "#7A0403FF")
+
+fill_palette = c("Within Site" = "#30123B20", 
+                 "S1:N" ="#1AE4B620", 
+            "S2:N" = "#FABA3920", 
+            "S1:S2" = "#7A040320")
+
+
+#WITHIN SITE COMBINED
+
+summary$Combo2 <- summary$Combo
+summary$Combo2[summary$Combo2 == "S1:S1"] = "Within Site"
+summary$Combo2[summary$Combo2 == "S2:S2"] = "Within Site"
+summary$Combo2[summary$Combo2 == "N:N"] = "Within Site"
+
+
+g2.5 = ggplot(summary, aes(x = Time, y = Jaccard, color = factor(Combo2, level = c("Within Site", "S1:N", "S2:N", "S1:S2")), fill = factor(Combo2, level = c("Within Site", "S1:N", "S2:N", "S1:S2")))) + 
+  geom_boxplot(position = position_dodge(.5, preserve = "single")) + 
+  geom_point(position = position_jitterdodge(dodge.width = .5), alpha=0.2) + 
+  scale_color_manual(values = palette, name = "Site Pairings") + 
+  scale_fill_manual(values = fill_palette, name = "Site Pairings") + 
+  geom_hline(yintercept = stats$mean, color = palette["Within Site"] ) + 
+  #geom_hline(yintercept = stats$max, linetype = "dashed", color = palette["Within Site"]) +
+  ylab("Jaccard Dissimilarity") +
+  coord_cartesian(expand = 0, clip = "off") + 
+  #geom_text(aes(max(Time),stats$max, label = "Max Dissimilarity\n  Within Sites", hjust = -.2), color = "#30123BFF", show.legend = FALSE) +
+  geom_text(aes(max(Time),stats$mean, label = "Mean Dissimilarity\n  Within Sites", hjust = -.2), color = palette["Within Site"], show.legend = FALSE, check_overlap = TRUE) +
+  theme_classic(base_size = 16) + theme(axis.ticks = element_line(color = "black"),
+                                             axis.text.y = element_text(color="black"), 
+                                             axis.text.x = element_text(color="black"))
+
+```
+
+The extent of the Jaccard dissimilarity between samples from different locations varied over time. As shown in Figure 8, except at the first time point sampled, the dissimilarity between samples across sites was always greater than the mean dissimilarity between samples within the same site, and increasingly so across the period sampled. At two time points—15:30 and 16:00—after low tide but before water was moving between all locations again, all dissimilarity values across sites were greater than the maximum dissimilarity recorded between two samples from the same site. 
+
+```{r Figure 8}
+
+g2.5
+
+#ADD FIGURE SAVING
+
+```
+
+#### 3.4.	Ecological Significance
+
+```{r}
+
+#Ecological Signifance -- import data 
+
+
+S1_hm = 12
+S1_no_hm = 5
+
+S2_hm = 2
+S2_no_hm = 12
+
+N_hm = 2
+N_no_hm = 7
+
+S1 = c(Yes = S1_hm, No = S1_no_hm)
+S2 = c(Yes = S2_hm, No = S2_no_hm)
+N = c(Yes = N_hm, No = N_no_hm)
+
+counts = rbind(S1, S2, N)
+
+test = chisq.test(counts, correct = FALSE, simulate.p.value = TRUE)
+
+
+
+test_post_hoc = chisq.posthoc.test(counts, method = "bonferroni", simulate.p.value = TRUE)
+
+```
+
+Identified unique and indicator taxa reflected known ecological differences between locations. Only a subset of unique and indicator taxa were described in Between Pacific Tides: 18.8% (9/48) of nearshore taxa, 32.1% (17/53) of S1 taxa, and 31.1% (14/45) of S2. However, across the described subset, more taxa from S1 were categorized to high and middle intertidal zones than S2 and N (Figure 9; not made in R). The proportion of taxa from the high and middle intertidal varied significantly across locations (χ2 = 11.67, p < 0.05), matching the environmental characteristics of the sites.  
+
+
+
+### Session Info
+
+```{r}
+sessionInfo()
+```
