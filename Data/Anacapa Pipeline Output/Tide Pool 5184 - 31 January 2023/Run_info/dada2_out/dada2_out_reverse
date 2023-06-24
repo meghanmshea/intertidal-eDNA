@@ -1,0 +1,1461 @@
+During startup - Warning messages:
+1: Setting LC_CTYPE failed, using "C" 
+2: Setting LC_COLLATE failed, using "C" 
+3: Setting LC_TIME failed, using "C" 
+4: Setting LC_MESSAGES failed, using "C" 
+5: Setting LC_MONETARY failed, using "C" 
+6: Setting LC_PAPER failed, using "C" 
+7: Setting LC_MEASUREMENT failed, using "C" 
+congrats, right version of dada2Loading required package: Rcpp
+Loading required package: methods
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning: namespace 'DelayedArray' is not available and has been replaced
+by .GlobalEnv when processing object 'plot.index'
+Warning messages:
+1: no function found corresponding to methods exports from 'SummarizedExperiment' for: 'acbind', 'arbind' 
+2: multiple methods tables found for 'rglist' 
+dada2 package version: 1.6.0Loading required package: BiocGenerics
+Loading required package: parallel
+
+Attaching package: 'BiocGenerics'
+
+The following objects are masked from 'package:parallel':
+
+    clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
+    clusterExport, clusterMap, parApply, parCapply, parLapply,
+    parLapplyLB, parRapply, parSapply, parSapplyLB
+
+The following objects are masked from 'package:stats':
+
+    IQR, mad, sd, var, xtabs
+
+The following objects are masked from 'package:base':
+
+    Filter, Find, Map, Position, Reduce, anyDuplicated, append,
+    as.data.frame, cbind, colMeans, colSums, colnames, do.call,
+    duplicated, eval, evalq, get, grep, grepl, intersect, is.unsorted,
+    lapply, lengths, mapply, match, mget, order, paste, pmax, pmax.int,
+    pmin, pmin.int, rank, rbind, rowMeans, rowSums, rownames, sapply,
+    setdiff, sort, table, tapply, union, unique, unsplit, which,
+    which.max, which.min
+
+Loading required package: S4Vectors
+Loading required package: stats4
+
+Attaching package: 'S4Vectors'
+
+The following object is masked from 'package:plyr':
+
+    rename
+
+The following object is masked from 'package:base':
+
+    expand.grid
+
+Loading required package: IRanges
+
+Attaching package: 'IRanges'
+
+The following object is masked from 'package:plyr':
+
+    desc
+
+Loading required package: XVector
+
+Attaching package: 'XVector'
+
+The following object is masked from 'package:plyr':
+
+    compact
+
+
+Attaching package: 'Biostrings'
+
+The following object is masked from 'package:base':
+
+    strsplit
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:Biostrings':
+
+    collapse, intersect, setdiff, setequal, union
+
+The following object is masked from 'package:XVector':
+
+    slice
+
+The following objects are masked from 'package:IRanges':
+
+    collapse, desc, intersect, setdiff, slice, union
+
+The following objects are masked from 'package:S4Vectors':
+
+    first, intersect, rename, setdiff, setequal, union
+
+The following objects are masked from 'package:BiocGenerics':
+
+    combine, intersect, setdiff, union
+
+The following objects are masked from 'package:plyr':
+
+    arrange, count, desc, failwith, id, mutate, rename, summarise,
+    summarize
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+  [1] "CO1_2-A1-1036-a-S93-L001_Paired_2_singles.fastq"     
+  [2] "CO1_2-A10-1060-a-S165-L001_Paired_2_singles.fastq"   
+  [3] "CO1_2-A11-1060-b-S170-L001_Paired_2_singles.fastq"   
+  [4] "CO1_2-A12-1060-c-S176-L001_Paired_2_singles.fastq"   
+  [5] "CO1_2-A2-1036-b-S101-L001_Paired_2_singles.fastq"    
+  [6] "CO1_2-A3-1036-c-S109-L001_Paired_2_singles.fastq"    
+  [7] "CO1_2-A4-1044-a-S117-L001_Paired_2_singles.fastq"    
+  [8] "CO1_2-A5-1044-b-S125-L001_Paired_2_singles.fastq"    
+  [9] "CO1_2-A6-1044-c-S133-L001_Paired_2_singles.fastq"    
+ [10] "CO1_2-A7-1052-a-S141-L001_Paired_2_singles.fastq"    
+ [11] "CO1_2-A8-1052-b-S149-L001_Paired_2_singles.fastq"    
+ [12] "CO1_2-A9-1052-c-S157-L001_Paired_2_singles.fastq"    
+ [13] "CO1_2-B1-1037-a-S94-L001_Paired_2_singles.fastq"     
+ [14] "CO1_2-B10-1061-a-S166-L001_Paired_2_singles.fastq"   
+ [15] "CO1_2-B11-1061-b-S171-L001_Paired_2_singles.fastq"   
+ [16] "CO1_2-B12-1061-c-S177-L001_Paired_2_singles.fastq"   
+ [17] "CO1_2-B2-1037-b-S102-L001_Paired_2_singles.fastq"    
+ [18] "CO1_2-B3-1037-c-S110-L001_Paired_2_singles.fastq"    
+ [19] "CO1_2-B4-1045-a-S118-L001_Paired_2_singles.fastq"    
+ [20] "CO1_2-B5-1045-b-S126-L001_Paired_2_singles.fastq"    
+ [21] "CO1_2-B6-1045-c-S134-L001_Paired_2_singles.fastq"    
+ [22] "CO1_2-B7-1053-a-S142-L001_Paired_2_singles.fastq"    
+ [23] "CO1_2-B8-1053-b-S150-L001_Paired_2_singles.fastq"    
+ [24] "CO1_2-B9-1053-c-S158-L001_Paired_2_singles.fastq"    
+ [25] "CO1_2-C1-1038-a-S95-L001_Paired_2_singles.fastq"     
+ [26] "CO1_2-C10-1062-a-S167-L001_Paired_2_singles.fastq"   
+ [27] "CO1_2-C11-1062-b-S172-L001_Paired_2_singles.fastq"   
+ [28] "CO1_2-C12-1062-c-S178-L001_Paired_2_singles.fastq"   
+ [29] "CO1_2-C2-1038-b-S103-L001_Paired_2_singles.fastq"    
+ [30] "CO1_2-C3-1038-c-S111-L001_Paired_2_singles.fastq"    
+ [31] "CO1_2-C4-1046-a-S119-L001_Paired_2_singles.fastq"    
+ [32] "CO1_2-C5-1046-b-S127-L001_Paired_2_singles.fastq"    
+ [33] "CO1_2-C6-1046-c-S135-L001_Paired_2_singles.fastq"    
+ [34] "CO1_2-C7-1054-a-S143-L001_Paired_2_singles.fastq"    
+ [35] "CO1_2-C8-1054-b-S151-L001_Paired_2_singles.fastq"    
+ [36] "CO1_2-C9-1054-c-S159-L001_Paired_2_singles.fastq"    
+ [37] "CO1_2-D1-1039-a-FB-S96-L001_Paired_2_singles.fastq"  
+ [38] "CO1_2-D10-1063-a-S168-L001_Paired_2_singles.fastq"   
+ [39] "CO1_2-D11-1063-b-S173-L001_Paired_2_singles.fastq"   
+ [40] "CO1_2-D12-1063-c-S179-L001_Paired_2_singles.fastq"   
+ [41] "CO1_2-D2-1039-b-FB-S104-L001_Paired_2_singles.fastq" 
+ [42] "CO1_2-D3-1039-c-FB-S112-L001_Paired_2_singles.fastq" 
+ [43] "CO1_2-D4-1047-a-S120-L001_Paired_2_singles.fastq"    
+ [44] "CO1_2-D5-1047-b-S128-L001_Paired_2_singles.fastq"    
+ [45] "CO1_2-D6-1047-c-S136-L001_Paired_2_singles.fastq"    
+ [46] "CO1_2-D7-1055-a-S144-L001_Paired_2_singles.fastq"    
+ [47] "CO1_2-D8-1055-b-S152-L001_Paired_2_singles.fastq"    
+ [48] "CO1_2-D9-1055-c-S160-L001_Paired_2_singles.fastq"    
+ [49] "CO1_2-E1-1040-a-S97-L001_Paired_2_singles.fastq"     
+ [50] "CO1_2-E10-1064-a-EB-S169-L001_Paired_2_singles.fastq"
+ [51] "CO1_2-E11-1064-b-EB-S174-L001_Paired_2_singles.fastq"
+ [52] "CO1_2-E12-1064-c-EB-S180-L001_Paired_2_singles.fastq"
+ [53] "CO1_2-E2-1040-b-S105-L001_Paired_2_singles.fastq"    
+ [54] "CO1_2-E3-1040-c-S113-L001_Paired_2_singles.fastq"    
+ [55] "CO1_2-E4-1048-a-EB-S121-L001_Paired_2_singles.fastq" 
+ [56] "CO1_2-E5-1048-b-EB-S129-L001_Paired_2_singles.fastq" 
+ [57] "CO1_2-E6-1048-c-EB-S137-L001_Paired_2_singles.fastq" 
+ [58] "CO1_2-E7-1056-a-S145-L001_Paired_2_singles.fastq"    
+ [59] "CO1_2-E8-1056-b-S153-L001_Paired_2_singles.fastq"    
+ [60] "CO1_2-E9-1056-c-S161-L001_Paired_2_singles.fastq"    
+ [61] "CO1_2-F1-1041-a-S98-L001_Paired_2_singles.fastq"     
+ [62] "CO1_2-F2-1041-b-S106-L001_Paired_2_singles.fastq"    
+ [63] "CO1_2-F3-1041-c-S114-L001_Paired_2_singles.fastq"    
+ [64] "CO1_2-F4-1049-a-S122-L001_Paired_2_singles.fastq"    
+ [65] "CO1_2-F5-1049-b-S130-L001_Paired_2_singles.fastq"    
+ [66] "CO1_2-F6-1049-c-S138-L001_Paired_2_singles.fastq"    
+ [67] "CO1_2-F7-1057-a-S146-L001_Paired_2_singles.fastq"    
+ [68] "CO1_2-F8-1057-b-S154-L001_Paired_2_singles.fastq"    
+ [69] "CO1_2-F9-1057-c-S162-L001_Paired_2_singles.fastq"    
+ [70] "CO1_2-G1-1042-a-S99-L001_Paired_2_singles.fastq"     
+ [71] "CO1_2-G2-1042-b-S107-L001_Paired_2_singles.fastq"    
+ [72] "CO1_2-G3-1042-c-S115-L001_Paired_2_singles.fastq"    
+ [73] "CO1_2-G4-1050-a-S123-L001_Paired_2_singles.fastq"    
+ [74] "CO1_2-G5-1050-b-S131-L001_Paired_2_singles.fastq"    
+ [75] "CO1_2-G6-1050-c-S139-L001_Paired_2_singles.fastq"    
+ [76] "CO1_2-G7-1058-a-S147-L001_Paired_2_singles.fastq"    
+ [77] "CO1_2-G8-1058-b-S155-L001_Paired_2_singles.fastq"    
+ [78] "CO1_2-G9-1058-c-S163-L001_Paired_2_singles.fastq"    
+ [79] "CO1_2-H1-1043-a-S100-L001_Paired_2_singles.fastq"    
+ [80] "CO1_2-H11-1071-2-S175-L001_Paired_2_singles.fastq"   
+ [81] "CO1_2-H12-NTC-2-S181-L001_Paired_2_singles.fastq"    
+ [82] "CO1_2-H2-1043-b-S108-L001_Paired_2_singles.fastq"    
+ [83] "CO1_2-H3-1043-c-S116-L001_Paired_2_singles.fastq"    
+ [84] "CO1_2-H4-1051-a-S124-L001_Paired_2_singles.fastq"    
+ [85] "CO1_2-H5-1051-b-S132-L001_Paired_2_singles.fastq"    
+ [86] "CO1_2-H6-1051-c-S140-L001_Paired_2_singles.fastq"    
+ [87] "CO1_2-H7-1059-a-S148-L001_Paired_2_singles.fastq"    
+ [88] "CO1_2-H8-1059-b-S156-L001_Paired_2_singles.fastq"    
+ [89] "CO1_2-H9-1059-c-S164-L001_Paired_2_singles.fastq"    
+ [90] "CO1_A1-1006-a-S1-L001_Paired_2_singles.fastq"        
+ [91] "CO1_A10-1030-a-S73-L001_Paired_2_singles.fastq"      
+ [92] "CO1_A11-1030-b-S79-L001_Paired_2_singles.fastq"      
+ [93] "CO1_A12-1030-c-S86-L001_Paired_2_singles.fastq"      
+ [94] "CO1_A2-1006-b-S9-L001_Paired_2_singles.fastq"        
+ [95] "CO1_A3-1006-c-S17-L001_Paired_2_singles.fastq"       
+ [96] "CO1_A4-1014-a-FB-S25-L001_Paired_2_singles.fastq"    
+ [97] "CO1_A5-1014-b-FB-S33-L001_Paired_2_singles.fastq"    
+ [98] "CO1_A6-1014-c-FB-S41-L001_Paired_2_singles.fastq"    
+ [99] "CO1_A7-1022-a-S49-L001_Paired_2_singles.fastq"       
+[100] "CO1_A8-1022-b-S57-L001_Paired_2_singles.fastq"       
+[101] "CO1_A9-1022-c-S65-L001_Paired_2_singles.fastq"       
+[102] "CO1_B1-1007-a-S2-L001_Paired_2_singles.fastq"        
+[103] "CO1_B10-1031-a-S74-L001_Paired_2_singles.fastq"      
+[104] "CO1_B11-1031-b-S80-L001_Paired_2_singles.fastq"      
+[105] "CO1_B12-1031-c-S87-L001_Paired_2_singles.fastq"      
+[106] "CO1_B2-1007-b-S10-L001_Paired_2_singles.fastq"       
+[107] "CO1_B3-1007-c-S18-L001_Paired_2_singles.fastq"       
+[108] "CO1_B4-1015-a-S26-L001_Paired_2_singles.fastq"       
+[109] "CO1_B5-1015-b-S34-L001_Paired_2_singles.fastq"       
+[110] "CO1_B6-1015-c-S42-L001_Paired_2_singles.fastq"       
+[111] "CO1_B7-1023-a-S50-L001_Paired_2_singles.fastq"       
+[112] "CO1_B8-1023-b-S58-L001_Paired_2_singles.fastq"       
+[113] "CO1_B9-1023-c-S66-L001_Paired_2_singles.fastq"       
+[114] "CO1_C1-1008-a-S3-L001_Paired_2_singles.fastq"        
+[115] "CO1_C10-1032-a-EB-S75-L001_Paired_2_singles.fastq"   
+[116] "CO1_C11-1032-b-EB-S81-L001_Paired_2_singles.fastq"   
+[117] "CO1_C12-1032-c-EB-S88-L001_Paired_2_singles.fastq"   
+[118] "CO1_C2-1008-b-S11-L001_Paired_2_singles.fastq"       
+[119] "CO1_C3-1008-c-S19-L001_Paired_2_singles.fastq"       
+[120] "CO1_C4-1016-a-EB-S27-L001_Paired_2_singles.fastq"    
+[121] "CO1_C5-1016-b-EB-S35-L001_Paired_2_singles.fastq"    
+[122] "CO1_C6-1016-c-EB-S43-L001_Paired_2_singles.fastq"    
+[123] "CO1_C7-1024-a-S51-L001_Paired_2_singles.fastq"       
+[124] "CO1_C8-1024-b-S59-L001_Paired_2_singles.fastq"       
+[125] "CO1_C9-1024-c-S67-L001_Paired_2_singles.fastq"       
+[126] "CO1_D1-1009-a-S4-L001_Paired_2_singles.fastq"        
+[127] "CO1_D10-1033-a-S76-L001_Paired_2_singles.fastq"      
+[128] "CO1_D11-1033-b-S82-L001_Paired_2_singles.fastq"      
+[129] "CO1_D12-1033-c-S89-L001_Paired_2_singles.fastq"      
+[130] "CO1_D2-1009-b-S12-L001_Paired_2_singles.fastq"       
+[131] "CO1_D3-1009-c-S20-L001_Paired_2_singles.fastq"       
+[132] "CO1_D4-1017-a-S28-L001_Paired_2_singles.fastq"       
+[133] "CO1_D5-1017-b-S36-L001_Paired_2_singles.fastq"       
+[134] "CO1_D6-1017-c-S44-L001_Paired_2_singles.fastq"       
+[135] "CO1_D7-1025-a-S52-L001_Paired_2_singles.fastq"       
+[136] "CO1_D8-1025-b-S60-L001_Paired_2_singles.fastq"       
+[137] "CO1_D9-1025-c-S68-L001_Paired_2_singles.fastq"       
+[138] "CO1_E1-1010-a-S5-L001_Paired_2_singles.fastq"        
+[139] "CO1_E10-1034-a-S77-L001_Paired_2_singles.fastq"      
+[140] "CO1_E11-1034-b-S83-L001_Paired_2_singles.fastq"      
+[141] "CO1_E12-1034-c-S90-L001_Paired_2_singles.fastq"      
+[142] "CO1_E2-1010-b-S13-L001_Paired_2_singles.fastq"       
+[143] "CO1_E3-1010-c-S21-L001_Paired_2_singles.fastq"       
+[144] "CO1_E4-1018-a-S29-L001_Paired_2_singles.fastq"       
+[145] "CO1_E5-1018-b-S37-L001_Paired_2_singles.fastq"       
+[146] "CO1_E6-1018-c-S45-L001_Paired_2_singles.fastq"       
+[147] "CO1_E7-1026-a-S53-L001_Paired_2_singles.fastq"       
+[148] "CO1_E8-1026-b-S61-L001_Paired_2_singles.fastq"       
+[149] "CO1_E9-1026-c-S69-L001_Paired_2_singles.fastq"       
+[150] "CO1_F1-1011-a-S6-L001_Paired_2_singles.fastq"        
+[151] "CO1_F10-1035-a-S78-L001_Paired_2_singles.fastq"      
+[152] "CO1_F11-1035-b-S84-L001_Paired_2_singles.fastq"      
+[153] "CO1_F12-1035-c-S91-L001_Paired_2_singles.fastq"      
+[154] "CO1_F2-1011-b-S14-L001_Paired_2_singles.fastq"       
+[155] "CO1_F3-1011-c-S22-L001_Paired_2_singles.fastq"       
+[156] "CO1_F4-1019-a-S30-L001_Paired_2_singles.fastq"       
+[157] "CO1_F5-1019-b-S38-L001_Paired_2_singles.fastq"       
+[158] "CO1_F6-1019-c-S46-L001_Paired_2_singles.fastq"       
+[159] "CO1_F7-1027-a-S54-L001_Paired_2_singles.fastq"       
+[160] "CO1_F8-1027-b-S62-L001_Paired_2_singles.fastq"       
+[161] "CO1_F9-1027-c-S70-L001_Paired_2_singles.fastq"       
+[162] "CO1_G1-1012-a-S7-L001_Paired_2_singles.fastq"        
+[163] "CO1_G2-1012-b-S15-L001_Paired_2_singles.fastq"       
+[164] "CO1_G3-1012-c-S23-L001_Paired_2_singles.fastq"       
+[165] "CO1_G4-1020-a-S31-L001_Paired_2_singles.fastq"       
+[166] "CO1_G5-1020-b-S39-L001_Paired_2_singles.fastq"       
+[167] "CO1_G6-1020-c-S47-L001_Paired_2_singles.fastq"       
+[168] "CO1_G7-1028-a-S55-L001_Paired_2_singles.fastq"       
+[169] "CO1_G8-1028-b-S63-L001_Paired_2_singles.fastq"       
+[170] "CO1_G9-1028-c-S71-L001_Paired_2_singles.fastq"       
+[171] "CO1_H1-1013-a-S8-L001_Paired_2_singles.fastq"        
+[172] "CO1_H11-1071-1-S85-L001_Paired_2_singles.fastq"      
+[173] "CO1_H12-NTC-1-S92-L001_Paired_2_singles.fastq"       
+[174] "CO1_H2-1013-b-S16-L001_Paired_2_singles.fastq"       
+[175] "CO1_H3-1013-c-S24-L001_Paired_2_singles.fastq"       
+[176] "CO1_H4-1021-a-S32-L001_Paired_2_singles.fastq"       
+[177] "CO1_H5-1021-b-S40-L001_Paired_2_singles.fastq"       
+[178] "CO1_H6-1021-c-S48-L001_Paired_2_singles.fastq"       
+[179] "CO1_H7-1029-a-S56-L001_Paired_2_singles.fastq"       
+[180] "CO1_H8-1029-b-S64-L001_Paired_2_singles.fastq"       
+[181] "CO1_H9-1029-c-S72-L001_Paired_2_singles.fastq"       
+Creating output directory: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered
+The filter removed all reads: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_H12-NTC-1-S92-L001_R_filt.fastq.gz not written.
+Some input samples had no reads pass the filter.
+                                                  reads.in reads.out
+CO1_2-A1-1036-a-S93-L001_Paired_2_singles.fastq         22        17
+CO1_2-A10-1060-a-S165-L001_Paired_2_singles.fastq       25        20
+CO1_2-A11-1060-b-S170-L001_Paired_2_singles.fastq       16        16
+CO1_2-A12-1060-c-S176-L001_Paired_2_singles.fastq        6         6
+CO1_2-A2-1036-b-S101-L001_Paired_2_singles.fastq        32        25
+CO1_2-A3-1036-c-S109-L001_Paired_2_singles.fastq        30        26
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Not all sequences were the same length.
+Initializing error rates to maximum possible estimate.
+Sample 1 - 17 reads in 17 unique sequences.
+Sample 2 - 20 reads in 19 unique sequences.
+Sample 3 - 16 reads in 15 unique sequences.
+Sample 4 - 6 reads in 6 unique sequences.
+Sample 5 - 25 reads in 25 unique sequences.
+Sample 6 - 26 reads in 25 unique sequences.
+Sample 7 - 16 reads in 16 unique sequences.
+Sample 8 - 21 reads in 21 unique sequences.
+Sample 9 - 16 reads in 16 unique sequences.
+Sample 10 - 15 reads in 14 unique sequences.
+Sample 11 - 16 reads in 14 unique sequences.
+Sample 12 - 33 reads in 31 unique sequences.
+Sample 13 - 21 reads in 21 unique sequences.
+Sample 14 - 20 reads in 17 unique sequences.
+Sample 15 - 6 reads in 6 unique sequences.
+Sample 16 - 14 reads in 14 unique sequences.
+Sample 17 - 18 reads in 14 unique sequences.
+Sample 18 - 18 reads in 17 unique sequences.
+Sample 19 - 7 reads in 7 unique sequences.
+Sample 20 - 18 reads in 18 unique sequences.
+Sample 21 - 14 reads in 13 unique sequences.
+Sample 22 - 11 reads in 11 unique sequences.
+Sample 23 - 9 reads in 8 unique sequences.
+Sample 24 - 20 reads in 20 unique sequences.
+Sample 25 - 8 reads in 8 unique sequences.
+Sample 26 - 9 reads in 9 unique sequences.
+Sample 27 - 9 reads in 9 unique sequences.
+Sample 28 - 14 reads in 14 unique sequences.
+Sample 29 - 20 reads in 20 unique sequences.
+Sample 30 - 15 reads in 15 unique sequences.
+Sample 31 - 9 reads in 9 unique sequences.
+Sample 32 - 13 reads in 12 unique sequences.
+Sample 33 - 13 reads in 12 unique sequences.
+Sample 34 - 7 reads in 7 unique sequences.
+Sample 35 - 5 reads in 5 unique sequences.
+Sample 36 - 23 reads in 21 unique sequences.
+Sample 37 - 6 reads in 6 unique sequences.
+Sample 38 - 15 reads in 15 unique sequences.
+Sample 39 - 16 reads in 16 unique sequences.
+Sample 40 - 8 reads in 8 unique sequences.
+Sample 41 - 5 reads in 5 unique sequences.
+Sample 42 - 5 reads in 5 unique sequences.
+Sample 43 - 11 reads in 11 unique sequences.
+Sample 44 - 14 reads in 14 unique sequences.
+Sample 45 - 15 reads in 13 unique sequences.
+Sample 46 - 11 reads in 11 unique sequences.
+Sample 47 - 16 reads in 16 unique sequences.
+Sample 48 - 10 reads in 10 unique sequences.
+Sample 49 - 10 reads in 10 unique sequences.
+Sample 50 - 4 reads in 4 unique sequences.
+Sample 51 - 7 reads in 7 unique sequences.
+Sample 52 - 182 reads in 181 unique sequences.
+Sample 53 - 9 reads in 8 unique sequences.
+Sample 54 - 15 reads in 15 unique sequences.
+Sample 55 - 252 reads in 252 unique sequences.
+Sample 56 - 10 reads in 9 unique sequences.
+Sample 57 - 121 reads in 118 unique sequences.
+Sample 58 - 8 reads in 8 unique sequences.
+Sample 59 - 17 reads in 17 unique sequences.
+Sample 60 - 12 reads in 12 unique sequences.
+Sample 61 - 28 reads in 28 unique sequences.
+Sample 62 - 10 reads in 10 unique sequences.
+Sample 63 - 25 reads in 25 unique sequences.
+Sample 64 - 11 reads in 8 unique sequences.
+Sample 65 - 11 reads in 11 unique sequences.
+Sample 66 - 15 reads in 14 unique sequences.
+Sample 67 - 14 reads in 14 unique sequences.
+Sample 68 - 7 reads in 6 unique sequences.
+Sample 69 - 18 reads in 18 unique sequences.
+Sample 70 - 9 reads in 9 unique sequences.
+Sample 71 - 7 reads in 7 unique sequences.
+Sample 72 - 8 reads in 8 unique sequences.
+Sample 73 - 5 reads in 5 unique sequences.
+Sample 74 - 8 reads in 8 unique sequences.
+Sample 75 - 8 reads in 7 unique sequences.
+Sample 76 - 21 reads in 21 unique sequences.
+Sample 77 - 22 reads in 22 unique sequences.
+Sample 78 - 9 reads in 9 unique sequences.
+Sample 79 - 8 reads in 8 unique sequences.
+Sample 80 - 8 reads in 8 unique sequences.
+Sample 81 - 4 reads in 4 unique sequences.
+Sample 82 - 8 reads in 8 unique sequences.
+Sample 83 - 18 reads in 18 unique sequences.
+Sample 84 - 11 reads in 11 unique sequences.
+Sample 85 - 11 reads in 11 unique sequences.
+Sample 86 - 23 reads in 23 unique sequences.
+Sample 87 - 16 reads in 16 unique sequences.
+Sample 88 - 11 reads in 10 unique sequences.
+Sample 89 - 11 reads in 11 unique sequences.
+Sample 90 - 16 reads in 16 unique sequences.
+Sample 91 - 7 reads in 7 unique sequences.
+Sample 92 - 10 reads in 10 unique sequences.
+Sample 93 - 8 reads in 8 unique sequences.
+Sample 94 - 8 reads in 8 unique sequences.
+Sample 95 - 7 reads in 7 unique sequences.
+Sample 96 - 10 reads in 5 unique sequences.
+Sample 97 - 7 reads in 6 unique sequences.
+Sample 98 - 2 reads in 2 unique sequences.
+Sample 99 - 11 reads in 10 unique sequences.
+Sample 100 - 15 reads in 14 unique sequences.
+Sample 101 - 9 reads in 9 unique sequences.
+Sample 102 - 8 reads in 8 unique sequences.
+Sample 103 - 11 reads in 11 unique sequences.
+Sample 104 - 8 reads in 7 unique sequences.
+Sample 105 - 15 reads in 15 unique sequences.
+Sample 106 - 5 reads in 5 unique sequences.
+Sample 107 - 14 reads in 14 unique sequences.
+Sample 108 - 4 reads in 4 unique sequences.
+Sample 109 - 32 reads in 30 unique sequences.
+Sample 110 - 47 reads in 37 unique sequences.
+Sample 111 - 28 reads in 27 unique sequences.
+Sample 112 - 10 reads in 10 unique sequences.
+Sample 113 - 9 reads in 9 unique sequences.
+Sample 114 - 20 reads in 18 unique sequences.
+Sample 115 - 8 reads in 8 unique sequences.
+Sample 116 - 313 reads in 291 unique sequences.
+Sample 117 - 422 reads in 392 unique sequences.
+Sample 118 - 9 reads in 9 unique sequences.
+Sample 119 - 12 reads in 11 unique sequences.
+Sample 120 - 10 reads in 10 unique sequences.
+Sample 121 - 6 reads in 6 unique sequences.
+Sample 122 - 4 reads in 4 unique sequences.
+Sample 123 - 8 reads in 8 unique sequences.
+Sample 124 - 8 reads in 8 unique sequences.
+Sample 125 - 7 reads in 7 unique sequences.
+Sample 126 - 7 reads in 7 unique sequences.
+Sample 127 - 11 reads in 10 unique sequences.
+Sample 128 - 12 reads in 12 unique sequences.
+Sample 129 - 19 reads in 19 unique sequences.
+Sample 130 - 6 reads in 6 unique sequences.
+Sample 131 - 10 reads in 10 unique sequences.
+Sample 132 - 8 reads in 8 unique sequences.
+Sample 133 - 8 reads in 8 unique sequences.
+Sample 134 - 49 reads in 48 unique sequences.
+Sample 135 - 7 reads in 7 unique sequences.
+Sample 136 - 9 reads in 9 unique sequences.
+Sample 137 - 13 reads in 13 unique sequences.
+Sample 138 - 8 reads in 8 unique sequences.
+Sample 139 - 18 reads in 18 unique sequences.
+Sample 140 - 8 reads in 8 unique sequences.
+Sample 141 - 15 reads in 14 unique sequences.
+Sample 142 - 12 reads in 12 unique sequences.
+Sample 143 - 7 reads in 7 unique sequences.
+Sample 144 - 10 reads in 10 unique sequences.
+Sample 145 - 7 reads in 7 unique sequences.
+Sample 146 - 10 reads in 10 unique sequences.
+Sample 147 - 3 reads in 3 unique sequences.
+Sample 148 - 14 reads in 14 unique sequences.
+Sample 149 - 11 reads in 11 unique sequences.
+Sample 150 - 18 reads in 17 unique sequences.
+Sample 151 - 11 reads in 11 unique sequences.
+Sample 152 - 5 reads in 5 unique sequences.
+Sample 153 - 11 reads in 11 unique sequences.
+Sample 154 - 9 reads in 9 unique sequences.
+Sample 155 - 10 reads in 10 unique sequences.
+Sample 156 - 8 reads in 8 unique sequences.
+Sample 157 - 7 reads in 7 unique sequences.
+Sample 158 - 13 reads in 13 unique sequences.
+Sample 159 - 8 reads in 8 unique sequences.
+Sample 160 - 6 reads in 5 unique sequences.
+Sample 161 - 6 reads in 6 unique sequences.
+Sample 162 - 8 reads in 8 unique sequences.
+Sample 163 - 8 reads in 8 unique sequences.
+Sample 164 - 9 reads in 9 unique sequences.
+Sample 165 - 9 reads in 9 unique sequences.
+Sample 166 - 7 reads in 7 unique sequences.
+Sample 167 - 5 reads in 5 unique sequences.
+Sample 168 - 13 reads in 12 unique sequences.
+Sample 169 - 5 reads in 4 unique sequences.
+Sample 170 - 9 reads in 9 unique sequences.
+Sample 171 - 5 reads in 5 unique sequences.
+Sample 172 - 1 reads in 1 unique sequences.
+Sample 173 - 14 reads in 14 unique sequences.
+Sample 174 - 7 reads in 6 unique sequences.
+Sample 175 - 9 reads in 9 unique sequences.
+Sample 176 - 14 reads in 14 unique sequences.
+Sample 177 - 6 reads in 6 unique sequences.
+Sample 178 - 7 reads in 7 unique sequences.
+Sample 179 - 2 reads in 2 unique sequences.
+Sample 180 - 7 reads in 7 unique sequences.
+   selfConsist step 2 
+Convergence after  2  rounds.
+Total reads used:  3359 
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-A1-1036-a-S93-L001_R_filt.fastq.gz
+Encountered 17 unique sequences from 17 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-A10-1060-a-S165-L001_R_filt.fastq.gz
+Encountered 19 unique sequences from 20 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-A11-1060-b-S170-L001_R_filt.fastq.gz
+Encountered 15 unique sequences from 16 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-A12-1060-c-S176-L001_R_filt.fastq.gz
+Encountered 6 unique sequences from 6 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-A2-1036-b-S101-L001_R_filt.fastq.gz
+Encountered 25 unique sequences from 25 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-A3-1036-c-S109-L001_R_filt.fastq.gz
+Encountered 25 unique sequences from 26 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-A4-1044-a-S117-L001_R_filt.fastq.gz
+Encountered 16 unique sequences from 16 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-A5-1044-b-S125-L001_R_filt.fastq.gz
+Encountered 21 unique sequences from 21 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-A6-1044-c-S133-L001_R_filt.fastq.gz
+Encountered 16 unique sequences from 16 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-A7-1052-a-S141-L001_R_filt.fastq.gz
+Encountered 14 unique sequences from 15 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-A8-1052-b-S149-L001_R_filt.fastq.gz
+Encountered 14 unique sequences from 16 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-A9-1052-c-S157-L001_R_filt.fastq.gz
+Encountered 31 unique sequences from 33 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-B1-1037-a-S94-L001_R_filt.fastq.gz
+Encountered 21 unique sequences from 21 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-B10-1061-a-S166-L001_R_filt.fastq.gz
+Encountered 17 unique sequences from 20 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-B11-1061-b-S171-L001_R_filt.fastq.gz
+Encountered 6 unique sequences from 6 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-B12-1061-c-S177-L001_R_filt.fastq.gz
+Encountered 14 unique sequences from 14 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-B2-1037-b-S102-L001_R_filt.fastq.gz
+Encountered 14 unique sequences from 18 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-B3-1037-c-S110-L001_R_filt.fastq.gz
+Encountered 17 unique sequences from 18 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-B4-1045-a-S118-L001_R_filt.fastq.gz
+Encountered 7 unique sequences from 7 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-B5-1045-b-S126-L001_R_filt.fastq.gz
+Encountered 18 unique sequences from 18 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-B6-1045-c-S134-L001_R_filt.fastq.gz
+Encountered 13 unique sequences from 14 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-B7-1053-a-S142-L001_R_filt.fastq.gz
+Encountered 11 unique sequences from 11 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-B8-1053-b-S150-L001_R_filt.fastq.gz
+Encountered 8 unique sequences from 9 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-B9-1053-c-S158-L001_R_filt.fastq.gz
+Encountered 20 unique sequences from 20 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-C1-1038-a-S95-L001_R_filt.fastq.gz
+Encountered 8 unique sequences from 8 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-C10-1062-a-S167-L001_R_filt.fastq.gz
+Encountered 9 unique sequences from 9 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-C11-1062-b-S172-L001_R_filt.fastq.gz
+Encountered 9 unique sequences from 9 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-C12-1062-c-S178-L001_R_filt.fastq.gz
+Encountered 14 unique sequences from 14 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-C2-1038-b-S103-L001_R_filt.fastq.gz
+Encountered 20 unique sequences from 20 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-C3-1038-c-S111-L001_R_filt.fastq.gz
+Encountered 15 unique sequences from 15 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-C4-1046-a-S119-L001_R_filt.fastq.gz
+Encountered 9 unique sequences from 9 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-C5-1046-b-S127-L001_R_filt.fastq.gz
+Encountered 12 unique sequences from 13 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-C6-1046-c-S135-L001_R_filt.fastq.gz
+Encountered 12 unique sequences from 13 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-C7-1054-a-S143-L001_R_filt.fastq.gz
+Encountered 7 unique sequences from 7 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-C8-1054-b-S151-L001_R_filt.fastq.gz
+Encountered 5 unique sequences from 5 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-C9-1054-c-S159-L001_R_filt.fastq.gz
+Encountered 21 unique sequences from 23 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-D1-1039-a-FB-S96-L001_R_filt.fastq.gz
+Encountered 6 unique sequences from 6 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-D10-1063-a-S168-L001_R_filt.fastq.gz
+Encountered 15 unique sequences from 15 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-D11-1063-b-S173-L001_R_filt.fastq.gz
+Encountered 16 unique sequences from 16 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-D12-1063-c-S179-L001_R_filt.fastq.gz
+Encountered 8 unique sequences from 8 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-D2-1039-b-FB-S104-L001_R_filt.fastq.gz
+Encountered 5 unique sequences from 5 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-D3-1039-c-FB-S112-L001_R_filt.fastq.gz
+Encountered 5 unique sequences from 5 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-D4-1047-a-S120-L001_R_filt.fastq.gz
+Encountered 11 unique sequences from 11 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-D5-1047-b-S128-L001_R_filt.fastq.gz
+Encountered 14 unique sequences from 14 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-D6-1047-c-S136-L001_R_filt.fastq.gz
+Encountered 13 unique sequences from 15 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-D7-1055-a-S144-L001_R_filt.fastq.gz
+Encountered 11 unique sequences from 11 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-D8-1055-b-S152-L001_R_filt.fastq.gz
+Encountered 16 unique sequences from 16 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-D9-1055-c-S160-L001_R_filt.fastq.gz
+Encountered 10 unique sequences from 10 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-E1-1040-a-S97-L001_R_filt.fastq.gz
+Encountered 10 unique sequences from 10 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-E10-1064-a-EB-S169-L001_R_filt.fastq.gz
+Encountered 4 unique sequences from 4 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-E11-1064-b-EB-S174-L001_R_filt.fastq.gz
+Encountered 7 unique sequences from 7 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-E12-1064-c-EB-S180-L001_R_filt.fastq.gz
+Encountered 181 unique sequences from 182 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-E2-1040-b-S105-L001_R_filt.fastq.gz
+Encountered 8 unique sequences from 9 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-E3-1040-c-S113-L001_R_filt.fastq.gz
+Encountered 15 unique sequences from 15 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-E4-1048-a-EB-S121-L001_R_filt.fastq.gz
+Encountered 252 unique sequences from 252 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-E5-1048-b-EB-S129-L001_R_filt.fastq.gz
+Encountered 9 unique sequences from 10 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-E6-1048-c-EB-S137-L001_R_filt.fastq.gz
+Encountered 118 unique sequences from 121 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-E7-1056-a-S145-L001_R_filt.fastq.gz
+Encountered 8 unique sequences from 8 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-E8-1056-b-S153-L001_R_filt.fastq.gz
+Encountered 17 unique sequences from 17 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-E9-1056-c-S161-L001_R_filt.fastq.gz
+Encountered 12 unique sequences from 12 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-F1-1041-a-S98-L001_R_filt.fastq.gz
+Encountered 28 unique sequences from 28 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-F2-1041-b-S106-L001_R_filt.fastq.gz
+Encountered 10 unique sequences from 10 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-F3-1041-c-S114-L001_R_filt.fastq.gz
+Encountered 25 unique sequences from 25 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-F4-1049-a-S122-L001_R_filt.fastq.gz
+Encountered 8 unique sequences from 11 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-F5-1049-b-S130-L001_R_filt.fastq.gz
+Encountered 11 unique sequences from 11 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-F6-1049-c-S138-L001_R_filt.fastq.gz
+Encountered 14 unique sequences from 15 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-F7-1057-a-S146-L001_R_filt.fastq.gz
+Encountered 14 unique sequences from 14 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-F8-1057-b-S154-L001_R_filt.fastq.gz
+Encountered 6 unique sequences from 7 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-F9-1057-c-S162-L001_R_filt.fastq.gz
+Encountered 18 unique sequences from 18 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-G1-1042-a-S99-L001_R_filt.fastq.gz
+Encountered 9 unique sequences from 9 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-G2-1042-b-S107-L001_R_filt.fastq.gz
+Encountered 7 unique sequences from 7 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-G3-1042-c-S115-L001_R_filt.fastq.gz
+Encountered 8 unique sequences from 8 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-G4-1050-a-S123-L001_R_filt.fastq.gz
+Encountered 5 unique sequences from 5 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-G5-1050-b-S131-L001_R_filt.fastq.gz
+Encountered 8 unique sequences from 8 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-G6-1050-c-S139-L001_R_filt.fastq.gz
+Encountered 7 unique sequences from 8 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-G7-1058-a-S147-L001_R_filt.fastq.gz
+Encountered 21 unique sequences from 21 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-G8-1058-b-S155-L001_R_filt.fastq.gz
+Encountered 22 unique sequences from 22 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-G9-1058-c-S163-L001_R_filt.fastq.gz
+Encountered 9 unique sequences from 9 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-H1-1043-a-S100-L001_R_filt.fastq.gz
+Encountered 8 unique sequences from 8 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-H11-1071-2-S175-L001_R_filt.fastq.gz
+Encountered 8 unique sequences from 8 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-H12-NTC-2-S181-L001_R_filt.fastq.gz
+Encountered 4 unique sequences from 4 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-H2-1043-b-S108-L001_R_filt.fastq.gz
+Encountered 8 unique sequences from 8 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-H3-1043-c-S116-L001_R_filt.fastq.gz
+Encountered 18 unique sequences from 18 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-H4-1051-a-S124-L001_R_filt.fastq.gz
+Encountered 11 unique sequences from 11 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-H5-1051-b-S132-L001_R_filt.fastq.gz
+Encountered 11 unique sequences from 11 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-H6-1051-c-S140-L001_R_filt.fastq.gz
+Encountered 23 unique sequences from 23 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-H7-1059-a-S148-L001_R_filt.fastq.gz
+Encountered 16 unique sequences from 16 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-H8-1059-b-S156-L001_R_filt.fastq.gz
+Encountered 10 unique sequences from 11 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_2-H9-1059-c-S164-L001_R_filt.fastq.gz
+Encountered 11 unique sequences from 11 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_A1-1006-a-S1-L001_R_filt.fastq.gz
+Encountered 16 unique sequences from 16 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_A10-1030-a-S73-L001_R_filt.fastq.gz
+Encountered 7 unique sequences from 7 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_A11-1030-b-S79-L001_R_filt.fastq.gz
+Encountered 10 unique sequences from 10 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_A12-1030-c-S86-L001_R_filt.fastq.gz
+Encountered 8 unique sequences from 8 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_A2-1006-b-S9-L001_R_filt.fastq.gz
+Encountered 8 unique sequences from 8 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_A3-1006-c-S17-L001_R_filt.fastq.gz
+Encountered 7 unique sequences from 7 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_A4-1014-a-FB-S25-L001_R_filt.fastq.gz
+Encountered 5 unique sequences from 10 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_A5-1014-b-FB-S33-L001_R_filt.fastq.gz
+Encountered 6 unique sequences from 7 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_A6-1014-c-FB-S41-L001_R_filt.fastq.gz
+Encountered 2 unique sequences from 2 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_A7-1022-a-S49-L001_R_filt.fastq.gz
+Encountered 10 unique sequences from 11 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_A8-1022-b-S57-L001_R_filt.fastq.gz
+Encountered 14 unique sequences from 15 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_A9-1022-c-S65-L001_R_filt.fastq.gz
+Encountered 9 unique sequences from 9 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_B1-1007-a-S2-L001_R_filt.fastq.gz
+Encountered 8 unique sequences from 8 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_B10-1031-a-S74-L001_R_filt.fastq.gz
+Encountered 11 unique sequences from 11 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_B11-1031-b-S80-L001_R_filt.fastq.gz
+Encountered 7 unique sequences from 8 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_B12-1031-c-S87-L001_R_filt.fastq.gz
+Encountered 15 unique sequences from 15 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_B2-1007-b-S10-L001_R_filt.fastq.gz
+Encountered 5 unique sequences from 5 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_B3-1007-c-S18-L001_R_filt.fastq.gz
+Encountered 14 unique sequences from 14 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_B4-1015-a-S26-L001_R_filt.fastq.gz
+Encountered 4 unique sequences from 4 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_B5-1015-b-S34-L001_R_filt.fastq.gz
+Encountered 30 unique sequences from 32 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_B6-1015-c-S42-L001_R_filt.fastq.gz
+Encountered 37 unique sequences from 47 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_B7-1023-a-S50-L001_R_filt.fastq.gz
+Encountered 27 unique sequences from 28 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_B8-1023-b-S58-L001_R_filt.fastq.gz
+Encountered 10 unique sequences from 10 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_B9-1023-c-S66-L001_R_filt.fastq.gz
+Encountered 9 unique sequences from 9 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_C1-1008-a-S3-L001_R_filt.fastq.gz
+Encountered 18 unique sequences from 20 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_C10-1032-a-EB-S75-L001_R_filt.fastq.gz
+Encountered 8 unique sequences from 8 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_C11-1032-b-EB-S81-L001_R_filt.fastq.gz
+Encountered 291 unique sequences from 313 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_C12-1032-c-EB-S88-L001_R_filt.fastq.gz
+Encountered 392 unique sequences from 422 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_C2-1008-b-S11-L001_R_filt.fastq.gz
+Encountered 9 unique sequences from 9 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_C3-1008-c-S19-L001_R_filt.fastq.gz
+Encountered 11 unique sequences from 12 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_C4-1016-a-EB-S27-L001_R_filt.fastq.gz
+Encountered 10 unique sequences from 10 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_C5-1016-b-EB-S35-L001_R_filt.fastq.gz
+Encountered 6 unique sequences from 6 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_C6-1016-c-EB-S43-L001_R_filt.fastq.gz
+Encountered 4 unique sequences from 4 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_C7-1024-a-S51-L001_R_filt.fastq.gz
+Encountered 8 unique sequences from 8 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_C8-1024-b-S59-L001_R_filt.fastq.gz
+Encountered 8 unique sequences from 8 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_C9-1024-c-S67-L001_R_filt.fastq.gz
+Encountered 7 unique sequences from 7 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_D1-1009-a-S4-L001_R_filt.fastq.gz
+Encountered 7 unique sequences from 7 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_D10-1033-a-S76-L001_R_filt.fastq.gz
+Encountered 10 unique sequences from 11 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_D11-1033-b-S82-L001_R_filt.fastq.gz
+Encountered 12 unique sequences from 12 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_D12-1033-c-S89-L001_R_filt.fastq.gz
+Encountered 19 unique sequences from 19 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_D2-1009-b-S12-L001_R_filt.fastq.gz
+Encountered 6 unique sequences from 6 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_D3-1009-c-S20-L001_R_filt.fastq.gz
+Encountered 10 unique sequences from 10 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_D4-1017-a-S28-L001_R_filt.fastq.gz
+Encountered 8 unique sequences from 8 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_D5-1017-b-S36-L001_R_filt.fastq.gz
+Encountered 8 unique sequences from 8 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_D6-1017-c-S44-L001_R_filt.fastq.gz
+Encountered 48 unique sequences from 49 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_D7-1025-a-S52-L001_R_filt.fastq.gz
+Encountered 7 unique sequences from 7 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_D8-1025-b-S60-L001_R_filt.fastq.gz
+Encountered 9 unique sequences from 9 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_D9-1025-c-S68-L001_R_filt.fastq.gz
+Encountered 13 unique sequences from 13 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_E1-1010-a-S5-L001_R_filt.fastq.gz
+Encountered 8 unique sequences from 8 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_E10-1034-a-S77-L001_R_filt.fastq.gz
+Encountered 18 unique sequences from 18 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_E11-1034-b-S83-L001_R_filt.fastq.gz
+Encountered 8 unique sequences from 8 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_E12-1034-c-S90-L001_R_filt.fastq.gz
+Encountered 14 unique sequences from 15 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_E2-1010-b-S13-L001_R_filt.fastq.gz
+Encountered 12 unique sequences from 12 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_E3-1010-c-S21-L001_R_filt.fastq.gz
+Encountered 7 unique sequences from 7 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_E4-1018-a-S29-L001_R_filt.fastq.gz
+Encountered 10 unique sequences from 10 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_E5-1018-b-S37-L001_R_filt.fastq.gz
+Encountered 7 unique sequences from 7 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_E6-1018-c-S45-L001_R_filt.fastq.gz
+Encountered 10 unique sequences from 10 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_E7-1026-a-S53-L001_R_filt.fastq.gz
+Encountered 3 unique sequences from 3 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_E8-1026-b-S61-L001_R_filt.fastq.gz
+Encountered 14 unique sequences from 14 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_E9-1026-c-S69-L001_R_filt.fastq.gz
+Encountered 11 unique sequences from 11 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_F1-1011-a-S6-L001_R_filt.fastq.gz
+Encountered 17 unique sequences from 18 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_F10-1035-a-S78-L001_R_filt.fastq.gz
+Encountered 11 unique sequences from 11 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_F11-1035-b-S84-L001_R_filt.fastq.gz
+Encountered 5 unique sequences from 5 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_F12-1035-c-S91-L001_R_filt.fastq.gz
+Encountered 11 unique sequences from 11 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_F2-1011-b-S14-L001_R_filt.fastq.gz
+Encountered 9 unique sequences from 9 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_F3-1011-c-S22-L001_R_filt.fastq.gz
+Encountered 10 unique sequences from 10 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_F4-1019-a-S30-L001_R_filt.fastq.gz
+Encountered 8 unique sequences from 8 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_F5-1019-b-S38-L001_R_filt.fastq.gz
+Encountered 7 unique sequences from 7 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_F6-1019-c-S46-L001_R_filt.fastq.gz
+Encountered 13 unique sequences from 13 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_F7-1027-a-S54-L001_R_filt.fastq.gz
+Encountered 8 unique sequences from 8 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_F8-1027-b-S62-L001_R_filt.fastq.gz
+Encountered 5 unique sequences from 6 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_F9-1027-c-S70-L001_R_filt.fastq.gz
+Encountered 6 unique sequences from 6 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_G1-1012-a-S7-L001_R_filt.fastq.gz
+Encountered 8 unique sequences from 8 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_G2-1012-b-S15-L001_R_filt.fastq.gz
+Encountered 8 unique sequences from 8 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_G3-1012-c-S23-L001_R_filt.fastq.gz
+Encountered 9 unique sequences from 9 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_G4-1020-a-S31-L001_R_filt.fastq.gz
+Encountered 9 unique sequences from 9 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_G5-1020-b-S39-L001_R_filt.fastq.gz
+Encountered 7 unique sequences from 7 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_G6-1020-c-S47-L001_R_filt.fastq.gz
+Encountered 5 unique sequences from 5 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_G7-1028-a-S55-L001_R_filt.fastq.gz
+Encountered 12 unique sequences from 13 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_G8-1028-b-S63-L001_R_filt.fastq.gz
+Encountered 4 unique sequences from 5 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_G9-1028-c-S71-L001_R_filt.fastq.gz
+Encountered 9 unique sequences from 9 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_H1-1013-a-S8-L001_R_filt.fastq.gz
+Encountered 5 unique sequences from 5 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_H11-1071-1-S85-L001_R_filt.fastq.gz
+Encountered 1 unique sequences from 1 total sequences read.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_H2-1013-b-S16-L001_R_filt.fastq.gz
+Encountered 14 unique sequences from 14 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_H3-1013-c-S24-L001_R_filt.fastq.gz
+Encountered 6 unique sequences from 7 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_H4-1021-a-S32-L001_R_filt.fastq.gz
+Encountered 9 unique sequences from 9 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_H5-1021-b-S40-L001_R_filt.fastq.gz
+Encountered 14 unique sequences from 14 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_H6-1021-c-S48-L001_R_filt.fastq.gz
+Encountered 6 unique sequences from 6 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_H7-1029-a-S56-L001_R_filt.fastq.gz
+Encountered 7 unique sequences from 7 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_H8-1029-b-S64-L001_R_filt.fastq.gz
+Encountered 2 unique sequences from 2 total sequences read.
+Not all sequences were the same length.
+Dereplicating sequence entries in Fastq file: /scratch/users/mshea/PillarPoint/CO1/CO1_sort_by_read_type/unpaired_R/filtered/CO1_H9-1029-c-S72-L001_R_filt.fastq.gz
+Encountered 7 unique sequences from 7 total sequences read.
+Not all sequences were the same length.
+Sample 1 - 17 reads in 17 unique sequences.
+Sample 2 - 20 reads in 19 unique sequences.
+Sample 3 - 16 reads in 15 unique sequences.
+Sample 4 - 6 reads in 6 unique sequences.
+Sample 5 - 25 reads in 25 unique sequences.
+Sample 6 - 26 reads in 25 unique sequences.
+Sample 7 - 16 reads in 16 unique sequences.
+Sample 8 - 21 reads in 21 unique sequences.
+Sample 9 - 16 reads in 16 unique sequences.
+Sample 10 - 15 reads in 14 unique sequences.
+Sample 11 - 16 reads in 14 unique sequences.
+Sample 12 - 33 reads in 31 unique sequences.
+Sample 13 - 21 reads in 21 unique sequences.
+Sample 14 - 20 reads in 17 unique sequences.
+Sample 15 - 6 reads in 6 unique sequences.
+Sample 16 - 14 reads in 14 unique sequences.
+Sample 17 - 18 reads in 14 unique sequences.
+Sample 18 - 18 reads in 17 unique sequences.
+Sample 19 - 7 reads in 7 unique sequences.
+Sample 20 - 18 reads in 18 unique sequences.
+Sample 21 - 14 reads in 13 unique sequences.
+Sample 22 - 11 reads in 11 unique sequences.
+Sample 23 - 9 reads in 8 unique sequences.
+Sample 24 - 20 reads in 20 unique sequences.
+Sample 25 - 8 reads in 8 unique sequences.
+Sample 26 - 9 reads in 9 unique sequences.
+Sample 27 - 9 reads in 9 unique sequences.
+Sample 28 - 14 reads in 14 unique sequences.
+Sample 29 - 20 reads in 20 unique sequences.
+Sample 30 - 15 reads in 15 unique sequences.
+Sample 31 - 9 reads in 9 unique sequences.
+Sample 32 - 13 reads in 12 unique sequences.
+Sample 33 - 13 reads in 12 unique sequences.
+Sample 34 - 7 reads in 7 unique sequences.
+Sample 35 - 5 reads in 5 unique sequences.
+Sample 36 - 23 reads in 21 unique sequences.
+Sample 37 - 6 reads in 6 unique sequences.
+Sample 38 - 15 reads in 15 unique sequences.
+Sample 39 - 16 reads in 16 unique sequences.
+Sample 40 - 8 reads in 8 unique sequences.
+Sample 41 - 5 reads in 5 unique sequences.
+Sample 42 - 5 reads in 5 unique sequences.
+Sample 43 - 11 reads in 11 unique sequences.
+Sample 44 - 14 reads in 14 unique sequences.
+Sample 45 - 15 reads in 13 unique sequences.
+Sample 46 - 11 reads in 11 unique sequences.
+Sample 47 - 16 reads in 16 unique sequences.
+Sample 48 - 10 reads in 10 unique sequences.
+Sample 49 - 10 reads in 10 unique sequences.
+Sample 50 - 4 reads in 4 unique sequences.
+Sample 51 - 7 reads in 7 unique sequences.
+Sample 52 - 182 reads in 181 unique sequences.
+Sample 53 - 9 reads in 8 unique sequences.
+Sample 54 - 15 reads in 15 unique sequences.
+Sample 55 - 252 reads in 252 unique sequences.
+Sample 56 - 10 reads in 9 unique sequences.
+Sample 57 - 121 reads in 118 unique sequences.
+Sample 58 - 8 reads in 8 unique sequences.
+Sample 59 - 17 reads in 17 unique sequences.
+Sample 60 - 12 reads in 12 unique sequences.
+Sample 61 - 28 reads in 28 unique sequences.
+Sample 62 - 10 reads in 10 unique sequences.
+Sample 63 - 25 reads in 25 unique sequences.
+Sample 64 - 11 reads in 8 unique sequences.
+Sample 65 - 11 reads in 11 unique sequences.
+Sample 66 - 15 reads in 14 unique sequences.
+Sample 67 - 14 reads in 14 unique sequences.
+Sample 68 - 7 reads in 6 unique sequences.
+Sample 69 - 18 reads in 18 unique sequences.
+Sample 70 - 9 reads in 9 unique sequences.
+Sample 71 - 7 reads in 7 unique sequences.
+Sample 72 - 8 reads in 8 unique sequences.
+Sample 73 - 5 reads in 5 unique sequences.
+Sample 74 - 8 reads in 8 unique sequences.
+Sample 75 - 8 reads in 7 unique sequences.
+Sample 76 - 21 reads in 21 unique sequences.
+Sample 77 - 22 reads in 22 unique sequences.
+Sample 78 - 9 reads in 9 unique sequences.
+Sample 79 - 8 reads in 8 unique sequences.
+Sample 80 - 8 reads in 8 unique sequences.
+Sample 81 - 4 reads in 4 unique sequences.
+Sample 82 - 8 reads in 8 unique sequences.
+Sample 83 - 18 reads in 18 unique sequences.
+Sample 84 - 11 reads in 11 unique sequences.
+Sample 85 - 11 reads in 11 unique sequences.
+Sample 86 - 23 reads in 23 unique sequences.
+Sample 87 - 16 reads in 16 unique sequences.
+Sample 88 - 11 reads in 10 unique sequences.
+Sample 89 - 11 reads in 11 unique sequences.
+Sample 90 - 16 reads in 16 unique sequences.
+Sample 91 - 7 reads in 7 unique sequences.
+Sample 92 - 10 reads in 10 unique sequences.
+Sample 93 - 8 reads in 8 unique sequences.
+Sample 94 - 8 reads in 8 unique sequences.
+Sample 95 - 7 reads in 7 unique sequences.
+Sample 96 - 10 reads in 5 unique sequences.
+Sample 97 - 7 reads in 6 unique sequences.
+Sample 98 - 2 reads in 2 unique sequences.
+Sample 99 - 11 reads in 10 unique sequences.
+Sample 100 - 15 reads in 14 unique sequences.
+Sample 101 - 9 reads in 9 unique sequences.
+Sample 102 - 8 reads in 8 unique sequences.
+Sample 103 - 11 reads in 11 unique sequences.
+Sample 104 - 8 reads in 7 unique sequences.
+Sample 105 - 15 reads in 15 unique sequences.
+Sample 106 - 5 reads in 5 unique sequences.
+Sample 107 - 14 reads in 14 unique sequences.
+Sample 108 - 4 reads in 4 unique sequences.
+Sample 109 - 32 reads in 30 unique sequences.
+Sample 110 - 47 reads in 37 unique sequences.
+Sample 111 - 28 reads in 27 unique sequences.
+Sample 112 - 10 reads in 10 unique sequences.
+Sample 113 - 9 reads in 9 unique sequences.
+Sample 114 - 20 reads in 18 unique sequences.
+Sample 115 - 8 reads in 8 unique sequences.
+Sample 116 - 313 reads in 291 unique sequences.
+Sample 117 - 422 reads in 392 unique sequences.
+Sample 118 - 9 reads in 9 unique sequences.
+Sample 119 - 12 reads in 11 unique sequences.
+Sample 120 - 10 reads in 10 unique sequences.
+Sample 121 - 6 reads in 6 unique sequences.
+Sample 122 - 4 reads in 4 unique sequences.
+Sample 123 - 8 reads in 8 unique sequences.
+Sample 124 - 8 reads in 8 unique sequences.
+Sample 125 - 7 reads in 7 unique sequences.
+Sample 126 - 7 reads in 7 unique sequences.
+Sample 127 - 11 reads in 10 unique sequences.
+Sample 128 - 12 reads in 12 unique sequences.
+Sample 129 - 19 reads in 19 unique sequences.
+Sample 130 - 6 reads in 6 unique sequences.
+Sample 131 - 10 reads in 10 unique sequences.
+Sample 132 - 8 reads in 8 unique sequences.
+Sample 133 - 8 reads in 8 unique sequences.
+Sample 134 - 49 reads in 48 unique sequences.
+Sample 135 - 7 reads in 7 unique sequences.
+Sample 136 - 9 reads in 9 unique sequences.
+Sample 137 - 13 reads in 13 unique sequences.
+Sample 138 - 8 reads in 8 unique sequences.
+Sample 139 - 18 reads in 18 unique sequences.
+Sample 140 - 8 reads in 8 unique sequences.
+Sample 141 - 15 reads in 14 unique sequences.
+Sample 142 - 12 reads in 12 unique sequences.
+Sample 143 - 7 reads in 7 unique sequences.
+Sample 144 - 10 reads in 10 unique sequences.
+Sample 145 - 7 reads in 7 unique sequences.
+Sample 146 - 10 reads in 10 unique sequences.
+Sample 147 - 3 reads in 3 unique sequences.
+Sample 148 - 14 reads in 14 unique sequences.
+Sample 149 - 11 reads in 11 unique sequences.
+Sample 150 - 18 reads in 17 unique sequences.
+Sample 151 - 11 reads in 11 unique sequences.
+Sample 152 - 5 reads in 5 unique sequences.
+Sample 153 - 11 reads in 11 unique sequences.
+Sample 154 - 9 reads in 9 unique sequences.
+Sample 155 - 10 reads in 10 unique sequences.
+Sample 156 - 8 reads in 8 unique sequences.
+Sample 157 - 7 reads in 7 unique sequences.
+Sample 158 - 13 reads in 13 unique sequences.
+Sample 159 - 8 reads in 8 unique sequences.
+Sample 160 - 6 reads in 5 unique sequences.
+Sample 161 - 6 reads in 6 unique sequences.
+Sample 162 - 8 reads in 8 unique sequences.
+Sample 163 - 8 reads in 8 unique sequences.
+Sample 164 - 9 reads in 9 unique sequences.
+Sample 165 - 9 reads in 9 unique sequences.
+Sample 166 - 7 reads in 7 unique sequences.
+Sample 167 - 5 reads in 5 unique sequences.
+Sample 168 - 13 reads in 12 unique sequences.
+Sample 169 - 5 reads in 4 unique sequences.
+Sample 170 - 9 reads in 9 unique sequences.
+Sample 171 - 5 reads in 5 unique sequences.
+Sample 172 - 1 reads in 1 unique sequences.
+Sample 173 - 14 reads in 14 unique sequences.
+Sample 174 - 7 reads in 6 unique sequences.
+Sample 175 - 9 reads in 9 unique sequences.
+Sample 176 - 14 reads in 14 unique sequences.
+Sample 177 - 6 reads in 6 unique sequences.
+Sample 178 - 7 reads in 7 unique sequences.
+Sample 179 - 2 reads in 2 unique sequences.
+Sample 180 - 7 reads in 7 unique sequences.
+The sequences being tabled vary in length.
+Identified 9 bimeras out of 2999 input sequences.
+                        name input filtered denoised tabled nochim
+1   CO1_2-A1-1036-a-S93-L001    22       17       17     17     17
+2 CO1_2-A10-1060-a-S165-L001    25       20       20     20     20
+3 CO1_2-A11-1060-b-S170-L001    16       16       16     16     16
+4 CO1_2-A12-1060-c-S176-L001     6        6        6      6      6
+5  CO1_2-A2-1036-b-S101-L001    32       25       25     25     25
+6  CO1_2-A3-1036-c-S109-L001    30       26       26     26     26
+Warning message:
+In dir.create(outpath, recursive = T) :
+  '/scratch/users/mshea/PillarPoint/CO1/CO1dada2_out' already exists
+Done with analyzing your unpaired reads!
+

@@ -31,7 +31,17 @@ packages <- c("tidyverse",
               "colourvalues",
               "usedist",
               "patchwork",
-              "cluster")
+              "cluster",
+              "vegan",
+              "chisq.posthoc.test", 
+              "taxize",
+              "Polychrome",
+              "pals", 
+              "ggnewscale",
+              "tidytree",
+              "ggtree",
+              "ggtreeExtra")
+
 
 install.packages(setdiff(packages, rownames(installed.packages())))
 
@@ -157,9 +167,17 @@ Raw ASVs, taxonomy assignments, and metadata were converted into interchangeable
 #Read PERCENT CONFIDENCE ASV/Taxonomy Table
 #This code is used for importing the ASV_taxonomy_detailed.txt file produced by the Anacapa Toolkit
 
-setwd("Data/Anacapa Pipeline Output/Tide Pool 5184 - 31 January 2023")
+current_subfolder = "Data/Anacapa Pipeline Output/Tide Pool 5184 - 31 January 2023"
+p_confidence = 60
+filepath = paste0(current_subfolder, 
+                  "/CO1/CO1_taxonomy_tables/Summary_by_percent_confidence/", 
+                  p_confidence, 
+                  "/CO1_ASV_raw_taxonomy_", 
+                  p_confidence, 
+                  ".txt")
 
-AnacapaOutput = read.table("CO1/CO1_taxonomy_tables/Summary_by_percent_confidence/60/CO1_ASV_raw_taxonomy_60.txt", header = TRUE, sep = "\t", dec = ".")
+
+AnacapaOutput = read.table(filepath, header = TRUE, sep = "\t", dec = ".")
 
 
 #Format ASV Table
@@ -183,18 +201,17 @@ rownames(taxmat) <- rownames(asvmat)
 
 #Read Metadata
 
-setwd("./Metadata-Added")
+current_subfolder = paste0(current_subfolder, "/Metadata-Added/PillarPoint_SampleInfo_") 
 
-EnviroData = read.table("PillarPoint_SampleInfo_EnviroData.txt", 
-                        header = TRUE, 
-                        sep = "\t", 
-                        dec = ".", 
-                        strip.white = TRUE)
+filepath = paste0(current_subfolder, "EnviroData.txt")
+EnviroData = read.table(filepath, header = TRUE, sep = "\t", dec = ".", strip.white = TRUE)
 
-FieldSampling = read.table("PillarPoint_SampleInfo_FieldSampling.txt", header = TRUE, sep = "\t", dec = ".", strip.white = TRUE)
+filepath = paste0(current_subfolder, "FieldSampling.txt")
+FieldSampling = read.table(filepath, header = TRUE, sep = "\t", dec = ".", strip.white = TRUE)
 FieldSampling = FieldSampling[,1:4]
 
-Sequencing = read.table("PillarPoint_SampleInfo_Sequencing.txt", header = TRUE, sep = "\t", dec = ".", strip.white = TRUE)
+filepath = paste0(current_subfolder, "Sequencing.txt")
+Sequencing = read.table(filepath, header = TRUE, sep = "\t", dec = ".", strip.white = TRUE)
 
 #Format Metadata
 
@@ -316,6 +333,7 @@ total_reads = sum(amp$abund)
 
 samples = length(amp$metadata$Type[amp$metadata$Type == "sample"])
 controls = length(amp$metadata$Type[amp$metadata$Type == "control"])
+
 
 #Check positive PCR controls
 amp_MC = amp_filter_samples(amp, Location %in% c("MC"))
@@ -449,7 +467,150 @@ Focused on just the `r samples` samples, we removed singletons and all `r overla
 
 ```{r Figure 4 -- Phylogenetic Tree}
 
-#NEED TO ADD THIS
+#Aggregate to species assignment and remove the NCBI identifiers
+pt_physeq = tax_glom(data_physeq, taxrank="Species", NArm=FALSE)
+tax_table(pt_physeq) = tax_table(pt_physeq)[!tax_table(pt_physeq)[,"Kingdom"]==""]
+
+tax_table(pt_physeq)[tax_table(pt_physeq)==""] = NA
+numbers = sub(".*_","", tax_table(pt_physeq))
+
+taxa = apply(numbers, 1, function(x) tail(na.omit(x), 1))
+
+tax_table(pt_physeq) = sub("_[^_]+$","", tax_table(pt_physeq))
+
+
+
+
+taxa_classification = classification(taxa, db = "ncbi")
+
+
+taxa_tree = class2tree(taxa_classification, check = TRUE)
+
+#Change the tip labels to match phyloseq objects (code only works if order is the same)
+taxa_tree$phylo$tip.label = row.names(tax_table(pt_physeq))
+
+
+phyla = unique(tax_table(pt_physeq)[,"Phylum"])
+
+
+phyla_nodes = data.frame("node_phylum" = c(), "node" = c())  
+phyla_nodes_secondary = data.frame("node_phylum" = c(), "tips" = c()) 
+
+for (x in phyla) {
+  OTUs = na.omit(row.names(tax_table(pt_physeq))[tax_table(pt_physeq)[,"Phylum"] == x])
+  OTUs = as.vector(OTUs)
+  num = getMRCA(taxa_tree$phylo, tip = OTUs)
+  if (is.null(num)) {
+    nodes = as_tibble(taxa_tree$phylo)
+    num = nodes$node[nodes$label == OTUs]
+  } 
+  df = data.frame("node_phylum" = c(x), "node" = c(num))
+  phyla_nodes = rbind(phyla_nodes, df)
+  
+  if (length(OTUs) <6) {
+    for (y in OTUs) {
+      df2 = data.frame("node_phylum" = c(x), "tips" = c(y))
+      phyla_nodes_secondary = rbind(phyla_nodes_secondary, df2)
+    }
+  }
+}
+
+
+
+
+pt_physeq = merge_phyloseq(pt_physeq, taxa_tree$phylo)
+
+
+
+set.seed(567629)
+colors = createPalette(28, c("#FFFFFF"), range = c(30, 80), target = c("normal", "protanope", "deuteranope", "tritanope"))
+
+pal.safe(colors)
+
+colors_ordered = colors[c( 
+                          'NC2',
+                          'NC11',
+                          'NC27',
+                          'NC25',
+                          'NC4',
+                      
+                          'NC5',
+                        
+                          'NC8',
+                          'NC24',
+                          'NC9',
+                          'NC10',
+                          
+                          'NC12',
+                          'NC13',
+                          'NC1',
+                          'NC14',
+                          'NC15',
+                          'NC16',
+                          'NC7',
+                          'NC17',
+                          'NC18',
+                          'NC19',
+                        
+                          'NC20',
+                          'NC21', 
+                          'NC22',
+                          'NC23',
+                      
+                          
+                          'NC26',
+                          'NC6',
+                          'NC3',
+                          'NC28'
+)]
+
+pal.safe(colors_ordered)
+
+
+
+
+
+
+p <- ggtree(pt_physeq,  layout = "circular") 
+
+
+ordered_names = get_taxa_name(p)
+ordered_names = unique(ordered_names)
+ordered_names[match(rownames(tax_table(pt_physeq)), ordered_names)] = tax_table(pt_physeq)[,"Phylum"]
+ordered_names = unique(ordered_names)
+
+
+
+names(colors_ordered) = ordered_names
+
+
+
+p = p + geom_fruit(geom = geom_tile, mapping = aes(fill = Phylum), width = 3, show.legend = FALSE)  + scale_fill_manual(values = colors_ordered) +scale_color_manual(values = colors_ordered)
+
+p = p +  geom_fruit(data=phyla_nodes_secondary, geom = geom_tile, mapping = aes(y = tips, fill = node_phylum), width = 6, show.legend = FALSE)  
+
+p = p + geom_hilight(data=phyla_nodes, mapping=aes(node = node, fill = node_phylum), show.legend = FALSE)
+
+p = p + geom_cladelab(data=phyla_nodes, mapping=aes(node=node, label= node_phylum), geom = "text", angle = "auto", offset = 5, fontsize=2, barcolor=NA, show.legend = FALSE)
+
+p = p +
+  theme(
+    panel.background = element_rect(fill='transparent'),
+    plot.background = element_rect(fill='transparent', color=NA),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.background = element_rect(fill='transparent'),
+    legend.box.background = element_rect(fill='transparent')
+  )
+
+
+ggsave(
+  "phylo_test_5.pdf",
+  plot = p,
+  dpi = 300,
+  bg='transparent')
+
+
 ```
 
 ```{r GBIF}
@@ -680,6 +841,8 @@ jaccard_taxa = vegdist(t(data_amp_taxa$abund), binary = TRUE, method = "jaccard"
 
 #Calculate jaccard dissimilarity 
 
+set.seed(0)
+
 #PERMANOVA on full data set
 permutest(betadisper(jaccard_full, data_amp$metadata$Location))
 adonis2(jaccard_full ~ Location + Time + Dereplicated_Sample_Name , data = data_amp$metadata)
@@ -905,6 +1068,8 @@ summary$Combo2 <- summary$Combo
 summary$Combo2[summary$Combo2 == "S1:S1"] = "Within Site"
 summary$Combo2[summary$Combo2 == "S2:S2"] = "Within Site"
 summary$Combo2[summary$Combo2 == "N:N"] = "Within Site"
+
+stats = summary %>% filter(Combo2 == "Within Site") %>% summarize(mean = mean(Jaccard), max = max(Jaccard))
 
 
 g2.5 = ggplot(summary, aes(x = Time, y = Jaccard, color = factor(Combo2, level = c("Within Site", "S1:N", "S2:N", "S1:S2")), fill = factor(Combo2, level = c("Within Site", "S1:N", "S2:N", "S1:S2")))) + 

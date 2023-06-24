@@ -1,0 +1,7 @@
+Tue Jan 31 18:46:38 PST 2023
+Run blca on sam output
+> 1 > Read in taxonomy information!
+> 2 > Read in reference db
+> 3 > Read in bowtie2 output!
+>> Taxonomy file generated!!
+wrote /scratch/users/mshea/PillarPoint/CO1/CO1bowtie2_out/single_read_merged_CO1_local.sam.blca.complete file

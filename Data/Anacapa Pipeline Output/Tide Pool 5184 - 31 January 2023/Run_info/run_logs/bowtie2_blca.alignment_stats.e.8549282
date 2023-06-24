@@ -1,0 +1,134 @@
+INFO:    underlay of /etc/slurm required more than 50 (138) bind mounts
+perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+	LANGUAGE = (unset),
+	LC_ALL = (unset),
+	LANG = "en_US.UTF-8"
+    are supported and installed on your system.
+perl: warning: Falling back to the standard locale ("C").
+24902 reads; of these:
+  24902 (100.00%) were unpaired; of these:
+    21600 (86.74%) aligned 0 times
+    598 (2.40%) aligned exactly 1 time
+    2704 (10.86%) aligned >1 times
+13.26% overall alignment rate
+perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+	LANGUAGE = (unset),
+	LC_ALL = (unset),
+	LANG = "en_US.UTF-8"
+    are supported and installed on your system.
+perl: warning: Falling back to the standard locale ("C").
+21600 reads; of these:
+  21600 (100.00%) were unpaired; of these:
+    2844 (13.17%) aligned 0 times
+    483 (2.24%) aligned exactly 1 time
+    18273 (84.60%) aligned >1 times
+86.83% overall alignment rate
+perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+	LANGUAGE = (unset),
+	LC_ALL = (unset),
+	LANG = "en_US.UTF-8"
+    are supported and installed on your system.
+perl: warning: Falling back to the standard locale ("C").
+43890 reads; of these:
+  43890 (100.00%) were unpaired; of these:
+    36429 (83.00%) aligned 0 times
+    2127 (4.85%) aligned exactly 1 time
+    5334 (12.15%) aligned >1 times
+17.00% overall alignment rate
+perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+	LANGUAGE = (unset),
+	LC_ALL = (unset),
+	LANG = "en_US.UTF-8"
+    are supported and installed on your system.
+perl: warning: Falling back to the standard locale ("C").
+36429 reads; of these:
+  36429 (100.00%) were unpaired; of these:
+    2559 (7.02%) aligned 0 times
+    712 (1.95%) aligned exactly 1 time
+    33158 (91.02%) aligned >1 times
+92.98% overall alignment rate
+perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+	LANGUAGE = (unset),
+	LC_ALL = (unset),
+	LANG = "en_US.UTF-8"
+    are supported and installed on your system.
+perl: warning: Falling back to the standard locale ("C").
+2990 reads; of these:
+  2990 (100.00%) were unpaired; of these:
+    2421 (80.97%) aligned 0 times
+    70 (2.34%) aligned exactly 1 time
+    499 (16.69%) aligned >1 times
+19.03% overall alignment rate
+perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+	LANGUAGE = (unset),
+	LC_ALL = (unset),
+	LANG = "en_US.UTF-8"
+    are supported and installed on your system.
+perl: warning: Falling back to the standard locale ("C").
+2421 reads; of these:
+  2421 (100.00%) were unpaired; of these:
+    836 (34.53%) aligned 0 times
+    35 (1.45%) aligned exactly 1 time
+    1550 (64.02%) aligned >1 times
+65.47% overall alignment rate
+perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+	LANGUAGE = (unset),
+	LC_ALL = (unset),
+	LANG = "en_US.UTF-8"
+    are supported and installed on your system.
+perl: warning: Falling back to the standard locale ("C").
+165 reads; of these:
+  165 (100.00%) were paired; of these:
+    165 (100.00%) aligned concordantly 0 times
+    0 (0.00%) aligned concordantly exactly 1 time
+    0 (0.00%) aligned concordantly >1 times
+0.00% overall alignment rate
+perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+	LANGUAGE = (unset),
+	LC_ALL = (unset),
+	LANG = "en_US.UTF-8"
+    are supported and installed on your system.
+perl: warning: Falling back to the standard locale ("C").
+165 reads; of these:
+  165 (100.00%) were paired; of these:
+    124 (75.15%) aligned concordantly 0 times
+    2 (1.21%) aligned concordantly exactly 1 time
+    39 (23.64%) aligned concordantly >1 times
+    ----
+    124 pairs aligned 0 times concordantly or discordantly; of these:
+      248 mates make up the pairs; of these:
+        160 (64.52%) aligned 0 times
+        2 (0.81%) aligned exactly 1 time
+        86 (34.68%) aligned >1 times
+51.52% overall alignment rate
+/usr/local/anacapa/miniconda/lib/python2.7/site-packages/pandas/core/frame.py:6211: FutureWarning: Sorting because non-concatenation axis is not aligned. A future version
+of pandas will change to not sort by default.
+
+To accept the future behavior, pass 'sort=False'.
+
+To retain the current behavior and silence the warning, pass 'sort=True'.
+
+  sort=sort)
+/usr/local/anacapa/miniconda/lib/python2.7/site-packages/pandas/core/indexing.py:1472: FutureWarning: 
+Passing list-likes to .loc or [] with any missing label will raise
+KeyError in the future, you can use .reindex() as an alternative.
+
+See the documentation here:
+https://pandas.pydata.org/pandas-docs/stable/indexing.html#deprecate-loc-reindex-listlike
+  return self._getitem_tuple(key)
+/usr/local/anacapa/miniconda/lib/python2.7/site-packages/pandas/core/frame.py:6211: FutureWarning: Sorting because non-concatenation axis is not aligned. A future version
+of pandas will change to not sort by default.
+
+To accept the future behavior, pass 'sort=False'.
+
+To retain the current behavior and silence the warning, pass 'sort=True'.
+
+  sort=sort)

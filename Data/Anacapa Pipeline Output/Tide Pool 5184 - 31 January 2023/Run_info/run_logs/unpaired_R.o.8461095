@@ -1,0 +1,6 @@
+_BEGIN_ [run_dada2_bowtie2_unpaired_R.sh]: Mon Jan 30 20:22:33 PST 2023
+
+Running dada2 on reverse reads
+0
+moving on
+_END_ [run_dada2_unpaired_R.sh]
