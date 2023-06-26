@@ -40,8 +40,13 @@ packages <- c("tidyverse",
               "ggnewscale",
               "tidytree",
               "ggtree",
-              "ggtreeExtra")
-
+              "ggtreeExtra",
+              "spocc",
+              "sp",
+              "mregions",
+              "sf",
+              "mapview",
+              "rgbif")
 
 install.packages(setdiff(packages, rownames(installed.packages())))
 
@@ -137,7 +142,7 @@ p_patch
 
 ggsave(
   plot = p_patch,
-  filename = "Figures/tide_chart_final.png",
+  filename = "Figures/Figure3.png",
   bg = "transparent"
 )
 ```
@@ -165,7 +170,6 @@ Raw ASVs, taxonomy assignments, and metadata were converted into interchangeable
 ```{r Importing Anacapa, warning = FALSE}
 
 #Read PERCENT CONFIDENCE ASV/Taxonomy Table
-#This code is used for importing the ASV_taxonomy_detailed.txt file produced by the Anacapa Toolkit
 
 current_subfolder = "Data/Anacapa Pipeline Output/Tide Pool 5184 - 31 January 2023"
 p_confidence = 60
@@ -244,7 +248,6 @@ amp = amp_load(asvmat_amp, metadata = sampledata_amp, taxonomy = taxmat_amp)
 
 amp_nocontrols = amp_filter_samples(amp, Type %in% c("sample"))
 amp_controls = amp_filter_samples(amp, Type %in% c("control"))
-amp_FB = amp_filter_samples(amp_controls, Location %in% c("FB"))
 
 
 
@@ -308,6 +311,14 @@ amp_nocontrols_NS_R = rarefaction(amp_nocontrols_NS)
 amp_nocontrols_FD_R = rarefaction(amp_nocontrols_FD)
 
 amp_nocontrols_NS_FD_R = rarefaction(amp_nocontrols_NS_FD)
+
+
+
+
+remove_NCBInums = function(list) {
+  list = sub("_[^_]+$","", list)
+  return(list)
+}
 ```
 
 To ensure the accuracy of taxonomic assignments, we analyzed occurrence data from the Global Biodiversity Information Facility to investigate whether identified species had occurrence records in the California Current System and known ranges that encompassed Pillar Point, using the spocc (version 1.2.0) (Chamberlain, 2021) package. A phylogenetic tree based on taxonomic assignments was created using the taxize (version 0.9.100) (Chamberlain and Szöcs, 2013) and treedataverse (version 0.0.1) (citation) packages. 
@@ -350,7 +361,18 @@ amp_no_MC = amp_filter_samples(amp, !(Location %in% c("MC")))
 intersect(rownames(amp_MC$abund), rownames(amp_no_MC$abund))
 
 #Check intersection between samples and controls
-overlap = length(intersect(rownames(amp_controls$abund), rownames(amp_nocontrols$abund)))
+intersect = intersect(rownames(amp_controls$abund), rownames(amp_nocontrols$abund))
+overlap = length(intersect)
+
+overlap_table = list(ASV = intersect,
+                     "Taxonomic Assignment" = amp_nocontrols$tax[amp_nocontrols$tax$OTU %in% intersect,]$Species)
+
+
+overlap_table$`Taxonomic Assignment` = remove_NCBInums(overlap_table$`Taxonomic Assignment`)
+
+overlap_table
+
+write.csv(overlap_table, "Data/Analysis Products/OverlapASVs.csv", row.names=TRUE)
 
 ```
 Using the Anacapa Toolkit, we identified `r total_ASVs` ASVs from `r total_reads` reads across `r samples` samples and `r controls` controls (positive PCR controls, negative field controls, negative extraction controls, and no-template negative PCR controls). All expected taxa amplified in each positive PCR control, and no ASVs present in the positive PCR controls occurred in any other samples, providing no evidence of index hopping. Before application of any decontamination steps, only `r overlap` ASVs were shared between the samples and negative field, extraction, and PCR controls. 
@@ -358,9 +380,25 @@ Using the Anacapa Toolkit, we identified `r total_ASVs` ASVs from `r total_reads
 ```{r}
 #Establish processed data set used throughout analyses
 
+amp_to_phyloseq = function(ampvis, abund, tax, md) {
+  if(!is.null(ampvis)) {
+    physeq = phyloseq(otu_table(as.matrix(ampvis$abund), taxa_are_rows = TRUE), 
+                    tax_table(as.matrix(ampvis$tax)), 
+                    sample_data(ampvis$metadata))
+  } else if (is.null(md)) {
+    physeq = phyloseq(otu_table(as.matrix(abund), taxa_are_rows = TRUE), 
+                    tax_table(as.matrix(tax)))
+} else {
+  physeq = phyloseq(otu_table(as.matrix(abund), taxa_are_rows = TRUE), 
+                    tax_table(as.matrix(tax)), 
+                    sample_data(md))
+}
+  return(physeq)
+}
+
 data_amp = amp_nocontrols_NS_FD_R
 
-data_physeq = phyloseq(otu_table(as.matrix(data_amp$abund), taxa_are_rows = TRUE), tax_table(as.matrix(data_amp$tax)), sample_data(data_amp$metadata))
+data_physeq = amp_to_phyloseq(data_amp, NA, NA, NA)
 
 data_amp_taxa = data_amp
 data_amp_taxa$abund = aggregate_abund(data_amp$abund, data_amp$tax, tax_aggregate = "Species", format = "abund")
@@ -377,11 +415,8 @@ processed_reads = sum(data_amp$abund)
 #Sum across all samples
 total = as.data.frame(rowSums(data_amp$abund))
 
-
- #Transform summed ampvis2 object into phyloseq object which has better functions for these specific tasks
-  ASV = otu_table(as.matrix(total), taxa_are_rows = TRUE)
-  TAX = tax_table(as.matrix(data_amp$tax[,1:7]))
-  physeq_summed = phyloseq(ASV, TAX)
+#Transform summed ampvis2 object into phyloseq object which has better functions for these specific tasks
+physeq_summed = amp_to_phyloseq(NULL, total, data_amp$tax[,1:7], NULL)
   
   kingdom = as.data.frame(tax_table(physeq_summed)[,1])
   
@@ -425,8 +460,6 @@ Focused on just the `r samples` samples, we removed singletons and all `r overla
 
 ```{r Table 1}
 
-##NEED TO FIX TABLE
-
  #merge all samples together
   #make abundance of each one
   #glom by phylum
@@ -460,9 +493,16 @@ Focused on just the `r samples` samples, we removed singletons and all `r overla
     mutate(ASVs_Percent = scales::label_percent()(ASVs/sum(ASVs))) %>%
     mutate(Species_Percent = scales::label_percent()(Species/sum(Species)))
   
+  full_sorted$Phylum = remove_NCBInums(full_sorted$Phylum)
+  full_sorted$Phylum = str_replace(full_sorted$Phylum, "phylum_", "Class: ")
+  
+  col_order = c("Phylum", "Reads", "Reads_Percent", "ASVs", "ASVs_Percent", "Species", "Species_Percent")
+  
+  full_sorted = full_sorted[,col_order]
+  
   full_sorted
-
-  write.csv(full_sorted, "Data/TaxonDiversity.csv", row.names=TRUE)
+  
+  write.csv(full_sorted, "Data/Analysis Products/TaxonDiversity.csv", row.names=TRUE)
 ```
 
 ```{r Figure 4 -- Phylogenetic Tree}
@@ -605,7 +645,7 @@ p = p +
 
 
 ggsave(
-  "phylo_test_5.pdf",
+  "/Figures/phylotree.pdf",
   plot = p,
   dpi = 300,
   bg='transparent')
@@ -615,7 +655,185 @@ ggsave(
 
 ```{r GBIF}
 
-#NEED TO ADD THIS
+#Create list of identified species
+species = unique(data_amp$tax$Species)
+species = sub("_[^_]+$","", species)
+species = species[species != ""]
+species = sub("_", "-", species) #to address Pseudo_nitzchia error
+
+
+#Standardize species names against GBIF backbone
+species_GBIF = name_backbone_checklist(species)
+
+species_standardized = species_GBIF$species[!is.na(species_GBIF$species)]
+
+species_both = species_GBIF[c("species", "verbatim_name")]
+
+
+##Core GBIF checking function
+distribution_check <- function(small_bound, big_bound, species, min_records, efficiency) {
+  
+  ##Function that checks GBIF given a particular geographic region
+  boundary_function <- function(species, bounds) {
+    no_data = c()
+    confirmed = c()
+    for (i in species) {
+      print(i)
+      occ = occ(query = i, geometry = bounds, from = 'gbif', limit = min_records, has_coords = TRUE, gbifopts = list(hasGeospatialIssue = FALSE))
+      occ.df = occ2df(occ)
+      if (nrow(occ.df) >= min_records) {
+        confirmed = append(confirmed, i)
+      } else {
+        no_data = append(no_data, i)
+      }
+    }
+    return(list(no_data = no_data, confirmed = confirmed))
+  }
+  
+  ##Function that checks GBIF to confirm whether a particular location is within the range of observations
+  range_function <- function(species){
+    CC.confirmed = c()
+    CC.not_confirmed = c()
+    CC.no_data = c() 
+    limits = c(10, 100, 1000, 10000)
+    
+    for (i in species) {
+      track = 0
+      for (l in limits) {
+        print(i)
+        print (l)
+        occ = occ(i, from = 'gbif', limit = l, has_coords = TRUE, gbifopts = list(hasGeospatialIssue = FALSE))
+        occ.df = occ2df(occ)
+        if (nrow(occ.df) < min_records) {
+          CC.no_data = append(CC.no_data, i)
+          print("no data")
+          track = 1
+          break
+        }
+        bb_occ = bbox(cbind(occ.df$longitude, occ.df$latitude))
+        if (bb_occ['x', 'min'] < small_bound[1] & bb_occ['x', 'max'] >small_bound[1] & bb_occ['y', 'min'] <small_bound[4] & bb_occ['y', 'max'] >small_bound[4]) {
+          CC.confirmed = append(CC.confirmed, i)
+          print("confirmed")
+          track = 1
+          break
+        }
+        if(nrow(occ.df) < l) {
+          CC.not_confirmed = append(CC.not_confirmed, i)
+          print("not confirmed")
+          track = 1
+          break
+        } 
+      }
+      if(track == 0) {
+        CC.not_confirmed = append(CC.not_confirmed, i)
+        print("not confirmed")
+      }
+    }
+    return(list(no_data = CC.no_data, not_confirmed = CC.not_confirmed, confirmed = CC.confirmed))
+  }
+  
+  
+  #Actual Steps
+  PP = boundary_function(species, small_bound)
+  
+  if(efficiency == TRUE) {
+    CC = boundary_function(PP[["no_data"]], big_bound)
+  } else {
+    CC = boundary_function(species, big_bound)
+  }
+  
+  if(efficiency == TRUE) {
+    range_confirmed = range_function(CC[["confirmed"]])
+    range_unconfirmed = range_function(CC[["not_confirmed"]])
+    return(list(PP, CC, range_confirmed, range_unconfirmed))
+  } else {
+    range = range_function(species)
+    return(list(PP, CC, range))
+  }
+}
+
+
+
+#Get the California Current System shape
+
+CC_shape = mr_features_get(type = "MarineRegions:lme", featureID = "lme.10", format = "json")
+
+#check that it's the right polygon
+class(CC_shape) <- "mr_geojson"
+CC_shape = mr_as_wkt(CC_shape)
+pnt <- st_as_sfc(CC_shape, crs = 4326)
+mapview(pnt)
+
+#Simplify into a box for use with GBIF function
+CC_shape = wkt2bbox(CC_shape)
+CC_shape = c(CC_shape$min_x, CC_shape$min_y, CC_shape$max_x, CC_shape$max_y)
+
+
+
+distribution = distribution_check(c(-122.50, 37.49, -122.49, 37.50), CC_shape, species_standardized, 5, FALSE)
+
+d = distribution
+PP = d[[1]]$confirmed
+CC = d[[2]]$confirmed
+range = d[[3]]$confirmed
+no_data = d[[3]]$no_data 
+
+df_PP = c()
+df_CC = c()
+df_range = c()
+df_no_data = c()
+df_not_in_GBIF = c()
+
+
+for (s in species_both$species) {
+  if(is.na(s)) {
+    df_not_in_GBIF = append(df_not_in_GBIF, TRUE)
+    df_PP = append(df_PP, NA)
+    df_CC = append(df_CC, NA)
+    df_range = append(df_range, NA)
+    df_no_data = append(df_no_data, NA)
+    next
+  } else {
+    df_not_in_GBIF = append(df_not_in_GBIF, FALSE)
+  }
+  
+  if(s %in% PP) {
+    df_PP = append(df_PP, TRUE)
+  } else {
+    df_PP = append(df_PP, FALSE)
+  }
+   
+  if(s %in% CC) {
+    df_CC = append(df_CC, TRUE)
+  } else {
+    df_CC = append(df_CC, FALSE)
+  }
+  
+  if(s %in% range) {
+    df_range = append(df_range, TRUE)
+  } else {
+    df_range = append(df_range, FALSE)
+  }
+  
+  if(s %in% no_data) {
+    df_no_data = append(df_no_data, TRUE)
+  } else {
+    df_no_data = append(df_no_data, FALSE)
+  }
+  
+}
+
+summary = data.frame(Species = species_both$verbatim_name, 
+                     GBIFSpecies = species_both$species, 
+                     PillarPointOccurrence = df_PP, 
+                     CCSOccurrence = df_CC, 
+                     Range = df_range, 
+                     NoData = df_no_data, 
+                     NotInGBIF = df_not_in_GBIF)
+
+summary %>% group_by(across(PillarPointOccurrence:NotInGBIF)) %>% summarise(count=n())
+
+write.csv(summary, "Data/Analysis Products/RangeAnalysis.csv", row.names=TRUE)
 ```
 
 
@@ -821,6 +1039,8 @@ heatmap_taxa$plot
 #ADD FIGURE SAVING
 
 ```
+
+
 ```{r Supplemental Figure X}
 
 heatmap_ASV$plot
