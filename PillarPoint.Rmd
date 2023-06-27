@@ -242,6 +242,9 @@ FieldSampling = FieldSampling[,1:4]
 filepath = paste0(current_subfolder, "Sequencing.txt")
 Sequencing = read.table(filepath, header = TRUE, sep = "\t", dec = ".", strip.white = TRUE)
 
+filepath = paste0(current_subfolder, "Location.txt")
+Location = read.table(filepath, header = TRUE, sep = "\t", dec = ".", strip.white = TRUE)
+
 #Format Metadata
 
 sampledata = merge(FieldSampling, EnviroData, all=T)
@@ -249,6 +252,8 @@ sampledata = sampledata %>% drop_na(Dereplicated_Sample_Name)
 #removing one sample that has EnviroData reading but the field sample was not processed
 
 sampledata = merge(Sequencing,sampledata, all=T)
+
+sampledata = merge(Location, sampledata, all=T)
 
 rownames(sampledata) <- sampledata[,"X"]
 
@@ -833,7 +838,7 @@ ggsave(
 
 amp_S1 = amp_filter_samples(data_amp, Location %in% c("S1"))
 amp_S2 = amp_filter_samples(data_amp, Location %in% c("S2"))
-amp_N = amp_filter_samples(data_amp, Location %in% c("O"))
+amp_N = amp_filter_samples(data_amp, Location %in% c("N"))
 
 #List the unique taxa at each location
 
@@ -908,7 +913,7 @@ indicator_heatmap <- function(physeq, asv) {
   
   #Use indicspecies package to get top taxa
   indval = multipatt(t(otu_table(physeq)),t(sample_data(physeq)[,"Location"]), control = how(nperm=999), duleg = TRUE)
-  top_N = rownames(indval$sign %>% filter(p.value < 0.05) %>% filter(s.O == 1)  %>% filter(stat > .7))
+  top_N = rownames(indval$sign %>% filter(p.value < 0.05) %>% filter(s.N == 1)  %>% filter(stat > .7))
   top_S1 = rownames(indval$sign %>% filter(p.value < 0.05) %>% filter(s.S1 == 1)  %>% filter(stat > .7))
   top_S2 = rownames(indval$sign %>% filter(p.value < 0.05) %>% filter(s.S2 == 1)  %>% filter(stat > .7))
   
@@ -951,7 +956,7 @@ indicator_heatmap <- function(physeq, asv) {
   tax_table(indicators_only) = cbind(tax_table(indicators_only), indicators)
   
   loc_labs = c("N", "S1", "S2")
-  names(loc_labs) = c("O", "S1", "S2")
+  names(loc_labs) = c("N", "S1", "S2")
   
   #Plot
   plot = plot_heatmap(indicators_only, 
