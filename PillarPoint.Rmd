@@ -253,8 +253,6 @@ sampledata = sampledata %>% drop_na(Dereplicated_Sample_Name)
 
 sampledata = merge(Sequencing,sampledata, all=T)
 
-sampledata = merge(Location, sampledata, all=T)
-
 rownames(sampledata) <- sampledata[,"X"]
 
 sampledata$Dereplicated_Sample_Name = as.factor(sampledata$Dereplicated_Sample_Name)
@@ -330,6 +328,46 @@ amp_nocontrols_NS_R = rarefaction(amp_nocontrols_NS)
 amp_nocontrols_FD_R = rarefaction(amp_nocontrols_FD)
 
 amp_nocontrols_NS_FD_R = rarefaction(amp_nocontrols_NS_FD)
+
+
+##Create data frame for GBIF
+#Exporting version of data with decontamination and controls removed but no additional processing
+
+GBIF_export = amp_nocontrols_FD
+
+GBIF_export$metadata = merge(GBIF_export$metadata, Location, all=T)
+
+TimeZone = "UTC−08:00"
+Date = "28 January 2022"
+GBIF_export$metadata = cbind(GBIF_export$metadata, TimeZone)
+GBIF_export$metadata = cbind(GBIF_export$metadata, Date)
+
+names(GBIF_export$metadata)[names(GBIF_export$metadata) == 'Sample'] <- 'Sequencing_Sample_Name'
+
+col_order = c("Sequencing_Sample_Name", "Sample_Name", "Location", "Latitude", "Longitude", "CRS", "Date", "Time", "TimeZone", "T", "S")
+GBIF_export$metadata = GBIF_export$metadata[,col_order]
+
+#Add sequences to file
+
+current_subfolder = "Data/Anacapa Pipeline Output/Tide Pool 5184 - 31 January 2023"
+filepath = paste0(current_subfolder, 
+                  "/CO1/CO1_taxonomy_tables/CO1_ASV_taxonomy_detailed.txt")
+
+AnacapaDetailed = read.table(filepath, header = TRUE, sep = "\t", dec = ".")
+sequences = as.data.frame(AnacapaDetailed[,"sequence"])
+rownames(sequences) = AnacapaDetailed$CO1_seq_number
+
+GBIF_export$tax = merge(sequences, GBIF_export$tax, by = "row.names", all.x = FALSE, all.y = TRUE, sort = FALSE)
+rownames(GBIF_export$tax) = GBIF_export$tax$Row.names
+names(GBIF_export$tax)[names(GBIF_export$tax) == "AnacapaDetailed[, \"sequence\"]"] <- 'Sequence'
+
+col_order = c("Sequence", "Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
+GBIF_export$tax = GBIF_export$tax[,col_order]
+
+write.csv(GBIF_export$abund, "Data/GBIF/ASVTable.csv", row.names=TRUE)
+write.csv(GBIF_export$tax, "Data/GBIF/TaxTable.csv", row.names=TRUE)
+write.csv(GBIF_export$metadata, "Data/Analysis Products/GBIF/SampleData.csv", row.names=TRUE)
+
 
 ```
 
