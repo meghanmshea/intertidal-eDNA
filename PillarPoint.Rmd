@@ -366,7 +366,7 @@ GBIF_export$tax = GBIF_export$tax[,col_order]
 
 write.csv(GBIF_export$abund, "Data/GBIF/ASVTable.csv", row.names=TRUE)
 write.csv(GBIF_export$tax, "Data/GBIF/TaxTable.csv", row.names=TRUE)
-write.csv(GBIF_export$metadata, "Data/Analysis Products/GBIF/SampleData.csv", row.names=TRUE)
+write.csv(GBIF_export$metadata, "Data/GBIF/SampleData.csv", row.names=FALSE)
 
 
 ```
