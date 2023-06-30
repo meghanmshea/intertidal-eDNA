@@ -141,56 +141,14 @@ p_patch = wrap_elements(p_patch) +
 
 p_patch
 
-
-data_forchart = data_amp$metadata
-data_forchart = data_forchart %>% group_by(SiteByTime) %>% mutate(chart_num = ceiling(row_number()/3))
-
-facet.labs =  c("Tide Pool 1\n (S1)", "Tide Pool 2\n (S2)", "Nearshore\n (N)")
-names(facet.labs) = c("S1", "S2", "N")
-
-data_forchart$Location= factor(data_forchart$Location, levels=c("S1", "S2", "N"))
-data_forchart$chart_num= factor(data_forchart$chart_num, levels=c("3", "2", "1"))
-
-
-sample_schema = ggplot(data = data_forchart, aes(x = Time, y = chart_num, shape = Location, color = Time, fill = Time)) + 
-  geom_beeswarm(cex= 2, size = 3) + 
-  geom_mark_rect() +
-  
-    scale_shape_manual(values = c(16, 15, 17)) + 
-    viridis::scale_color_viridis(discrete=TRUE, begin = 0, end = .97, direction = -1) +
-  viridis::scale_fill_viridis(discrete=TRUE, begin = 0, end = .97, direction = -1) +
-  facet_grid(Location ~., scales = "free_y", space = "free_y", switch = "y", labeller = labeller(Location = facet.labs)) +
-  theme_void(base_size = 16) + 
-  theme(legend.position = "none") +
-theme(strip.text.y.left = element_text(angle = 0, hjust = 1, vjust = .9)) 
-
-
-# Get a list of grobs in the plot
-grid.ls(grid.force())  
-
-grid.gedit(gPath("GRID.stripGrob", "GRID.text"),  
-         just = "left", x = unit(0, "npc"))
-
-# It looks like we need the GRID.text grobs.
-# But some care is needed:
-# There are GRID.text grobs that are children of the strips;
-# but also there are GRID.text grobs that are children of the axes.
-# Therefore, a gPath should be set up 
-# to get to the GRID.text grobs in the strips
-
-# The edit
-grid.gedit(gPath("GRID.stripGrob", "GRID.text"),  
-         just = "left", x = unit(0, "npc"))
-
-
-
-p_patch/sample_schema
-
 ggsave(
   plot = p_patch,
   filename = "Figures/Figure3.png",
   bg = "transparent"
 )
+
+
+##Second section of plot continued below once data has been loaded
 ```
 
 At three time points (see Figure 3; additional items added outside of R) at the beginning and end of the sampling period as well as at low tide, we collected triplicate 1 L samples from each location as biological replicates. At the beginning and end of the sampling period, we also filtered 1 L MilliQ water via the procedure described above to serve as negative field controls. Additionally, using an Orion Model 1230 meter (Orion Research Inc., Beverly, MA, USA), we recorded temperature and salinity in each location directly after samples were collected. 
@@ -482,6 +440,71 @@ data_amp_taxa = data_amp
 data_amp_taxa$abund = aggregate_abund(data_amp$abund, data_amp$tax, tax_aggregate = "Species", format = "abund")
 
 ```
+
+
+```{r Figure 3 --Continued}
+
+##IN PROGRESS
+
+data_forchart = data_amp$metadata
+data_forchart = data_forchart %>% group_by(SiteByTime) %>% mutate(chart_num = ceiling(row_number()/3))
+
+
+facet.labs =  c("Tide Pool 1\n (S1)", "Tide Pool 2\n (S2)", "Nearshore\n (N)")
+names(facet.labs) = c("S1", "S2", "N")
+
+data_forchart$Location= factor(data_forchart$Location, levels=c("S1", "S2", "N"))
+data_forchart$chart_num= factor(data_forchart$chart_num, levels=c("3", "2", "1"))
+
+
+sample_schema = ggplot(data = data_forchart, aes(x = Time, y = chart_num, shape = Location, color = Time, fill = Time)) + 
+  geom_beeswarm(cex= 2, size = 3) + 
+  geom_mark_rect(expand = .03) +
+  
+    scale_shape_manual(values = c(15, 17, 16)) + 
+    viridis::scale_color_viridis(discrete=TRUE, begin = 0, end = .97, direction = -1) +
+  viridis::scale_fill_viridis(discrete=TRUE, begin = 0, end = .97, direction = -1) +
+  facet_grid(Location ~., scales = "free_y", space = "free_y", switch = "y", labeller = labeller(Location = facet.labs)) +
+  theme_void(base_size = 16) + 
+  theme(legend.position = "none") +
+theme(strip.text.y.left = element_text(angle = 0, hjust = 1, vjust = .9)) 
+
+
+graph = sample_schema 
+
+filename = paste("sample_schema_full.pdf")
+  path = paste("Figures/PowerPointFigure/", filename)
+  pdf(path, width = 13, height = 4.3)
+  print(graph)
+  dev.off()
+  
+  graph$layers[[2]] <- NULL
+  
+for (i in 1:12) {
+  alpha[i] = 1
+  graph <- graph + 
+    viridis::scale_fill_viridis(discrete=TRUE, 
+                                 begin = 0, 
+                                 end = .97, 
+                                 direction = -1, 
+                                 alpha = alpha) 
+  filename = paste("sample_schema", i, ".pdf")
+  path = paste("Figures/PowerPointFigure/", filename)
+  pdf(path, width = 9, height = 6.14)
+  print(graph)
+  dev.off()
+  alpha[i] = .5
+}
+
+
+##Still need to line up axes between two plots, probably by changing date format for both
+##Still need to add field blank to plots
+p_patch/sample_schema
+
+
+
+```
+
 
 
 ```{r}
@@ -912,6 +935,41 @@ ggsave(
   dpi = 300,
   bg='transparent')
 
+```
+```{r Phylogenetic Tree for PowerPoint}
+
+p <- ggtree(pt_physeq,  layout = "rectangular") 
+
+ordered_names = get_taxa_name(p)
+ordered_names = unique(ordered_names)
+ordered_names[match(rownames(tax_table(pt_physeq)), ordered_names)] = tax_table(pt_physeq)[,"Phylum"]
+ordered_names = unique(ordered_names)
+
+names(colors_ordered) = ordered_names
+
+p = p + geom_fruit(geom = geom_tile, mapping = aes(fill = Phylum), width = 3, show.legend = FALSE)  + scale_fill_manual(values = colors_ordered) +scale_color_manual(values = colors_ordered)
+
+p = p + geom_hilight(data=phyla_nodes, mapping=aes(node = node, fill = node_phylum), show.legend = FALSE)
+
+
+
+p = p +
+  theme(
+    panel.background = element_rect(fill='transparent'),
+    plot.background = element_rect(fill='transparent', color=NA),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.background = element_rect(fill='transparent'),
+    legend.box.background = element_rect(fill='transparent')
+  )
+
+ggsave(
+  "Figures/PowerPointFigure/phylo.pdf",
+  plot = p,
+  width = 4.49,
+  height = 7.06,
+  dpi = 300,
+  bg='transparent')
 ```
 
 
