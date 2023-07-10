@@ -447,24 +447,29 @@ data_amp_taxa$abund = aggregate_abund(data_amp$abund, data_amp$tax, tax_aggregat
 ##IN PROGRESS
 
 data_forchart = data_amp$metadata
+
 data_forchart = data_forchart %>% group_by(SiteByTime) %>% mutate(chart_num = ceiling(row_number()/3))
+
+data_forchart$datetime <- lubridate::ymd_hm(paste("2022/01/28", data_forchart$Time), tz = "US/Pacific")
+data_forchart$LocNumTime = as.factor(paste(data_forchart$Location, data_forchart$chart_num, data_forchart$Time))
 
 
 facet.labs =  c("Tide Pool 1\n (S1)", "Tide Pool 2\n (S2)", "Nearshore\n (N)")
 names(facet.labs) = c("S1", "S2", "N")
 
 data_forchart$Location= factor(data_forchart$Location, levels=c("S1", "S2", "N"))
-data_forchart$chart_num= factor(data_forchart$chart_num, levels=c("3", "2", "1"))
+#data_forchart$chart_num= factor(data_forchart$chart_num, levels=c("3", "2", "1"))
 
 
-sample_schema = ggplot(data = data_forchart, aes(x = Time, y = chart_num, shape = Location, color = Time, fill = Time)) + 
-  geom_beeswarm(cex= 2, size = 3) + 
-  geom_mark_rect(expand = .03) +
-  
-    scale_shape_manual(values = c(15, 17, 16)) + 
-    viridis::scale_color_viridis(discrete=TRUE, begin = 0, end = .97, direction = -1) +
+sample_schema = ggplot(data = data_forchart, aes(x = datetime, y = chart_num, shape = Location, color = Time, fill = Time)) + 
+   facet_grid(Location ~., scales = "free_y", space = "free_y", switch = "y", labeller = labeller(Location = facet.labs)) +
+  #geom_point(position = position_dodge2(width = 1)) + 
+  geom_beeswarm(cex= 2, size = 3) +
+  geom_mark_rect(aes(group = LocNumTime)) +
+  coord_cartesian(xlim = c(xmin, xmax)) +
+  scale_shape_manual(values = c(15, 17, 16)) + 
+  viridis::scale_color_viridis(discrete=TRUE, begin = 0, end = .97, direction = -1) +
   viridis::scale_fill_viridis(discrete=TRUE, begin = 0, end = .97, direction = -1) +
-  facet_grid(Location ~., scales = "free_y", space = "free_y", switch = "y", labeller = labeller(Location = facet.labs)) +
   theme_void(base_size = 16) + 
   theme(legend.position = "none") +
 theme(strip.text.y.left = element_text(angle = 0, hjust = 1, vjust = .9)) 
@@ -986,8 +991,11 @@ amp_N = amp_filter_samples(data_amp, Location %in% c("N"))
 #List the unique taxa at each location
 
 S1_taxa = unique(amp_S1$tax$Species)
+S1_taxa = S1_taxa[S1_taxa != ""]
 S2_taxa = unique(amp_S2$tax$Species)
+S2_taxa = S2_taxa[S2_taxa != ""]
 N_taxa = unique(amp_N$tax$Species)
+N_taxa = N_taxa[N_taxa != ""]
 
 #List the unique ASVs at each locaton
 
@@ -1112,7 +1120,7 @@ indicator_heatmap <- function(physeq, asv) {
                space = "free", 
                switch = "y") +
     scale_fill_gradient(low = "black", high = "#B5D7E4") + 
-    theme_grey(base_size = 14) + 
+    theme_grey(base_size = 18) + 
     theme(plot.title = element_text(hjust = 0.5)) +
     theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) +
     theme(strip.placement = "outside", axis.text.x=element_text(size=12))  +
@@ -1154,10 +1162,10 @@ heatmap_taxa$plot
 
 ```{r Figure for PowerPoint}
 
- graph = heatmap_taxa$plot
+ graph = heatmap_taxa$plot 
 
   path = "Figures/PowerPointFigure/indicator_figure.png"
-  ggsave(filename = path, plot = graph, width = 12, height = 6.69)
+  ggsave(filename = path, plot = graph, width = 13, height = 6.69)
   
 
 ```
@@ -1363,6 +1371,9 @@ filename = paste("NMDS_figure_full.pdf")
   dev.off()
   
   graph$layers[[2]] <- NULL
+  
+  graph = graph + 
+    stat_ellipse(aes(group=Location), type = "t",linetype = 2, alpha = 0) 
   
 for (i in 1:12) {
   alpha[i] = 1
