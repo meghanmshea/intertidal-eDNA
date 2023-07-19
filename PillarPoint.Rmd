@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-```{r}
+```{r Loading Packages}
 #Install & Load Requires Packages
 #Check if all required packages have been installed and loaded, and if not, install and load them. 
 
@@ -396,7 +396,7 @@ To further understand whether differences in eDNA detections corresponded with u
 #### 3.1 Sequencing Results & Taxonomic Diversity
 
 
-```{r}
+```{r Full Output Metrics}
 
 #Gather information about full Anacapa Toolkit results before any processing
 total_ASVs = nrow(amp$abund)
@@ -434,7 +434,7 @@ write.csv(overlap_table, "Data/Analysis Products/OverlapASVs.csv", row.names=TRU
 ```
 Using the Anacapa Toolkit, we identified `r total_ASVs` ASVs from `r total_reads` reads across `r samples` samples and `r controls` controls (positive PCR controls, negative field controls, negative extraction controls, and no-template negative PCR controls). All expected taxa amplified in each positive PCR control, and no ASVs present in the positive PCR controls occurred in any other samples, providing no evidence of index hopping. Before application of any decontamination steps, only `r overlap` ASVs were shared between the samples and negative field, extraction, and PCR controls. 
 
-```{r}
+```{r Core Data Sets}
 #Establish processed data set used throughout analyses
 
 data_amp = amp_nocontrols_NS_FD_R
@@ -540,7 +540,7 @@ p_patch/sample_schema
 
 
 
-```{r}
+```{r Processed Output Metrics}
 #Gather information about processed Anacapa Toolkit 
 
 processed_ASVs = nrow(data_amp$abund)
@@ -1006,7 +1006,7 @@ ggsave(
 
 #### 3.2 Individual-Level Differences Between Locations
 
-```{r}
+```{r Euler Diagrams}
 
 #Subset ampvis2 data by location
 
@@ -1064,7 +1064,7 @@ E_ASV_plot = add_quantity_line_break(E_ASV_plot)
 
 Across both taxa (n=415) and ASVs (n=27,038), all three locations had unique elements, suggesting that there was not complete mixing of eDNA across micro-habitats. 33.2% of taxa and 80% of ASVs were unique to one of the three locations (Figure 5). At both the taxa and ASV level, S1 had more unique elements than S2 and nearshore, although this effect was more pronounced across ASVs. ASVs and taxa shared across pairs of two locations were the least common elements. 
 
-```{r}
+```{r Figure 5}
 
 (wrap_elements(panel = E_taxa_plot$children$canvas.grob) + wrap_elements (panel = E_ASV_plot$children$canvas.grob)) / wrap_elements(panel = E_taxa_plot$children$legend.grob) + plot_layout(heights = c(7,1))
 
@@ -1072,7 +1072,7 @@ Across both taxa (n=415) and ASVs (n=27,038), all three locations had unique ele
 
 
 
-```{r, warning = FALSE}
+```{r Indicator Species Analysis, warning = FALSE}
 
 #Function for creating indicator species heatmap from physeq data
 
@@ -1146,12 +1146,12 @@ indicator_heatmap <- function(physeq, asv) {
                space = "free", 
                switch = "y") +
     scale_fill_gradient(low = "black", high = "#B5D7E4") + 
-    theme_grey(base_size = 18) + 
+    theme_grey(base_size = 12) + 
     theme(plot.title = element_text(hjust = 0.5)) +
     theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) +
     theme(strip.placement = "outside", axis.text.x=element_text(size=12))  +
     theme(strip.text = element_text(size = rel(1))) +
-    theme(legend.text=element_text(size=12), legend.key.height = unit(1.5, "cm")) +
+    #theme(legend.text=element_text(size=12), legend.key.height = unit(1.5, "cm")) +
     theme(panel.background = element_blank(), panel.grid.major = element_blank()) +
     labs(fill = "Proportion of \nPositive Detects", title = "Locations") +
     theme(axis.ticks = element_line(color = "black"),
@@ -1181,8 +1181,10 @@ unassigned_indicator_ASVs = indicator_ASVs %>% group_by(Kingdom) %>% summarise(n
 
 heatmap_taxa$plot
 
-
-#ADD FIGURE SAVING
+path = "Figures/Figure6.png"
+  ggsave(filename = path, plot = heatmap_taxa$plot, device = "png", width = 169, height = 120, units = "mm", dpi = 600)
+  
+  #adjust legend position
 
 ```
 
@@ -1206,15 +1208,13 @@ Using an indicator species framework produced similar trends to the analysis of 
 
 #### 3.3.	Community-Level Differences between Locations
 
-```{r}
+```{r Jaccard Dissimilariy}
 #Calculate Jaccard dissimilarity matrices
 jaccard_full = vegdist(t(data_amp$abund), binary = TRUE, method = "jaccard")
 jaccard_taxa = vegdist(t(data_amp_taxa$abund), binary = TRUE, method = "jaccard")
 ```
 
-```{r}
-
-#Calculate jaccard dissimilarity 
+```{r PERMANOVA}
 
 set.seed(0)
 
@@ -1228,7 +1228,7 @@ adonis2(jaccard_taxa ~ Location + Time + Dereplicated_Sample_Name, data = data_a
 
 ```
 
-```{r, message=FALSE, echo=FALSE, cache = TRUE}
+```{r NMDS & PAM, message=FALSE, echo=FALSE, cache = TRUE}
 
 #NMDS
 
@@ -1422,7 +1422,7 @@ for (i in 1:12) {
 
 
 
-```{r}
+```{r Pairwise Dissimilarity}
 
 distmat <- as.matrix(jaccard_full)
 
@@ -1433,9 +1433,9 @@ Combo = c()
 Time = c()
 summary = data.frame(Jaccard, Combo, Time)
 
-one = c("S1", "S2", "O", "S1", "S2", "S1")
+one = c("S1", "S2", "N", "S1", "S2", "S1")
 one_names = c("S1", "S2", "N", "S1", "S2", "S1")
-two = c("S1", "S2", "O", "O", "O", "S2")
+two = c("S1", "S2", "N", "N", "N", "S2")
 two_names = c("S1", "S2", "N", "N", "N", "S2")
 
 for(x in levels(data_amp$metadata$Time)){
@@ -1507,10 +1507,11 @@ g2.5 = ggplot(summary, aes(x = Time,
             color = palette["Within Site"], 
             show.legend = FALSE, 
             check_overlap = TRUE) +
-  theme_classic(base_size = 16) + 
+  theme_classic(base_size = 12) + 
   theme(axis.ticks = element_line(color = "black"),
         axis.text.y = element_text(color="black"), 
-        axis.text.x = element_text(color="black"))
+        axis.text.x = element_text(color="black")) +
+  theme(legend.position="right",legend.justification="top")
 
 ```
 
@@ -1520,13 +1521,14 @@ The extent of the Jaccard dissimilarity between samples from different locations
 
 g2.5
 
-#ADD FIGURE SAVING
+path = "Figures/Figure8.pdf"
+  ggsave(filename = path, plot = g2.5, device = "pdf", width = 169, height = 120, units = "mm", dpi = 600)
 
 ```
 
 #### 3.4.	Ecological Significance
 
-```{r}
+```{r Ecological Significance}
 
 S1_unique = setdiff(S1_taxa, union(S2_taxa,N_taxa) ) 
 S2_unique = setdiff(S2_taxa, union(S1_taxa,N_taxa) ) 

@@ -1,10 +1,3 @@
-base
-methods
-datasets
-utils
-grDevices
-graphics
-stats
 phyloseq
 ggtree
 ggtreeExtra
@@ -33,10 +26,10 @@ chisq.posthoc.test
 taxize
 Polychrome
 pals
-tidytree
 spocc
 mregions
 rgbif
 mapview
 ggbeeswarm
 ggh4x
+tidytree
