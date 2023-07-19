@@ -14,6 +14,8 @@ knitr::opts_chunk$set(echo = TRUE)
 #Install & Load Requires Packages
 #Check if all required packages have been installed and loaded, and if not, install and load them. 
 
+options(repos = list(CRAN="http://cran.rstudio.com/"))
+
 packages <- c("tidyverse", 
               "sf",
               "patchwork", 
@@ -28,16 +30,16 @@ packages <- c("tidyverse",
               "taxize",
               "Polychrome",
               "pals", 
-              "tidytree",
               "spocc",
               "mregions",
               "rgbif",
               "mapview",
-              "job",
-              "ggforce",
-              "ggbeeswarm")
+              "ggbeeswarm",
+              "ggh4x")
 
 #Packages that I don't think are necessary to load, but I did load at some point: "rsvg", "grImport2", "purrr", "sjmisc", "viridis", "ape", "colourvalues", "usedist", "ggnewscale", "sp"
+
+
 
 install.packages(setdiff(packages, rownames(installed.packages())))
 
@@ -56,6 +58,9 @@ if(!require("ampvis2", quietly=TRUE))
 packages = append(packages, c("phyloseq", "ampvis2", "ggtree", "ggtreeExtra"))
 
 invisible(lapply(packages, library, character.only = TRUE))
+
+install_version("tidytree", version = "0.4.2")
+library(tidytree)
 
 ```
 
@@ -173,7 +178,7 @@ Raw ASVs, taxonomy assignments, and metadata were converted into interchangeable
 
 ```{r Core Functions}
 
-#Function that removes NCBI Taxonomy IDs from the end of a taxa name, from an Anacapa Output in list form 
+#Function that removes NCBI Taxonomy IDs from the end of a taxa name, from an Anacapa Output, in list form 
 remove_NCBInums = function(list) {
   list = sub("_[^_]+$","", list)
   return(list)
@@ -446,7 +451,7 @@ data_amp_taxa$abund = aggregate_abund(data_amp$abund, data_amp$tax, tax_aggregat
 
 ##IN PROGRESS
 
-data_forchart = data_amp$metadata
+data_forchart = amp$metadata[!is.na(amp$metadata$Time),]
 
 data_forchart = data_forchart %>% group_by(SiteByTime) %>% mutate(chart_num = ceiling(row_number()/3))
 
@@ -454,25 +459,28 @@ data_forchart$datetime <- lubridate::ymd_hm(paste("2022/01/28", data_forchart$Ti
 data_forchart$LocNumTime = as.factor(paste(data_forchart$Location, data_forchart$chart_num, data_forchart$Time))
 
 
-facet.labs =  c("Tide Pool 1\n (S1)", "Tide Pool 2\n (S2)", "Nearshore\n (N)")
-names(facet.labs) = c("S1", "S2", "N")
+facet.labs =  c("Tide Pool 1\n (S1)", "Tide Pool 2\n (S2)", "Nearshore\n (N)", "Field Blank")
+names(facet.labs) = c("S1", "S2", "N", "FB")
 
-data_forchart$Location= factor(data_forchart$Location, levels=c("S1", "S2", "N"))
-#data_forchart$chart_num= factor(data_forchart$chart_num, levels=c("3", "2", "1"))
+data_forchart$Location= factor(data_forchart$Location, levels=c("S1", "S2", "N", "FB"))
+data_forchart$chart_num= factor(data_forchart$chart_num, levels=c("3", "2", "1"))
 
-
-sample_schema = ggplot(data = data_forchart, aes(x = datetime, y = chart_num, shape = Location, color = Time, fill = Time)) + 
-   facet_grid(Location ~., scales = "free_y", space = "free_y", switch = "y", labeller = labeller(Location = facet.labs)) +
-  #geom_point(position = position_dodge2(width = 1)) + 
-  geom_beeswarm(cex= 2, size = 3) +
-  geom_mark_rect(aes(group = LocNumTime)) +
-  coord_cartesian(xlim = c(xmin, xmax)) +
-  scale_shape_manual(values = c(15, 17, 16)) + 
-  viridis::scale_color_viridis(discrete=TRUE, begin = 0, end = .97, direction = -1) +
-  viridis::scale_fill_viridis(discrete=TRUE, begin = 0, end = .97, direction = -1) +
+sample_schema = ggplot(data = data_forchart, aes(x = Time, y = chart_num, shape = Location,
+                                 color = Time, 
+                                 fill = after_scale(alpha(colour, 0.05)))) + 
+  geom_beeswarm(cex = 2, size = 4) + 
+  geom_box(aes(xmin = after_stat(x) - 0.45, 
+               xmax = after_stat(x) + 0.45,
+               ymin = after_stat(y) - 0.4, 
+               ymax = after_stat(y) + 0.45),
+           radius = unit(5, "pt")) +
+  scale_shape_manual(values = c(15, 17, 16, 18)) + 
+  scale_color_viridis_d(direction = -1) +
+  facet_grid(Location ~., scales = "free_y", space = "free_y", 
+             switch = "y", labeller = labeller(Location = facet.labs)) +
   theme_void(base_size = 16) + 
-  theme(legend.position = "none") +
-theme(strip.text.y.left = element_text(angle = 0, hjust = 1, vjust = .9)) 
+  theme(legend.position = "none",
+        strip.text.y.left = element_text(angle = 0, hjust = 1, vjust = .9))  
 
 
 graph = sample_schema 
@@ -483,28 +491,48 @@ filename = paste("sample_schema_full.pdf")
   print(graph)
   dev.off()
   
-  graph$layers[[2]] <- NULL
+  graph$layers[[1]] <- NULL
   
+  alpha=c(0,0,0,0,0,0,0,0,0,0,0,0)
+ 
 for (i in 1:12) {
   alpha[i] = 1
   graph <- graph + 
-    viridis::scale_fill_viridis(discrete=TRUE, 
-                                 begin = 0, 
-                                 end = .97, 
-                                 direction = -1, 
-                                 alpha = alpha) 
+    scale_color_viridis_d(direction = -1, alpha = alpha) +
+     scale_fill_viridis_d(direction = -1, alpha = alpha)
   filename = paste("sample_schema", i, ".pdf")
   path = paste("Figures/PowerPointFigure/", filename)
-  pdf(path, width = 9, height = 6.14)
+  pdf(path, width = 13, height = 4.3)
   print(graph)
   dev.off()
-  alpha[i] = .5
 }
 
 
 ##Still need to line up axes between two plots, probably by changing date format for both
 ##Still need to add field blank to plots
 p_patch/sample_schema
+
+
+
+
+
+
+
+#OLD VERSION
+
+#sample_schema = ggplot(data = data_forchart, aes(x = datetime, y = chart_num, shape = Location, color = Time, fill = Time)) + 
+   #facet_grid(Location ~., scales = "free_y", space = "free_y", switch = "y", labeller = labeller(Location = facet.labs)) +
+  #geom_point(position = position_dodge2(width = 1)) + 
+  #geom_beeswarm(cex= 2, size = 3) +
+  #geom_mark_rect(aes(group = LocNumTime)) +
+  #coord_cartesian(xlim = c(xmin, xmax)) +
+  #scale_shape_manual(values = c(15, 17, 16)) + 
+  #viridis::scale_color_viridis(discrete=TRUE, begin = 0, end = .97, direction = -1) +
+  #viridis::scale_fill_viridis(discrete=TRUE, begin = 0, end = .97, direction = -1) +
+  #theme_void(base_size = 16) + 
+  #theme(legend.position = "none") +
+#theme(strip.text.y.left = element_text(angle = 0, hjust = 1, vjust = .9)) 
+
 
 
 
@@ -565,10 +593,9 @@ Phyla_Reads = data.frame(Phyla = tax_table(physeq_totalreads)[,2],
 ```
 
 
-```{r GBIF}
+```{r GBIF, cache=TRUE}
 
-#Run this code in the background since it takes a long time
-job::job({
+#TO-DO: figure out how to set this up with future or callr
 
 #Create list of identified species
 species = unique(data_amp$tax$Species)
@@ -759,7 +786,6 @@ print(GBIF_summary %>% group_by(across(PillarPointOccurrence:NotInGBIF)) %>% sum
 
 write.csv(GBIF_summary, "Data/Analysis Products/RangeAnalysis.csv", row.names=TRUE)
 
-})
 ```
 
 Focused on just the `r samples` samples, we removed singletons and all `r overlap` ASVs that overlapped with negative controls (Supplemental Information X), and we rarefied samples to the minimum number of reads of any sample, leaving `r processed_ASVs` ASVs and `r processed_reads` reads. `r sprintf("%0.1f%%", unassigned_ASVs[unassigned_ASVs$Kingdom == "",]$freq * 100)` of ASVs were unassigned, and the remainder included representatives from `r phyla` phyla, `r class` classes, `r order` orders, `r family` families, `r genus` genera, and `r species` species (Figure 4). A breakdown of the relative proportions of reads and ASVs assigned to each phyla can be found in Table 1. To ensure the accuracy of these taxonomic identifications, we confirmed that 306 of `r species` identified species (73.7%) have occurrence records in the California Current System (CCS) and known ranges that encompass Pillar Point. (Supplemental Information X).
@@ -1202,10 +1228,7 @@ adonis2(jaccard_taxa ~ Location + Time + Dereplicated_Sample_Name, data = data_a
 
 ```
 
-```{r, message=FALSE, echo=FALSE}
-
-#Run this code in the background since it takes a long time
-job::job({
+```{r, message=FALSE, echo=FALSE, cache = TRUE}
 
 #NMDS
 
@@ -1341,7 +1364,6 @@ NMDS_PAM_taxa = NMDS_PAM(data_amp_taxa, jaccard_taxa, 2, TRUE)
 NMDS_PAM_taxa$NMDS_stress
 NMDS_PAM_taxa$PAM_validation
 
-})
 ```
 
 Community composition also differed across locations, as supported by multiple analyses. Variation in community composition was significantly explained by location, even when accounting for variation due to time of sampling and variation between replicates (ASVs: PERMANOVA  p < 0.001, betadisper p > 0.5; Taxa: PERMANOVA  p < 0.001, betadisper p > 0.5). As visualized using NMDS ordination, S1 and S2 samples collected around low tide were most dissimilar from the offshore samples (Figures 7A, 7C). These patterns persisted in the optimal clusters identified using the partitioning among medoids (PAM) algorithm, without assuming a priori that location drives the clusters (Figure 7B, 7D). When analyzed by ASV, PAM identified three optimal clusters, primarily composed of: 1) nearshore samples with additional samples from S1 and S2 at early time points, 2) the remaining S1 samples, and 3) the remaining S2 samples (Figure 7B). When analyzing by taxa, PAM additionally differentiated between samples from the three locations collected at early time points. Thus, multiple analyses with different initial assumptions all demonstrated differentiable eDNA signals across micro-habitats. 
@@ -1526,6 +1548,8 @@ full_taxa_list = df_list %>% reduce(full_join, by='Species')
 
 
 #Get synonyms for taxa from WoRMS
+#to add: (get synonyms via taxize?)
+#to add: process synonyms to a) remove any parentheticals, and b) remove anything beyond two words
 
 synonyms = c()
 for (s in full_taxa_list$Species) {
@@ -1543,6 +1567,10 @@ for (s in full_taxa_list$Species) {
 full_taxa_list = cbind(full_taxa_list, synonyms)
 
 write.csv(full_taxa_list, "Data/Analysis Products/BPT_Analysis.csv", row.names=FALSE)
+
+#make combined PDF of whole book
+#for combined PDF, find every page number where names occur
+#in each group of PDFs, search for all the names in the list
 
 #Ecological Significance 
 #Add section here where I import/read data rather than just pull the numbers
