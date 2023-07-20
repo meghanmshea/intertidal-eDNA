@@ -39,9 +39,17 @@ packages <- c("tidyverse",
               "rgbif",
               "mapview",
               "ggbeeswarm",
-              "ggh4x")
+              "ggh4x",
+              "chunkhooks")
 
 install.packages(setdiff(packages, rownames(installed.packages())))
+
+BM_packages <- c("phyloseq", 
+                 "ggtreeExtra")
+
+ BiocManager::install(setdiff(BM_packages, rownames(installed.packages())))
+
+#ggtree? #tidytree?
 
 if(!require("phyloseq", quietly=TRUE))
   BiocManager::install("phyloseq")
@@ -62,6 +70,8 @@ if(!require("tidytree", quietly=TRUE))
 
 packages = append(packages, c("phyloseq", "ampvis2", "ggtree", "ggtreeExtra", "tidytree"))
 invisible(lapply(packages, library, character.only = TRUE))
+
+hook_figure_unit()
 ```
 
 ### Materials and Methods
@@ -78,10 +88,10 @@ Within Pillar Point, we sampled at three discrete locations: two individual tide
 
 #### 2.3 Sample Collection & Filtration
 
-We collected 1 L surface samples from each location every 30 minutes for the duration of time the intertidal was exposed on 28 January 2022, using single-use enteral feeding pouches (Covidien, Dublin, Ireland). Sampling commenced at 11:30 am PST; the exact times of sample collection, in relation to the tide, are shown in Figure 3. Following the approach used by Gold et al. (2021b), we attached a sterile 0.22 um pore size Sterivex cartridge (MilliporeSigma, Burlington, MA, USA) to the tubing of each feeding pouch, allowing samples to be immediately gravity filtered in the field. While gravity filtering (1-2 hours per sample), samples were shaded with an awning to prevent any degradation by sunlight (Andruszkiewicz et al., 2017). 
+We collected 1 L surface samples from each location every 30 minutes for the duration of time the intertidal was exposed on 28 January 2022, using single-use enteral feeding pouches (Covidien, Dublin, Ireland). Sampling commenced at 11:30 am PST; the exact times of sample collection, in relation to the tide, are shown in Figure 3. Following the approach used by Gold et al. (2021b), we attached a sterile 0.22 $\mu$m pore size Sterivex cartridge (MilliporeSigma, Burlington, MA, USA) to the tubing of each feeding pouch, allowing samples to be immediately gravity filtered in the field. While gravity filtering (1-2 hours per sample), samples were shaded with an awning to prevent any degradation by sunlight (Andruszkiewicz et al., 2017). 
 
 
-```{r Figure 3,  out.width = '100%'}
+```{r Figure 3,  fig.width= 169, fig.height = 90}
 
 #Read Pillar Point NOAA/NOS/CO-OPs Tide Chart data file
 Tides = read.table("Data/28-Jan-2022-TideChart.txt", header = TRUE, sep = "", dec = ".", skip=13)
@@ -102,7 +112,7 @@ p1 <- ggplot(data=Tides, aes(x=datetime, y = Pred, group=1)) +
   annotate("rect", xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, fill = box_color) +
   geom_line() +
   coord_cartesian(xlim = c(Tides$datetime[1], Tides$datetime[96])) +
-  theme_classic(base_size = 16) +
+  theme_classic(base_size = 12) +
   theme(
     panel.background = element_rect(fill = "transparent", colour = NA_character_), 
     # necessary to avoid drawing panel outline
@@ -121,7 +131,7 @@ p1 <- ggplot(data=Tides, aes(x=datetime, y = Pred, group=1)) +
 p2 <- ggplot(data=Tides, aes(x=datetime, y = Pred, group=1)) + 
   geom_line() +
   coord_cartesian(xlim = c(xmin, xmax), ylim = c(ymin, ymax)) +
-  theme_classic(base_size = 16) + 
+  theme_classic(base_size = 12) + 
   theme(panel.background = element_rect(fill = box_color), 
         plot.background = element_rect(fill = "transparent", colour = NA_character_), 
         axis.text.x = element_text(color="black"),
@@ -149,7 +159,12 @@ p_patch
 ggsave(
   plot = p_patch,
   filename = "Figures/Figure3.png",
-  bg = "transparent"
+  device = "png",
+  bg = "transparent",
+  width = 169,
+  height = 90,
+  units = "mm", 
+  dpi = 600
 )
 
 
@@ -158,23 +173,23 @@ ggsave(
 
 At three time points (see Figure 3; additional items added outside of R) at the beginning and end of the sampling period as well as at low tide, we collected triplicate 1 L samples from each location as biological replicates. At the beginning and end of the sampling period, we also filtered 1 L MilliQ water via the procedure described above to serve as negative field controls. Additionally, using an Orion Model 1230 meter (Orion Research Inc., Beverly, MA, USA), we recorded temperature and salinity in each location directly after samples were collected. 
 
-Once finished filtering, Sterivex cartridges were dried by pushing air through them using a sterile 3 mL syringe, capped, placed in sterile Whirl-Pak bags (Whirl-Pak, Madison, WI, USA). Then, samples were stored in a cooler on ice until transported back to the laboratory at the end of the sampling period. Samples were transferred to a -20C freezer for up to 18 days, at which time they were processed to extract nucleic acids from the captured materials.  
+Once finished filtering, Sterivex cartridges were dried by pushing air through them using a sterile 3 mL syringe, capped, placed in sterile Whirl-Pak bags (Whirl-Pak, Madison, WI, USA). Then, samples were stored in a cooler on ice until transported back to the laboratory at the end of the sampling period. Samples were transferred to a -20°C freezer for up to 18 days, at which time they were processed to extract nucleic acids from the captured materials.  
 
 #### 2.4 DNA Extraction & Library Preparation
 
-Within 18 days of collection, we extracted DNA from the Sterivex cartridge using the DNeasy Blood and Tissue Kit (Qiagen, Germantown, MD, USA) and the modifications described in Spens et al. (2017). In short, we incubated the filter cartridge overnight with proteinase K and ATL. Then, we extracted the liquid from the cartridge with a syringe and mixed it with equal volumes of AL buffer and 0C ethanol before proceeding with the manufacturer’s extraction protocol. One negative extraction control (DNA-grade water in place of a sample) was included in each of four batches of extractions. Extracted samples to be PCR amplified were stored at -20C for up to 6 months. 
+Within 18 days of collection, we extracted DNA from the Sterivex cartridge using the DNeasy Blood and Tissue Kit (Qiagen, Germantown, MD, USA) and the modifications described in Spens et al. (2017). In short, we incubated the filter cartridge overnight with proteinase K and ATL. Then, we extracted the liquid from the cartridge with a syringe and mixed it with equal volumes of AL buffer and 0°C ethanol before proceeding with the manufacturer’s extraction protocol. One negative extraction control (DNA-grade water in place of a sample) was included in each of four batches of extractions. Extracted samples to be PCR amplified were stored at -20°C for up to 6 months. 
 
-We PCR amplified the extracted DNA in triplicate within 6 months of storage, using the mlCOIintF/ jgHCO2198 primer set targeting a 313 bp fragment of the mitochondrial COI region optimized by Leray et al. (2013) (Forward: GGWACWGGWTGAACWGTWTAYCCYCC; Reverse: TAIACYTCIGGRTGICCRAARAAYCA) with Nextera modifications. Following Curd et al. (2019), we used a 25 l PCR reaction mixture consisting of 12.5 l of Qiagen Multiplex Mix (Qiagen, Germantown, MD, USA), 2.5 l each of the forward and reverse primers at 2 M (Integrated DNA Technologies, Inc., Coralville, IA, USA), 6.5 l of PCR-grade water, and 1 l of undiluted DNA template. The PCR thermocycling touchdown profile began with an initial denaturation at 95 for 15 minutes to activate the DNA polymerase, followed by 13 cycles of denaturation (94 for 30 seconds), annealing (starting at 69.5 for 30 seconds, with the temperature decreased by 1.5 each cycle), and extension (72 for 1 minute). Then, an additional 35 cycles were run with the same denaturation and extension steps as above with an annealing temperature of 50, followed by a final extension at 72 for 10 minutes. PCR reactions were prepared in a designated DNA-free hood until the template was added. 
+We PCR amplified the extracted DNA in triplicate within 6 months of storage, using the mlCOIintF/ jgHCO2198 primer set targeting a 313 bp fragment of the mitochondrial COI region optimized by Leray et al. (2013) (Forward: GGWACWGGWTGAACWGTWTAYCCYCC; Reverse: TAIACYTCIGGRTGICCRAARAAYCA) with Nextera modifications. Following Curd et al. (2019), we used a 25 $\mu$l PCR reaction mixture consisting of 12.5 $\mu$l of Qiagen Multiplex Mix (Qiagen, Germantown, MD, USA), 2.5 $\mu$l each of the forward and reverse primers at 2 $\mu$M (Integrated DNA Technologies, Inc., Coralville, IA, USA), 6.5 $\mu$l of PCR-grade water, and 1 $\mu$l of undiluted DNA template. The PCR thermocycling touchdown profile began with an initial denaturation at 95° for 15 minutes to activate the DNA polymerase, followed by 13 cycles of denaturation (94° for 30 seconds), annealing (starting at 69.5° for 30 seconds, with the temperature decreased by 1.5° each cycle), and extension (72° for 1 minute). Then, an additional 35 cycles were run with the same denaturation and extension steps as above with an annealing temperature of 50°, followed by a final extension at 72° for 10 minutes. PCR reactions were prepared in a designated DNA-free hood until the template was added. 
 
 PCR amplification was conducted in two batches; in each batch, we included one no-template negative PCR control (DNA-grade water used as template). Additionally, we extracted DNA from tissue from five organisms across a range of phyla we expected to amplify with the mlCOIintF/ jgHCO2198 primers, but not expected to be present at Pillar Point in particular (Mytilus edulis, Mizuhopecten yessoensis, Xiphias gladius, Mercenaria mercenaria, Lutjanus campechanus) using the standard tissue extraction protocol detailed in the DNeasy Blood and Tissue Kit (Qiagen, Germantown, MD, USA). These tissues were obtained from a local grocery store and it was assumed that they were labeled correctly, although previous work has indicated mislabeling in seafood stores can occur (e.g. Willette et al., 2017). Extracts from the 5 tissue samples were combined in equimolar amounts to form a mock community used as a positive PCR control in each batch. Triplicate PCR amplicons from both samples and controls were not subsequently pooled, but were carried through the remaining library preparation and sequencing steps as technical replicates. We electrophoresed and visualized a subset of PCR products on a 1.5% agarose gel stained with GelRed® (Biotium, Fremont, CA, USA) to ensure successful amplification and correct product sizes as well as lack of contamination. 
 
-Post-PCR library preparation and sequencing was conducted at the Georgia Genomics and Bioinformatics Core (GGBC, UG Athens, GA, RRID:SCR_010994). In short, provided PCR amplicons were cleaned using AMPure XP magnetic beads (Beckman Coulter, Indianapolis, IN, USA), barcoded with Nextera adapters (Illumina, San Diego, CA, USA) during a second PCR (3 min at 95 °C; 15 cycles of 30 sec at 95 °C, 30 sec at 67 °C, and 30 sec at 72 °C; and 4 min at 72 °C), cleaned again using AMPureXP magnetic beads, and pooled in equimolar ratio. The resulting library was sequenced on a MiSeq PE 2x250bp (500 cycles) using Reagent Kit V2 with 25% PhiX spike-in (Illumina, San Diego, CA, USA). Given our technical replication of samples and controls, our final library included 6 negative field controls (1 at beginning and end of field sampling, amplified in triplicate), 12 negative extraction controls (1 in each of 4 extraction sets, amplified in triplicate), 2 positive PCR controls (1 in each of 2 amplification batches), 2 no-template negative PCR controls (1 in each of 2 amplification batches), and 159 samples (53 field samples, amplified in triplicate). 
+Post-PCR library preparation and sequencing was conducted at the Georgia Genomics and Bioinformatics Core (GGBC, UG Athens, GA, RRID:SCR_010994). In short, provided PCR amplicons were cleaned using AMPure XP magnetic beads (Beckman Coulter, Indianapolis, IN, USA), barcoded with Nextera adapters (Illumina, San Diego, CA, USA) during a second PCR (3 min at 95°C; 15 cycles of 30 sec at 95°C, 30 sec at 67°C, and 30 sec at 72°C; and 4 min at 72°C), cleaned again using AMPureXP magnetic beads, and pooled in equimolar ratio. The resulting library was sequenced on a MiSeq PE 2x250bp (500 cycles) using Reagent Kit V2 with 25% PhiX spike-in (Illumina, San Diego, CA, USA). Given our technical replication of samples and controls, our final library included 6 negative field controls (1 at beginning and end of field sampling, amplified in triplicate), 12 negative extraction controls (1 in each of 4 extraction sets, amplified in triplicate), 2 positive PCR controls (1 in each of 2 amplification batches), 2 no-template negative PCR controls (1 in each of 2 amplification batches), and 159 samples (53 field samples, amplified in triplicate). 
 
 #### 2.5 Bioinformatics
 
 We processed sequencing data using the Anacapa Toolkit, which contains two core modules: one for quality control and ASV parsing, and one for classifying taxonomy (Curd et al., 2019). Briefly, we ran the first module using default parameters, which uses cutadapt (version 1.16) (Martin, 2011) for adapter and primer trimming, FastX-Toolkit (version: 0.0.13) (citation) for quality trimming, and dada2 (version 1.6) (Callahan et al., 2016) for assigning ASVs. For the second module, we utilized the MIDORI2 reference database, a quality controlled and updated database built from GenBank release 253 (12/20/2022) that has been technically validated (Leray et al., 2022). Following Gold et al. (2022), we adjusted the identity and query coverage to 95% (default: 80%) to account for the relative incompleteness of the broad COI reference database compared to more taxonomically-specific databases (Curd et al., 2019). The second module relies on Bowtie 2 (version 2.3.5) (Langmead and Salzberg, 2012) and a modified instance of BLCA (Gao et al., 2017) as dependencies. Following Gold et al. (2021a) we only kept taxonomic assignments that had a bootstrap confidence cutoff score of 60 or higher in BLCA, to avoid spurious assignments from the incomplete reference database. We modified the Anacapa Container (Ogden, 2018), a Singularity container with all the needed dependencies for executing the Anacapa Toolkit, to enable the pipeline to be run in a high-performance computing environment requiring two-step authentication; the updated container, scripts, and reference database with the required Bowtie 2 index library needed to reproduce our bioinformatics process can be found on Dryad (link/citation).  
 
-Raw ASVs, taxonomy assignments, and metadata were converted into interchangeable ampvis2 (version 2.7.34) (Andersen et al., 2018) and phyloseq (version 1.42.0) (McMurdie and Holmes, 2013) objects in R (version 4.2.2) to facilitate decontamination and further analyses. Singletons were removed using ampvis2, and samples were further decontaminated using phyloseq by removing all ASVs that appeared in any negative field control, negative extraction control, or no-template negative PCR control, a choice made due to the very low number of overlapping ASVs between samples and negative controls (Supplemental Information X). Samples were rarified to the minimum number of reads of any sample using ampvis2. Subsequent analyses were robust to all three decontamination steps. 
+Raw ASVs, taxonomy assignments, and metadata were converted into interchangeable `ampvis2` (version `r packageVersion("ampvis2")` `packageVersion("ampvis2")`) (Andersen et al., 2018) and `phyloseq` (version `r packageVersion("phyloseq")` `packageVersion("phyloseq")`) (McMurdie and Holmes, 2013) objects in `r R.Version()$version.string` `R.Version()$version.string` to facilitate decontamination and further analyses. Singletons were removed using `ampvis2`, and samples were further decontaminated using `phyloseq` by removing all ASVs that appeared in any negative field control, negative extraction control, or no-template negative PCR control, a choice made due to the very low number of overlapping ASVs between samples and negative controls (Supplemental Information X). Samples were rarified to the minimum number of reads of any sample using `ampvis2`. Subsequent analyses were robust to all three decontamination steps. 
 
 ```{r Core Functions}
 
@@ -381,13 +396,13 @@ write.csv(GBIF_export$metadata, "Data/GBIF/SampleData.csv", row.names=FALSE)
 
 ```
 
-To ensure the accuracy of taxonomic assignments, we analyzed occurrence data from the Global Biodiversity Information Facility to investigate whether identified species had occurrence records in the California Current System and known ranges that encompassed Pillar Point, using the spocc (version 1.2.0) (Chamberlain, 2021) package. A phylogenetic tree based on taxonomic assignments was created using the taxize (version 0.9.100) (Chamberlain and Szöcs, 2013) and treedataverse (version 0.0.1) (citation) packages. 
+To ensure the accuracy of taxonomic assignments, we analyzed occurrence data from the Global Biodiversity Information Facility to investigate whether identified species had occurrence records in the California Current System and known ranges that encompassed Pillar Point, using the `spocc` (version `r packageVersion("spocc")` `packageVersion("spocc")`) (Chamberlain, 2021) package. A phylogenetic tree based on taxonomic assignments was created using the taxize (version `r packageVersion("taxize")` `packageVersion("taxize")`) (Chamberlain and Szöcs, 2013) and treedataverse (version ???) (citation) packages. 
 
 #### Data Analysis
 
-To understand whether eDNA signals could be distinguished by location, we first analyzed individual-level differences between locations; that is, whether ASVs or individual taxa (agglomerated species-level taxonomic assignments) were unique to, or associated with, particular locations. We calculated and visualized unique ASVs and taxa using the nVennR (version 0.2.3) (Pérez-Silva et al., 2018) and eulerr (version 7.0.0) (Larsson, 2022) packages. However, with metabarcoding data in particular, taxa or ASVs that are unique to a given location are not necessarily ecologically meaningful; they could include rare taxa present elsewhere but not amplified and exclude taxa that are well correlated with particular locations but sometimes detected at others. Thus, we also analyzed ASVs and taxa using an indicator species framework (Dufrêne and Legendre, 1997). In this framework, the null hypothesis is that the frequency of a taxon’s or ASV’s presence in samples from a particular location is not higher that the frequency of that taxon’s or ASV’s presence in samples from other locations. For each location, we identified all statistically-significant indicator taxa and ASVs with indicator value indices above 0.7—that is, indicators that are well-associated with a site group even if they are detected in samples from other sites—based on presence-absence data per sample using the indicspecies package (version 1.7.12) (Cáceres and Legendre, 2009). 
+To understand whether eDNA signals could be distinguished by location, we first analyzed individual-level differences between locations; that is, whether ASVs or individual taxa (agglomerated species-level taxonomic assignments) were unique to, or associated with, particular locations. We calculated and visualized unique ASVs and taxa using the `eulerr` (version `r packageVersion("eulerr")` `packageVersion("eulerr")`) (Larsson, 2022) packages. However, with metabarcoding data in particular, taxa or ASVs that are unique to a given location are not necessarily ecologically meaningful; they could include rare taxa present elsewhere but not amplified and exclude taxa that are well correlated with particular locations but sometimes detected at others. Thus, we also analyzed ASVs and taxa using an indicator species framework (Dufrêne and Legendre, 1997). In this framework, the null hypothesis is that the frequency of a taxon’s or ASV’s presence in samples from a particular location is not higher that the frequency of that taxon’s or ASV’s presence in samples from other locations. For each location, we identified all statistically-significant indicator taxa and ASVs with indicator value indices above 0.7—that is, indicators that are well-associated with a site group even if they are detected in samples from other sites—based on presence-absence data per sample using the `indicspecies` package (version `r packageVersion("indicspecies")` `packageVersion("indicspecies")`) (Cáceres and Legendre, 2009). 
 
-We followed our individual-level analyses with approaches to test whether community composition varied by location. We calculated a Jaccard dissimilarity matrix across all samples using vegan (version 2.6.4) (Oksanen et al., 2022). Then, we tested for differences in community composition among locations using a permutational multivariate analysis of variance (PERMANOVA) with the model eDNA Presence ~ Location + Time + Biological Replicates using the adonis function in vegan. We confirmed that locational differences found via PERMANOVA were not a result of differences in dispersions by testing for homogeneity of dispersions using the betadisper function in vegan. We also visualized Jaccard dissimilarity using non-metric multidimensional scaling (NMDS) using the metaMDS function in vegan. We coupled these analyses with a partitioning among medoids algorithm (Kaufman and Rousseeuw, 1990) implemented with the pam function in the cluster package (version 2.1.4) (Maechler et al., 2022). Rather than assuming location clusters a priori, we validated the optimal number of clusters for a given dataset by finding the number of clusters (k) that maximized the average silhouette width, a measure of how well-structured the clusters are. Finally, to better understand how the difference between locations varied over the time sampled, for each time point, we calculated the Jaccard dissimilarity between each unique combination of replicates within each site, and then the pairwise Jaccard dissimilarity between each unique combination of samples across the three pairs of sites: S1-N, S2-N, and S1-S2.
+We followed our individual-level analyses with approaches to test whether community composition varied by location. We calculated a Jaccard dissimilarity matrix across all samples using `vegan` (version `r packageVersion("vegan")` `packageVersion("vegan")`) (Oksanen et al., 2022). Then, we tested for differences in community composition among locations using a permutational multivariate analysis of variance (PERMANOVA) with the model eDNA Presence ~ Location + Time + Biological Replicates using the `adonis` function in `vegan`. We confirmed that locational differences found via PERMANOVA were not a result of differences in dispersions by testing for homogeneity of dispersions using the betadisper function in `vegan`. We also visualized Jaccard dissimilarity using non-metric multidimensional scaling (NMDS) using the `metaMDS` function in `vegan`. We coupled these analyses with a partitioning among medoids algorithm (Kaufman and Rousseeuw, 1990) implemented with the `pam` function in the `cluster` package (version `r packageVersion("cluster")` `packageVersion("cluster")`) (Maechler et al., 2022). Rather than assuming location clusters a priori, we validated the optimal number of clusters for a given dataset by finding the number of clusters (k) that maximized the average silhouette width, a measure of how well-structured the clusters are. Finally, to better understand how the difference between locations varied over the time sampled, for each time point, we calculated the Jaccard dissimilarity between each unique combination of replicates within each site, and then the pairwise Jaccard dissimilarity between each unique combination of samples across the three pairs of sites: S1-N, S2-N, and S1-S2.
 
 To further understand whether differences in eDNA detections corresponded with underlying ecological gradients, we compared the unique and indicator taxa identified at each site to their ecological zonation in a highly regarded field guide to the Pacific intertidal, Between Pacific Tides (Ricketts et al., 1985). To account for potential variations in taxonomic names between Between Pacific Tides and the MIDORI2 reference database, we used the World Register of Marine Species (WoRMS) to identify all synonymized names for each unique and indicator taxon identified, and we searched Between Pacific Tides for all synonyms. We compared the proportion of high and middle intertidal species identified across each location using a chi-squared test with p-values computed via Monte Carlo simulation. 
 
@@ -432,7 +447,7 @@ overlap_table
 write.csv(overlap_table, "Data/Analysis Products/OverlapASVs.csv", row.names=TRUE)
 
 ```
-Using the Anacapa Toolkit, we identified `r total_ASVs` ASVs from `r total_reads` reads across `r samples` samples and `r controls` controls (positive PCR controls, negative field controls, negative extraction controls, and no-template negative PCR controls). All expected taxa amplified in each positive PCR control, and no ASVs present in the positive PCR controls occurred in any other samples, providing no evidence of index hopping. Before application of any decontamination steps, only `r overlap` ASVs were shared between the samples and negative field, extraction, and PCR controls. 
+Using the Anacapa Toolkit, we identified `r total_ASVs` (`total_ASVs`) ASVs from `r total_reads`(`total_reads`) reads across `r samples` (`samples`) samples and `r controls` (`controls`) controls (positive PCR controls, negative field controls, negative extraction controls, and no-template negative PCR controls). All expected taxa amplified in each positive PCR control, and no ASVs present in the positive PCR controls occurred in any other samples, providing no evidence of index hopping. Before application of any decontamination steps, only `r overlap` (`overlap`) ASVs were shared between the samples and negative field, extraction, and PCR controls. 
 
 ```{r Core Data Sets}
 #Establish processed data set used throughout analyses
@@ -447,7 +462,7 @@ data_amp_taxa$abund = aggregate_abund(data_amp$abund, data_amp$tax, tax_aggregat
 ```
 
 
-```{r Figure 3 --Continued, message = FALSE, warning = FALSE, results = FALSE, out.width = '100%'}
+```{r Figure 3 --Continued, message = FALSE, warning = FALSE, results = FALSE, fig.width= 169, fig.height = 200}
 
 ##IN PROGRESS
 
@@ -478,7 +493,7 @@ sample_schema = ggplot(data = data_forchart, aes(x = Time, y = chart_num, shape 
   scale_color_viridis_d(direction = -1) +
   facet_grid(Location ~., scales = "free_y", space = "free_y", 
              switch = "y", labeller = labeller(Location = facet.labs)) +
-  theme_void(base_size = 16) + 
+  theme_void(base_size = 14) + 
   theme(legend.position = "none",
         strip.text.y.left = element_text(angle = 0, hjust = 1, vjust = .9))  
 
@@ -513,27 +528,16 @@ for (i in 1:12) {
 p_patch/sample_schema
 
 
-
-
-
-
-
-#OLD VERSION
-
-#sample_schema = ggplot(data = data_forchart, aes(x = datetime, y = chart_num, shape = Location, color = Time, fill = Time)) + 
-   #facet_grid(Location ~., scales = "free_y", space = "free_y", switch = "y", labeller = labeller(Location = facet.labs)) +
-  #geom_point(position = position_dodge2(width = 1)) + 
-  #geom_beeswarm(cex= 2, size = 3) +
-  #geom_mark_rect(aes(group = LocNumTime)) +
-  #coord_cartesian(xlim = c(xmin, xmax)) +
-  #scale_shape_manual(values = c(15, 17, 16)) + 
-  #viridis::scale_color_viridis(discrete=TRUE, begin = 0, end = .97, direction = -1) +
-  #viridis::scale_fill_viridis(discrete=TRUE, begin = 0, end = .97, direction = -1) +
-  #theme_void(base_size = 16) + 
-  #theme(legend.position = "none") +
-#theme(strip.text.y.left = element_text(angle = 0, hjust = 1, vjust = .9)) 
-
-
+ggsave(
+  plot = p_patch/sample_schema,
+  filename = "Figures/Figure3_full.png",
+  device = "png",
+  bg = "transparent",
+  width = 169,
+  height = 200,
+  units = "mm", 
+  dpi = 600
+)
 
 
 ```
@@ -593,7 +597,7 @@ Phyla_Reads = data.frame(Phyla = tax_table(physeq_totalreads)[,2],
 ```
 
 
-```{r GBIF, cache=TRUE, message = FALSE, warning = FALSE, results='hide',fig.keep='all'}
+```{r GBIF Set-Up, message = FALSE, warning = FALSE}
 
 #This chunk takes a long time to run
 #TO-DO: figure out how to set this up with future or callr
@@ -712,8 +716,15 @@ CC_shape_sp = st_simplify(CC_shape_sp, preserveTopology = FALSE, dTolerance=1000
 CC_shape_sp = st_transform(CC_shape_sp, crs = 4326)
 mapview(CC_shape_sp)
 
+```
+
+```{r GBIF Run, cache=TRUE, message = FALSE, warning = FALSE, results = 'hide'}
+
 distribution = distribution_check(c(-122.50, 37.49, -122.49, 37.50), CC_shape_sp, species_standardized, 5, FALSE)
 
+```
+
+```{r GBIF Summary, message = FALSE, warning = FALSE, fig.keep='all'}
 d = distribution
 PP = d[[1]]$confirmed
 CC = d[[2]]$confirmed
@@ -775,13 +786,15 @@ GBIF_summary = data.frame(Species = species_both$verbatim_name,
 
 print(GBIF_summary %>% group_by(across(PillarPointOccurrence:NotInGBIF)) %>% summarise(count=n()))
 
+known_summary = GBIF_summary %>% filter(!is.na(GBIFSpecies)) %>% summarise(count = sum(Range == TRUE & CCSOccurrence == TRUE))
+
 ##Add code to calculate the various percentages used in the text
 
 write.csv(GBIF_summary, "Data/Analysis Products/RangeAnalysis.csv", row.names=TRUE)
 
 ```
 
-Focused on just the `r samples` samples, we removed singletons and all `r overlap` ASVs that overlapped with negative controls (Supplemental Information X), and we rarefied samples to the minimum number of reads of any sample, leaving `r processed_ASVs` ASVs and `r processed_reads` reads. `r sprintf("%0.1f%%", unassigned_ASVs[unassigned_ASVs$Kingdom == "",]$freq * 100)` of ASVs were unassigned, and the remainder included representatives from `r phyla` phyla, `r class` classes, `r order` orders, `r family` families, `r genus` genera, and `r species` species (Figure 4). A breakdown of the relative proportions of reads and ASVs assigned to each phyla can be found in Table 1. To ensure the accuracy of these taxonomic identifications, we confirmed that 306 of `r species` identified species (73.7%) have occurrence records in the California Current System (CCS) and known ranges that encompass Pillar Point. (Supplemental Information X).
+Focused on just the `r samples` (`samples`) samples, we removed singletons and all `r overlap` (`overlap`) ASVs that overlapped with negative controls (Supplemental Information X), and we rarefied samples to the minimum number of reads of any sample, leaving `r processed_ASVs` (`processed_ASVs`) ASVs and `r processed_reads` (`processed_reads`) reads. `r sprintf("%0.1f%%", unassigned_ASVs[unassigned_ASVs$Kingdom == "",]$freq * 100)` (`sprintf("%0.1f%%", unassigned_ASVs[unassigned_ASVs$Kingdom == "",]$freq * 100)`) of ASVs were unassigned, and the remainder included representatives from `r phyla` (`phyla`) phyla, `r class` (`class`) classes, `r order` (`order`) orders, `r family` (`family`) families, `r genus` (`genus`) genera, and `r species` (`species`) species (Figure 4). A breakdown of the relative proportions of reads and ASVs assigned to each phyla can be found in Table 1. To ensure the accuracy of these taxonomic identifications, we confirmed that `r known_summary` (`known_summary`) of `r species` (`species`) identified species (`r sprintf("%0.1f%%", known_summary/species * 100)` `sprintf("%0.1f%%", known_summary/species * 100)`) have occurrence records in the California Current System (CCS) and known ranges that encompass Pillar Point. (Supplemental Information X).
 
 ```{r Table 1}
 
@@ -955,6 +968,8 @@ p = p +
     legend.box.background = element_rect(fill='transparent')
   )
 
+p
+
 ggsave(
   "Figures/Figure4.pdf",
   plot = p,
@@ -962,7 +977,8 @@ ggsave(
   bg='transparent')
 
 ```
-```{r Phylogenetic Tree for PowerPoint}
+
+```{r Phylogenetic Tree for PowerPoint, class.source = 'fold-hide'}
 
 p <- ggtree(pt_physeq,  layout = "rectangular") 
 
@@ -976,8 +992,6 @@ names(colors_ordered) = ordered_names
 p = p + geom_fruit(geom = geom_tile, mapping = aes(fill = Phylum), width = 3, show.legend = FALSE)  + scale_fill_manual(values = colors_ordered) +scale_color_manual(values = colors_ordered)
 
 p = p + geom_hilight(data=phyla_nodes, mapping=aes(node = node, fill = node_phylum), show.legend = FALSE)
-
-
 
 p = p +
   theme(
@@ -1002,6 +1016,8 @@ ggsave(
 #### 3.2 Individual-Level Differences Between Locations
 
 ```{r Euler Diagrams}
+
+eulerr_options(fontsize = 12)
 
 #Subset ampvis2 data by location
 
@@ -1047,17 +1063,17 @@ add_quantity_line_break = function(v) {
 
 
 E_taxa <- euler(list(S1 = S1_taxa, S2 = S2_taxa, N = N_taxa), shape = "ellipse")
-E_taxa_plot = plot(E_taxa, quantities = list(type = c("counts", "percent"), cex=2), legend = list(side ="right", nrow = 1, ncol = 3, cex = 2.5))
+E_taxa_plot = plot(E_taxa, quantities = list(type = c("counts", "percent"), cex=1), legend = list(side ="right", nrow = 1, ncol = 3, cex = 1))
 E_taxa_plot = add_quantity_line_break(E_taxa_plot)
 
 
 E_ASV <- euler(list(S1 = S1_ASV, S2 = S2_ASV, N = N_ASV), shape="ellipse")
-E_ASV_plot = plot(E_ASV, quantities = list(type = c("counts", "percent"), cex=2), legend = list(side ="right", nrow = 1, ncol = 3, cex = 2.5))
+E_ASV_plot = plot(E_ASV, quantities = list(type = c("counts", "percent"), cex=1), legend = list(side ="right", nrow = 1, ncol = 3, cex = 1))
 E_ASV_plot = add_quantity_line_break(E_ASV_plot)
 
 ```
 
-Across both taxa (n=415) and ASVs (n=27,038), all three locations had unique elements, suggesting that there was not complete mixing of eDNA across micro-habitats. 33.2% of taxa and 80% of ASVs were unique to one of the three locations (Figure 5). At both the taxa and ASV level, S1 had more unique elements than S2 and nearshore, although this effect was more pronounced across ASVs. ASVs and taxa shared across pairs of two locations were the least common elements. 
+Across both taxa (n=`r samples``samples`) and ASVs (n=`r `processed_ASVs` `processed_ASVs`), all three locations had unique elements, suggesting that there was not complete mixing of eDNA across micro-habitats. 33.2% of taxa and 80% of ASVs were unique to one of the three locations (Figure 5). At both the taxa and ASV level, S1 had more unique elements than S2 and nearshore, although this effect was more pronounced across ASVs. ASVs and taxa shared across pairs of two locations were the least common elements. 
 
 ```{r Figure 5}
 
