@@ -2,15 +2,19 @@
 title: "Environmental DNA (eDNA) metabarcoding differentiates between micro-habitats within the rocky intertidal"
 author: "Meghan M. Shea"
 date: "`r Sys.Date()`"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    df_print: paged
+    code_download: true
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, tidy = 'styler')
 ```
 
 
-```{r Loading Packages}
+```{r Loading Packages, message = FALSE, warning = FALSE, results = FALSE}
 #Install & Load Requires Packages
 #Check if all required packages have been installed and loaded, and if not, install and load them. 
 
@@ -37,10 +41,6 @@ packages <- c("tidyverse",
               "ggbeeswarm",
               "ggh4x")
 
-#Packages that I don't think are necessary to load, but I did load at some point: "rsvg", "grImport2", "purrr", "sjmisc", "viridis", "ape", "colourvalues", "usedist", "ggnewscale", "sp"
-
-
-
 install.packages(setdiff(packages, rownames(installed.packages())))
 
 if(!require("phyloseq", quietly=TRUE))
@@ -55,13 +55,13 @@ if(!require("ggtreeExtra", quietly=TRUE))
 if(!require("ampvis2", quietly=TRUE))
   remotes::install_github("kasperskytte/ampvis2")
 
-packages = append(packages, c("phyloseq", "ampvis2", "ggtree", "ggtreeExtra"))
 
+#most recent CRAN update for tidytree broke my phylogenetic tree code; see if I can troubleshoot at some point
+if(!require("tidytree", quietly=TRUE))
+  install_version("tidytree", version = "0.4.2")
+
+packages = append(packages, c("phyloseq", "ampvis2", "ggtree", "ggtreeExtra", "tidytree"))
 invisible(lapply(packages, library, character.only = TRUE))
-
-install_version("tidytree", version = "0.4.2")
-library(tidytree)
-
 ```
 
 ### Materials and Methods
@@ -81,7 +81,7 @@ Within Pillar Point, we sampled at three discrete locations: two individual tide
 We collected 1 L surface samples from each location every 30 minutes for the duration of time the intertidal was exposed on 28 January 2022, using single-use enteral feeding pouches (Covidien, Dublin, Ireland). Sampling commenced at 11:30 am PST; the exact times of sample collection, in relation to the tide, are shown in Figure 3. Following the approach used by Gold et al. (2021b), we attached a sterile 0.22 um pore size Sterivex cartridge (MilliporeSigma, Burlington, MA, USA) to the tubing of each feeding pouch, allowing samples to be immediately gravity filtered in the field. While gravity filtering (1-2 hours per sample), samples were shaded with an awning to prevent any degradation by sunlight (Andruszkiewicz et al., 2017). 
 
 
-```{r Figure 3}
+```{r Figure 3,  out.width = '100%'}
 
 #Read Pillar Point NOAA/NOS/CO-OPs Tide Chart data file
 Tides = read.table("Data/28-Jan-2022-TideChart.txt", header = TRUE, sep = "", dec = ".", skip=13)
@@ -447,7 +447,7 @@ data_amp_taxa$abund = aggregate_abund(data_amp$abund, data_amp$tax, tax_aggregat
 ```
 
 
-```{r Figure 3 --Continued}
+```{r Figure 3 --Continued, message = FALSE, warning = FALSE, results = FALSE, out.width = '100%'}
 
 ##IN PROGRESS
 
@@ -593,19 +593,20 @@ Phyla_Reads = data.frame(Phyla = tax_table(physeq_totalreads)[,2],
 ```
 
 
-```{r GBIF, cache=TRUE}
+```{r GBIF, cache=TRUE, message = FALSE, warning = FALSE, results='hide',fig.keep='all'}
 
+#This chunk takes a long time to run
 #TO-DO: figure out how to set this up with future or callr
 
 #Create list of identified species
-species = unique(data_amp$tax$Species)
-species = remove_NCBInums(species)
-species = species[species != ""]
-species = sub("_", "-", species) #to address Pseudo_nitzchia error
+species_list = unique(data_amp$tax$Species)
+species_list = remove_NCBInums(species_list)
+species_list = species_list[species_list != ""]
+species_list = sub("_", "-", species_list) #to address Pseudo_nitzchia error
 
 
 #Standardize species names against GBIF backbone
-species_GBIF = name_backbone_checklist(species)
+species_GBIF = name_backbone_checklist(species_list)
 species_standardized = species_GBIF$species[!is.na(species_GBIF$species)]
 species_both = species_GBIF[c("species", "verbatim_name")]
 
@@ -705,21 +706,13 @@ pnt <- st_as_sfc(CC_shape, crs = 4326)
 mapview(pnt)
 
 #Simplify the polygon for use with GBIF
-test = st_transform(pnt, crs = '+proj=aeqd +lat_0=53.6 +lon_0=12.7')
-mapview(test)
-test1 = st_simplify(test, preserveTopology = FALSE, dTolerance=10000)
-test1 = st_transform(test1, crs = 4326)
-mapview(test1)
+CC_shape_sp = st_transform(pnt, crs = '+proj=aeqd +lat_0=53.6 +lon_0=12.7')
+mapview(CC_shape_sp)
+CC_shape_sp = st_simplify(CC_shape_sp, preserveTopology = FALSE, dTolerance=10000)
+CC_shape_sp = st_transform(CC_shape_sp, crs = 4326)
+mapview(CC_shape_sp)
 
-
-
-#Simplify into a box for use with GBIF function
-CC_shape = wkt2bbox(CC_shape)
-CC_shape = c(CC_shape$min_x, CC_shape$min_y, CC_shape$max_x, CC_shape$max_y)
-
-
-
-distribution = distribution_check(c(-122.50, 37.49, -122.49, 37.50), test1, species_standardized, 5, FALSE)
+distribution = distribution_check(c(-122.50, 37.49, -122.49, 37.50), CC_shape_sp, species_standardized, 5, FALSE)
 
 d = distribution
 PP = d[[1]]$confirmed
@@ -837,7 +830,9 @@ Focused on just the `r samples` samples, we removed singletons and all `r overla
   write.csv(full_sorted, "Data/Analysis Products/TaxonDiversity.csv", row.names=TRUE)
 ```
 
-```{r Figure 4 -- Phylogenetic Tree}
+```{r Figure 4 -- Phylogenetic Tree, message = FALSE, warning = FALSE, results = FALSE, error = FALSE}
+
+options(getClass.msg=FALSE)
 
 #Aggregate to species assignment and remove the NCBI identifiers
 pt_physeq = tax_glom(data_physeq, taxrank="Species", NArm=FALSE)
@@ -1228,7 +1223,7 @@ adonis2(jaccard_taxa ~ Location + Time + Dereplicated_Sample_Name, data = data_a
 
 ```
 
-```{r NMDS & PAM, message=FALSE, echo=FALSE, cache = TRUE}
+```{r NMDS & PAM, message=FALSE, echo=FALSE, cache = TRUE, warning = FALSE, results = FALSE}
 
 #NMDS
 
@@ -1379,7 +1374,7 @@ Community composition also differed across locations, as supported by multiple a
 #Add figuring saving
 ```
 
-```{r Animated Figure for PowerPoint}
+```{r Animated Figure for PowerPoint, message=FALSE, echo=FALSE, warning = FALSE, results = FALSE}
 
 alpha=c(0,0,0,0,0,0,0,0,0,0,0,0)
 graph = NMDS_PAM_full$NMDS + 
@@ -1528,7 +1523,9 @@ path = "Figures/Figure8.pdf"
 
 #### 3.4.	Ecological Significance
 
-```{r Ecological Significance}
+```{r Ecological Significance, message = FALSE, warning = FALSE, results = FALSE}
+
+#NOT DONE YET 
 
 S1_unique = setdiff(S1_taxa, union(S2_taxa,N_taxa) ) 
 S2_unique = setdiff(S2_taxa, union(S1_taxa,N_taxa) ) 
@@ -1600,7 +1597,7 @@ test_post_hoc = chisq.posthoc.test(counts, method = "bonferroni", simulate.p.val
 
 ```
 
-Identified unique and indicator taxa reflected known ecological differences between locations. Only a subset of unique and indicator taxa were described in Between Pacific Tides: 18.8% (9/48) of nearshore taxa, 32.1% (17/53) of S1 taxa, and 31.1% (14/45) of S2. However, across the described subset, more taxa from S1 were categorized to high and middle intertidal zones than S2 and N (Figure 9; not made in R). The proportion of taxa from the high and middle intertidal varied significantly across locations (χ2 = 11.67, p < 0.05), matching the environmental characteristics of the sites.  
+Identified unique and indicator taxa reflected known ecological differences between locations. Only a subset of unique and indicator taxa were described in Between Pacific Tides: 18.8% (9/48) of nearshore taxa, 32.1% (17/53) of S1 taxa, and 31.1% (14/45) of S2. However, across the described subset, more taxa from S1 were categorized to high and middle intertidal zones than S2 and N (Figure 9; not made in R). The proportion of taxa from the high and middle intertidal varied significantly across locations (χ2 =11.67, p<0.05), matching the environmental characteristics of the sites.  
 
 
 
