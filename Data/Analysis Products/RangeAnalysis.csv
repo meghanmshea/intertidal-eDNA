@@ -298,7 +298,7 @@
 "297","Glycera robusta","Glycera robusta",FALSE,TRUE,TRUE,FALSE,FALSE
 "298","Stephanocystis osmundacea",NA,NA,NA,NA,NA,TRUE
 "299","Schistomeringos longicornis","Schistomeringos longicornis",FALSE,TRUE,TRUE,FALSE,FALSE
-"300","Aporrectodea caliginosa","Aporrectodea caliginosa",FALSE,FALSE,TRUE,FALSE,FALSE
+"300","Aporrectodea caliginosa","Aporrectodea caliginosa",FALSE,TRUE,TRUE,FALSE,FALSE
 "301","Symphyocladiella rosea","Symphyocladiella rosea",FALSE,FALSE,TRUE,FALSE,FALSE
 "302","Nuttallina californica","Nuttallina californica",TRUE,TRUE,TRUE,FALSE,FALSE
 "303","Schimmelmannia plumosa","Schimmelmannia plumosa",FALSE,TRUE,TRUE,FALSE,FALSE
@@ -326,7 +326,7 @@
 "325","Dendraster excentricus","Dendraster excentricus",FALSE,TRUE,TRUE,FALSE,FALSE
 "326","Polycystis hamata","Polycystis hamata",FALSE,FALSE,FALSE,TRUE,FALSE
 "327","Bipolaris sorokiniana","Bipolaris sorokiniana",FALSE,FALSE,TRUE,FALSE,FALSE
-"328","Nitzschia traheaformis","Nitzschia traheaformis",FALSE,FALSE,FALSE,TRUE,FALSE
+"328","Nitzschia traheaformis","Nitzschia traheaformis",FALSE,FALSE,FALSE,FALSE,FALSE
 "329","Myriogloea simplex",NA,NA,NA,NA,NA,TRUE
 "330","Campanularia volubilis","Campanularia volubilis",FALSE,TRUE,TRUE,FALSE,FALSE
 "331","Eupolymnia heterobranchia","Eupolymnia heterobranchia",FALSE,TRUE,TRUE,FALSE,FALSE
@@ -378,7 +378,7 @@
 "377","Semibalanus cariosus","Semibalanus cariosus",TRUE,TRUE,TRUE,FALSE,FALSE
 "378","Erythrophyllum delesserioides","Erythrophyllum delesserioides",TRUE,TRUE,TRUE,FALSE,FALSE
 "379","Bothragonus swanii","Bothragonus swanii",FALSE,TRUE,TRUE,FALSE,FALSE
-"380","Aporrectodea trapezoides","Aporrectodea caliginosa",FALSE,FALSE,TRUE,FALSE,FALSE
+"380","Aporrectodea trapezoides","Aporrectodea caliginosa",FALSE,TRUE,TRUE,FALSE,FALSE
 "381","Ozophora clevelandii","Ozophora clevelandi",FALSE,TRUE,TRUE,FALSE,FALSE
 "382","Acanthodoris rhodoceras","Acanthodoris rhodoceras",TRUE,TRUE,TRUE,FALSE,FALSE
 "383","Herposiphonia plumula","Herposiphonia plumula",FALSE,TRUE,TRUE,FALSE,FALSE

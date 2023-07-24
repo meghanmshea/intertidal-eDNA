@@ -48,6 +48,7 @@ packages <- c("tidyverse",
 install.packages(setdiff(packages, rownames(installed.packages())))
 invisible(lapply(packages, library, character.only = TRUE))
 
+
 BM_packages <- c("phyloseq", 
                  "ggtreeExtra")
 
@@ -61,6 +62,7 @@ if(!require("tidytree", quietly=TRUE))
 
 packages = append(packages, BM_packages)
 packages = append(packages, "ampvis2")
+packages = append(packages, "tidytree")
 
 invisible(lapply(packages, library, character.only = TRUE))
 
@@ -460,7 +462,6 @@ data_amp_taxa$abund = aggregate_abund(data_amp$abund, data_amp$tax, tax_aggregat
 
 ```
 
-*Figure 3--Continued**
 ```{r, Figure 3 --Continued, message = FALSE, warning = FALSE, results = FALSE, fig.width= 169, fig.height = 200}
 ###Figure 3--Continued###
 #Finish the bottom portion of Figure 3 not that data has been loaded
@@ -492,34 +493,11 @@ sample_schema = ggplot(data = data_forchart, aes(x = Time, y = chart_num, shape 
   scale_color_viridis_d(direction = -1) +
   facet_grid(Location ~., scales = "free_y", space = "free_y", 
              switch = "y", labeller = labeller(Location = facet.labs)) +
-  #theme_void(base_size = 12) + 
+  theme_void(base_size = 12) + 
   theme(legend.position = "none",
         strip.text.y.left = element_text(angle = 0, hjust = 1, vjust = .9))  
 
 
-graph = sample_schema 
-
-filename = paste("sample_schema_full.pdf")
-  path = paste("Figures/PowerPointFigure/", filename)
-  pdf(path, width = 13, height = 4.3)
-  print(graph)
-  dev.off()
-  
-  graph$layers[[1]] <- NULL
-  
-  alpha=c(0,0,0,0,0,0,0,0,0,0,0,0)
- 
-for (i in 1:12) {
-  alpha[i] = 1
-  graph <- graph + 
-    scale_color_viridis_d(direction = -1, alpha = alpha) +
-     scale_fill_viridis_d(direction = -1, alpha = alpha)
-  filename = paste("sample_schema", i, ".pdf")
-  path = paste("Figures/PowerPointFigure/", filename)
-  pdf(path, width = 13, height = 4.3)
-  print(graph)
-  dev.off()
-}
 
 
 ##Still need to line up axes between two plots, probably by changing date format for both
@@ -559,9 +537,6 @@ unique = apply(tax_table(physeq_summed), 2, function(x) length(unique(x[x != ""]
 *GBIF Analysis*
 ```{r, GBIF Set-Up, message = FALSE, warning = FALSE}
 
-#This chunk takes a long time to run
-#TO-DO: figure out how to set this up with future or callr
-
 #Create list of identified species
 species_list = unique(data_amp$tax$Species)
 species_list = remove_NCBInums(species_list)
@@ -584,9 +559,14 @@ distribution_check <- function(small_bound, big_bound, species, min_records, eff
     confirmed = c()
     for (i in species) {
       print(i)
-      occ = occ(query = i, geometry = bounds, from = 'gbif', limit = min_records, has_coords = TRUE, gbifopts = list(hasGeospatialIssue = FALSE))
+      occ = occ(query = i, 
+                geometry = bounds, 
+                from = 'gbif', 
+                limit = min_records, 
+                has_coords = TRUE, 
+                gbifopts = list(hasGeospatialIssue = FALSE))
       occ.df = occ2df(occ)
-      if (nrow(occ.df) >= min_records) {
+      if (nrow(occ.df) >= min_records) { 
         confirmed = append(confirmed, i)
       } else {
         no_data = append(no_data, i)
@@ -616,7 +596,10 @@ distribution_check <- function(small_bound, big_bound, species, min_records, eff
           break
         }
         bb_occ = sp::bbox(cbind(occ.df$longitude, occ.df$latitude))
-        if (bb_occ['x', 'min'] < small_bound[1] & bb_occ['x', 'max'] >small_bound[1] & bb_occ['y', 'min'] <small_bound[4] & bb_occ['y', 'max'] >small_bound[4]) {
+        if (bb_occ['x', 'min'] < small_bound[1] & 
+            bb_occ['x', 'max'] >small_bound[1] & 
+            bb_occ['y', 'min'] <small_bound[4] & 
+            bb_occ['y', 'max'] >small_bound[4]) {
           CC.confirmed = append(CC.confirmed, i)
           print("confirmed")
           track = 1
@@ -657,8 +640,6 @@ distribution_check <- function(small_bound, big_bound, species, min_records, eff
   }
 }
 
-
-
 #Get the California Current System shape
 
 CC_shape = mr_features_get(type = "MarineRegions:lme", featureID = "lme.10", format = "json")
@@ -680,7 +661,9 @@ mapview(CC_shape_sp)
 
 ```{r, GBIF Run, cache=TRUE, message = FALSE, warning = FALSE, results = 'hide'}
 
-distribution = distribution_check(c(-122.50, 37.49, -122.49, 37.50), CC_shape_sp, species_standardized, 5, FALSE)
+
+    distribution = distribution_check(c(-122.50, 37.49, -122.49, 37.50), CC_shape_sp, species_standardized, 5, FALSE)
+
 
 ```
 
@@ -863,11 +846,7 @@ for (x in phyla) {
   }
 }
 
-
-
-
 pt_physeq = merge_phyloseq(pt_physeq, taxa_tree$phylo)
-
 
 #Use Polychrome package to create a good color palette for the number of phyla
 set.seed(567629)
@@ -909,7 +888,6 @@ colors_ordered = colors[c('NC2',
 #Confirm that the new order works well
 pal.safe(colors_ordered)
 
-
 #Create ggtree
 p <- ggtree::ggtree(pt_physeq,  layout = "circular") 
 
@@ -920,10 +898,11 @@ ordered_names = unique(ordered_names)
 
 names(colors_ordered) = ordered_names
 
-p = p + geom_fruit(geom = geom_tile, mapping = aes(fill = Phylum), width = 3, show.legend = FALSE)  + scale_fill_manual(values = colors_ordered) +scale_color_manual(values = colors_ordered)
+p = p + geom_fruit(geom = geom_tile, mapping = aes(fill = Phylum), width = 3, show.legend = FALSE) + 
+  scale_fill_manual(values = colors_ordered) +
+  scale_color_manual(values = colors_ordered)
 
 p = p +  geom_fruit(data=phyla_nodes_secondary, geom = geom_tile, mapping = aes(y = tips, fill = node_phylum), width = 6, show.legend = FALSE)  
-
 p = p + ggtree::geom_hilight(data=phyla_nodes, mapping=aes(node = node, fill = node_phylum), show.legend = FALSE)
 
 p = p + ggtree::geom_cladelab(data=phyla_nodes, mapping=aes(node=node, label= node_phylum), geom = "text", angle = "auto", offset = 5, fontsize=2, barcolor=NA, show.legend = FALSE)
@@ -949,45 +928,8 @@ save_pdf_png(plot = p, path = path, w = 169, h = 169, u = "mm", bg = "transparen
 
 </center>
 
-*Figure 4 version for PowerPoint*
-```{r Phylogenetic Tree for PowerPoint, warning = FALSE, class.source = 'fold-hide'}
-
-p <- ggtree::ggtree(pt_physeq,  layout = "rectangular") 
-
-ordered_names = ggtree::get_taxa_name(p)
-ordered_names = unique(ordered_names)
-ordered_names[match(rownames(tax_table(pt_physeq)), ordered_names)] = tax_table(pt_physeq)[,"Phylum"]
-ordered_names = unique(ordered_names)
-
-names(colors_ordered) = ordered_names
-
-p = p + geom_fruit(geom = geom_tile, mapping = aes(fill = Phylum), width = 3, show.legend = FALSE)  + scale_fill_manual(values = colors_ordered) +scale_color_manual(values = colors_ordered)
-
-p = p + ggtree::geom_hilight(data=phyla_nodes, mapping=aes(node = node, fill = node_phylum), show.legend = FALSE)
-
-p = p +
-  theme(
-    panel.background = element_rect(fill='transparent'),
-    plot.background = element_rect(fill='transparent', color=NA),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    legend.background = element_rect(fill='transparent'),
-    legend.box.background = element_rect(fill='transparent')
-  )
-
-ggsave(
-  "Figures/PowerPointFigure/phylo.pdf",
-  plot = p,
-  width = 4.49,
-  height = 7.06,
-  dpi = 300,
-  bg='transparent')
-```
-
-
 #### 3.2 Individual-Level Differences Between Locations
 
-*Euler Diagrams*
 ```{r Euler Diagrams}
 
 eulerr_options(quantities = list(fontsize = 10), legend = list(fontsize = 14))
@@ -1035,11 +977,6 @@ add_quantity_line_break = function(v) {
   return(v)
 }
 
-
-
-
-
-
 E_taxa <- euler(list(S1 = S1_taxa, S2 = S2_taxa, N = N_taxa), shape = "ellipse")
 E_taxa_plot = plot(E_taxa, quantities = list(type = c("counts", "percent"), cex=1), legend = list(side ="right", nrow = 1, ncol = 3, cex = 1))
 E_taxa_plot = add_quantity_line_break(E_taxa_plot)
@@ -1054,8 +991,6 @@ E_ASV_plot = add_quantity_line_break(E_ASV_plot)
 Across both taxa (n=`r unique["Species"]``unique["Species"]`) and ASVs (n=`r processed_ASVs` `processed_ASVs`), all three locations had unique elements, suggesting that there was not complete mixing of eDNA across micro-habitats. 33.2% of taxa and 80% of ASVs were unique to one of the three locations (Figure 5). At both the taxa and ASV level, S1 had more unique elements than S2 and nearshore, although this effect was more pronounced across ASVs. ASVs and taxa shared across pairs of two locations were the least common elements. 
 
 ```{r Figure 5}
-
-
 
 euler = (wrap_elements(panel = grid::textGrob('A)', hjust = 6, vjust = 1, gp=gpar(fontsize=14, fontface = 'bold'))) + 
            wrap_elements (panel = grid::textGrob('B)', hjust = 6, vjust = 1, gp=gpar(fontsize=14, fontface = 'bold')))) / 
@@ -1092,7 +1027,6 @@ indicator_heatmap <- function(physeq, asv) {
   
   #Convert to presence/absence data
   otu_table(physeq)[otu_table(physeq) >0] <- 1
-  
   
   #Use indicspecies package to get top taxa
   indval = multipatt(t(otu_table(physeq)),t(sample_data(physeq)[,"Location"]), control = how(nperm=999), duleg = TRUE)
@@ -1180,15 +1114,12 @@ heatmap_ASV = indicator_heatmap(data_physeq, TRUE)
 
 indicator_ASVs = data_amp$tax[heatmap_ASV$all_indicators,]
 unassigned_indicator_ASVs = indicator_ASVs %>% group_by(Kingdom) %>% summarise(n = n()) %>% mutate (freq = n / sum(n))
-  
 ```
 
 
 ```{r Figure 6}
-
 path = "Figures/Figure6."
 save_pdf_png(plot = heatmap_taxa$plot, path = path, w = 169, h = 100, u = "mm", bg = "transparent", dpi = 600)
-
 ```
 
 <center>
@@ -1196,24 +1127,6 @@ save_pdf_png(plot = heatmap_taxa$plot, path = path, w = 169, h = 100, u = "mm", 
 ![*Figure 6: Heat map of identified indicator taxa for all three locations over time, scaled by the number of replicates that detected that species.*](`r paste0(path, "png")`)
 
 </center>
-
-
-```{r Figure for PowerPoint}
-
- graph = heatmap_taxa$plot 
-
-  path = "Figures/PowerPointFigure/indicator_figure.png"
-  ggsave(filename = path, plot = graph, width = 13, height = 6.69)
-  
-
-```
-
-```{r Supplemental Figure 1}
-
-path = "Figures/SuppFigure1."
-save_pdf_png(plot = heatmap_ASV$plot, path = path, w = 169, h = 300, u = "mm", bg = "transparent", dpi = 600)
-
-```
 
 Using an indicator species framework produced similar trends to the analysis of unique taxa and ASVs; all three locations had indicator taxa and ASVs, and S1 had more indicator elements than other locations. By taxa, we identified `r length(heatmap_taxa$all_indicators)` indicator taxa:  `r length(heatmap_taxa$top_S1)` for S1, `r length(heatmap_taxa$top_S2)` for S2, and `r length(heatmap_taxa$top_N)` for nearshore (Figure 6). By ASVs, we found more indicators overall. We identified `r length(heatmap_ASV$all_indicators)` indicator ASVs: `r length(heatmap_ASV$top_S1)` for S1, `r length(heatmap_ASV$top_S2)` for S2, and `r length(heatmap_ASV$top_N)` for nearshore (Supplemental Figure X). Most (`r sprintf("%0.1f%%", unassigned_indicator_ASVs[unassigned_indicator_ASVs$Kingdom == "",]$freq * 100)`) indicator ASVs had no taxonomic assignment, but the ones that did included several species beyond the original indicator taxa, at S1 (Scorpaenichthys marmoratus, Corallina confusa, Leathesia difformis, Bossiella frondescens, Myrionema balticum, Bossiella plumosa), S2 (Bossiella frondescens, Smithora naiadum), and nearshore (Mazzaella splendens, Strongylocentrotus purpuratus, Halichondria panicea, Smithora naiadum). 
 
@@ -1239,7 +1152,7 @@ adonis2(jaccard_taxa ~ Location + Time + Dereplicated_Sample_Name, data = data_a
 
 ```
 
-```{r NMDS & PAM, message=FALSE, cache = TRUE, warning = FALSE, results = FALSE}
+```{r Figure 7, message=FALSE, cache = TRUE, warning = FALSE, results = FALSE}
 
 #NMDS
 
@@ -1375,12 +1288,6 @@ NMDS_PAM_full$PAM_validation
 NMDS_PAM_taxa = NMDS_PAM(data_amp_taxa, jaccard_taxa, 2, TRUE)
 NMDS_PAM_taxa$PAM_validation
 
-```
-
-Community composition also differed across locations, as supported by multiple analyses. Variation in community composition was significantly explained by location, even when accounting for variation due to time of sampling and variation between replicates (ASVs: PERMANOVA  p < 0.001, betadisper p > 0.5; Taxa: PERMANOVA  p < 0.001, betadisper p > 0.5). As visualized using NMDS ordination, S1 and S2 samples collected around low tide were most dissimilar from the offshore samples (Figures 7A, 7C). These patterns persisted in the optimal clusters identified using the partitioning among medoids (PAM) algorithm, without assuming a priori that location drives the clusters (Figure 7B, 7D). When analyzed by ASV, PAM identified three optimal clusters, primarily composed of: 1) nearshore samples with additional samples from S1 and S2 at early time points, 2) the remaining S1 samples, and 3) the remaining S2 samples (Figure 7B). When analyzing by taxa, PAM additionally differentiated between samples from the three locations collected at early time points. Thus, multiple analyses with different initial assumptions all demonstrated differentiable eDNA signals across micro-habitats. 
-
-```{r Figure 7}
-
 NMDS_PAM_combined = (NMDS_PAM_full$NMDS + theme(legend.position = "none") + ggtitle("A)")) + 
   (NMDS_PAM_full$PAM  + theme(legend.position = "none") + ggtitle("B)")) + 
   (NMDS_PAM_taxa$NMDS + theme(legend.position = "none") + ggtitle("C)")) + 
@@ -1389,8 +1296,9 @@ NMDS_PAM_combined = (NMDS_PAM_full$NMDS + theme(legend.position = "none") + ggti
 
 path = "Figures/Figure7."
 save_pdf_png(plot = NMDS_PAM_combined, path = path, w = 169, h = 169, u = "mm", bg = "transparent", dpi = 600)
-
 ```
+
+Community composition also differed across locations, as supported by multiple analyses. Variation in community composition was significantly explained by location, even when accounting for variation due to time of sampling and variation between replicates (ASVs: PERMANOVA  p < 0.001, betadisper p > 0.5; Taxa: PERMANOVA  p < 0.001, betadisper p > 0.5). As visualized using NMDS ordination, S1 and S2 samples collected around low tide were most dissimilar from the offshore samples (Figures 7A, 7C). These patterns persisted in the optimal clusters identified using the partitioning among medoids (PAM) algorithm, without assuming a priori that location drives the clusters (Figure 7B, 7D). When analyzed by ASV, PAM identified three optimal clusters, primarily composed of: 1) nearshore samples with additional samples from S1 and S2 at early time points, 2) the remaining S1 samples, and 3) the remaining S2 samples (Figure 7B). When analyzing by taxa, PAM additionally differentiated between samples from the three locations collected at early time points. Thus, multiple analyses with different initial assumptions all demonstrated differentiable eDNA signals across micro-habitats. 
 
 <center>
 
@@ -1398,53 +1306,7 @@ save_pdf_png(plot = NMDS_PAM_combined, path = path, w = 169, h = 169, u = "mm", 
 
 </center>
 
-
-
-
-```{r Animated Figure for PowerPoint, message=FALSE, echo=FALSE, warning = FALSE, results = FALSE}
-
-alpha=c(0,0,0,0,0,0,0,0,0,0,0,0)
-graph = NMDS_PAM_full$NMDS + 
-  ggtitle("NMDS Ordination (Jaccard Dissimilarity)") +
-  theme_classic(base_size = 18)
-
-filename = paste("NMDS_figure_full.pdf")
-  path = paste("Figures/PowerPointFigure/", filename)
-  pdf(path, width = 11.97, height = 6.14)
-  print(graph)
-  dev.off()
-  
-  graph$layers[[2]] <- NULL
-  
-  graph = graph + 
-    stat_ellipse(aes(group=Location), type = "t",linetype = 2, alpha = 0) 
-  
-for (i in 1:12) {
-  alpha[i] = 1
-  graph <- graph + 
-    viridis::scale_color_viridis(discrete=TRUE, 
-                                 begin = 0, 
-                                 end = .97, 
-                                 direction = -1, 
-                                 alpha = alpha) 
-  filename = paste("NMDS_figure", i, ".pdf")
-  path = paste("Figures/PowerPointFigure/", filename)
-  pdf(path, width = 11.97, height = 6.14)
-  print(graph)
-  dev.off()
-  alpha[i] = .2
-}
-
-
-
-```
-
-
-
-
-
-
-```{r Pairwise Dissimilarity}
+```{r Figure 8}
 
 distmat <- as.matrix(jaccard_full)
 
@@ -1535,24 +1397,17 @@ g2.5 = ggplot(summary, aes(x = Time,
         axis.text.x = element_text(color="black")) +
   theme(legend.position="right",legend.justification="top")
 
+path = "Figures/Figure8."
+save_pdf_png(plot = g2.5, path = path, w = 169, h = 120, u = "mm", bg = "transparent", dpi = 600)
 ```
 
 The extent of the Jaccard dissimilarity between samples from different locations varied over time. As shown in Figure 8, except at the first time point sampled, the dissimilarity between samples across sites was always greater than the mean dissimilarity between samples within the same site, and increasingly so across the period sampled. At two time points—15:30 and 16:00—after low tide but before water was moving between all locations again, all dissimilarity values across sites were greater than the maximum dissimilarity recorded between two samples from the same site. 
-
-```{r Figure 8}
-
-
-path = "Figures/Figure8."
-save_pdf_png(plot = g2.5, path = path, w = 169, h = 120, u = "mm", bg = "transparent", dpi = 600)
-
-```
 
 <center>
 
 ![*Figure 8: Box plots over time showing the pairwise Jaccard dissimilarity values between all unique pairs of replicates from the same sites (Within Site) and all unique pairs of samples across two sites (S1:O, S:O, S1:S2). The solid line depicts the mean Jaccard dissimilarity value from within site pairings.*](`r paste0(path, "png")`)
 
 </center>
-
 
 #### 3.4.	Ecological Significance
 
@@ -1624,8 +1479,6 @@ counts = rbind(S1, S2, N)
 
 test = chisq.test(counts, correct = FALSE, simulate.p.value = TRUE)
 
-
-
 test_post_hoc = chisq.posthoc.test(counts, method = "bonferroni", simulate.p.value = TRUE)
 
 ```
@@ -1633,13 +1486,139 @@ test_post_hoc = chisq.posthoc.test(counts, method = "bonferroni", simulate.p.val
 Identified unique and indicator taxa reflected known ecological differences between locations. Only a subset of unique and indicator taxa were described in Between Pacific Tides: 18.8% (9/48) of nearshore taxa, 32.1% (17/53) of S1 taxa, and 31.1% (14/45) of S2. However, across the described subset, more taxa from S1 were categorized to high and middle intertidal zones than S2 and N (Figure 9; not made in R). The proportion of taxa from the high and middle intertidal varied significantly across locations (χ2 =11.67, p<0.05), matching the environmental characteristics of the sites.  
 
 
-### Supplemental Info X
+### Supplemental Info
 
+```{r Supplemental Figure 1}
+###Supplemental Figure X###
 
-```{r amp_nocontrols,  class.source = 'fold-hide'}
-
-
+path = "Figures/SuppFigure1."
+save_pdf_png(plot = heatmap_ASV$plot, path = path, w = 169, h = 300, u = "mm", bg = "transparent", dpi = 600)
 ```
+
+<center>
+
+![*Supplemental Figure X: Heat map of identified indicator ASVs for all three locations over time, scaled by the number of replicates that detected that species.*](`r paste0(path, "png")`)
+
+</center>
+
+### Code for Making Versions of Figures for PowerPoint
+
+*Figure 3*
+```{r, Figure 3 For Powerpoint, message = FALSE, warning = FALSE, results = FALSE, class.source = 'fold-hide'}
+###Version of Figure 3 optimized for PowerPoint slides/animations###
+
+graph = sample_schema 
+
+filename = paste("sample_schema_full.pdf")
+  path = paste("Figures/PowerPointFigure/", filename)
+  pdf(path, width = 13, height = 4.3)
+  print(graph)
+  dev.off()
+  
+  graph$layers[[1]] <- NULL
+  
+  alpha=c(0,0,0,0,0,0,0,0,0,0,0,0)
+ 
+for (i in 1:12) {
+  alpha[i] = 1
+  graph <- graph + 
+    scale_color_viridis_d(direction = -1, alpha = alpha) +
+     scale_fill_viridis_d(direction = -1, alpha = alpha)
+  filename = paste("sample_schema", i, ".pdf")
+  path = paste("Figures/PowerPointFigure/", filename)
+  pdf(path, width = 13, height = 4.3)
+  print(graph)
+  dev.off()
+}
+```
+
+*Figure 4*
+```{r, Figure 4 For Powerpoint, message = FALSE, warning = FALSE, results = FALSE, class.source = 'fold-hide'}
+###Version of Figure 4 optimized for PowerPoint slides/animations###
+
+p <- ggtree::ggtree(pt_physeq,  layout = "rectangular") 
+
+ordered_names = ggtree::get_taxa_name(p)
+ordered_names = unique(ordered_names)
+ordered_names[match(rownames(tax_table(pt_physeq)), ordered_names)] = tax_table(pt_physeq)[,"Phylum"]
+ordered_names = unique(ordered_names)
+
+names(colors_ordered) = ordered_names
+
+p = p + geom_fruit(geom = geom_tile, mapping = aes(fill = Phylum), width = 3, show.legend = FALSE)  + scale_fill_manual(values = colors_ordered) +scale_color_manual(values = colors_ordered)
+
+p = p + ggtree::geom_hilight(data=phyla_nodes, mapping=aes(node = node, fill = node_phylum), show.legend = FALSE)
+
+p = p +
+  theme(
+    panel.background = element_rect(fill='transparent'),
+    plot.background = element_rect(fill='transparent', color=NA),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.background = element_rect(fill='transparent'),
+    legend.box.background = element_rect(fill='transparent')
+  )
+
+ggsave(
+  "Figures/PowerPointFigure/phylo.pdf",
+  plot = p,
+  width = 4.49,
+  height = 7.06,
+  dpi = 300,
+  bg='transparent')
+```
+
+```{r, Figure 6 For Powerpoint, message = FALSE, warning = FALSE, results = FALSE, class.source = 'fold-hide'}
+###Version of Figure 6 optimized for PowerPoint slides/animations###
+
+ graph = heatmap_taxa$plot 
+
+  path = "Figures/PowerPointFigure/indicator_figure.png"
+  ggsave(filename = path, plot = graph, width = 13, height = 6.69)
+  
+```
+
+*Figure 7*
+```{r, Figure 7 For Powerpoint, message = FALSE, warning = FALSE, results = FALSE, class.source = 'fold-hide'}
+###Version of Figure 7 optimized for PowerPoint slides/animations###
+
+alpha=c(0,0,0,0,0,0,0,0,0,0,0,0)
+graph = NMDS_PAM_full$NMDS + 
+  ggtitle("NMDS Ordination (Jaccard Dissimilarity)") +
+  theme_classic(base_size = 18)
+
+filename = paste("NMDS_figure_full.pdf")
+  path = paste("Figures/PowerPointFigure/", filename)
+  pdf(path, width = 11.97, height = 6.14)
+  print(graph)
+  dev.off()
+  
+  graph$layers[[2]] <- NULL
+  
+  graph = graph + 
+    stat_ellipse(aes(group=Location), type = "t",linetype = 2, alpha = 0) 
+  
+for (i in 1:12) {
+  alpha[i] = 1
+  graph <- graph + 
+    viridis::scale_color_viridis(discrete=TRUE, 
+                                 begin = 0, 
+                                 end = .97, 
+                                 direction = -1, 
+                                 alpha = alpha) 
+  filename = paste("NMDS_figure", i, ".pdf")
+  path = paste("Figures/PowerPointFigure/", filename)
+  pdf(path, width = 11.97, height = 6.14)
+  print(graph)
+  dev.off()
+  alpha[i] = .2
+}
+```
+
+
+
+
+
 
 ### Session Info
 
