@@ -129,7 +129,6 @@ Within Pillar Point, we sampled at three discrete locations: two individual tide
 
 We collected 1 L surface samples from each location every 30 minutes for the duration of time the rocky intertidal was exposed on 28 January 2022, using single-use enteral feeding pouches (Covidien, Dublin, Ireland). Sampling commenced at 11:30 PST; the exact times of sample collection, in relation to the tide, are shown in Figure 3. Following the approach used by Gold et al. (2021b), we attached a sterile 0.22 $\mu$m pore size Sterivex cartridge (MilliporeSigma, Burlington, MA, USA) to the tubing of each feeding pouch, allowing samples to be immediately gravity filtered in the field. While gravity filtering (1-2 hours per sample), samples were shaded with an awning to prevent any degradation by sunlight (Andruszkiewicz et al., 2017).  
 
-*Figure 3*
 ```{r, Figure 3}
 ###Figure 3###
 #Produce the top portion of Figure 3 from tide data
@@ -481,7 +480,7 @@ sample_schema = ggplot(data = data_forchart, aes(x = Time, y = chart_num, shape 
   geom_beeswarm(cex = 2, size = 3) + 
   geom_box(aes(xmin = after_stat(x) - 0.45, 
                xmax = after_stat(x) + 0.45,
-               ymin = after_stat(y) - 0.4, 
+               ymin = after_stat(y) - 0.45, 
                ymax = after_stat(y) + 0.45),
            radius = unit(5, "pt")) +
   scale_shape_manual(values = c(15, 17, 16, 18)) + 
@@ -529,8 +528,9 @@ unique = apply(tax_table(physeq_summed), 2, function(x) length(unique(x[x != ""]
   
 ```
 
-*GBIF Analysis*
 ```{r, GBIF Set-Up, message = FALSE, warning = FALSE}
+###GBIF Set-Up###
+#Create functions and datasets needed for GBIF analysis
 
 #Create list of identified species
 species_list = unique(data_amp$tax$Species)
@@ -538,12 +538,10 @@ species_list = remove_NCBInums(species_list)
 species_list = species_list[species_list != ""]
 species_list = sub("_", "-", species_list) #to address Pseudo_nitzchia error
 
-
 #Standardize species names against GBIF backbone
 species_GBIF = name_backbone_checklist(species_list)
 species_standardized = species_GBIF$species[!is.na(species_GBIF$species)]
 species_both = species_GBIF[c("species", "verbatim_name")]
-
 
 ##Core GBIF checking function
 distribution_check <- function(small_bound, big_bound, species, min_records, efficiency) {
@@ -655,14 +653,16 @@ mapview(CC_shape_sp)
 ```
 
 ```{r, GBIF Run, cache=TRUE, message = FALSE, warning = FALSE, results = 'hide'}
+###GBIF Run###
+#Run function that does GBIF analysis (this takes a long time; recommend running with job::job() when working in chunks)
 
-
-    distribution = distribution_check(c(-122.50, 37.49, -122.49, 37.50), CC_shape_sp, species_standardized, 5, FALSE)
-
-
+distribution = distribution_check(c(-122.50, 37.49, -122.49, 37.50), CC_shape_sp, species_standardized, 5, FALSE)
 ```
 
 ```{r, GBIF Summary, message = FALSE, warning = FALSE, fig.keep='all'}
+###GBIF Summary###
+#Organize the GBIF analysis output
+
 d = distribution
 PP = d[[1]]$confirmed
 CC = d[[2]]$confirmed
@@ -734,13 +734,9 @@ known_summary = as.numeric(GBIF_summary %>% filter(!is.na(GBIFSpecies)) %>% summ
 
 Focused on just the `r samples` (`samples`) samples, we removed singletons and all `r overlap` (`overlap`) ASVs that overlapped with negative controls (Supplemental Information X), and we rarefied samples to the minimum number of reads of any sample, leaving `r processed_ASVs` (`processed_ASVs`) ASVs and `r processed_reads` (`processed_reads`) reads. `r sprintf("%0.1f%%", unassigned_ASVs[unassigned_ASVs$Kingdom == "",]$freq * 100)` (`sprintf("%0.1f%%", unassigned_ASVs[unassigned_ASVs$Kingdom == "",]$freq * 100)`) of ASVs were unassigned, and the remainder included representatives from `r unique["Phylum"]` (`unique["Phylum"]`) phyla, `r unique["Class"]` (`unique["Class"]`) classes, `r unique["Order"]` (`unique["Order"]`) orders, `r unique["Family"]` (`unique["Family"]`) families, `r unique["Genus"]` (`unique["Genus"]`) genera, and `r unique["Species"]` (`unique["Species"]`) species (Figure 4). A breakdown of the relative proportions of reads and ASVs assigned to each phyla can be found in Table 1. To ensure the accuracy of these taxonomic identifications, we confirmed that `r known_summary` (`known_summary`) of `r unique["Species"]` (`unique["Species"]`) identified species (`r sprintf("%0.1f%%", known_summary/unique["Species"] * 100)` `sprintf("%0.1f%%", known_summary/unique["Species"] * 100)`) have occurrence records in the California Current System (CCS) and known ranges that encompass Pillar Point. (additional details in SI 1 and Tabl).
 
-*Table 1*
 ```{r, Table 1}
-
- #merge all samples together
-  #make abundance of each one
-  #glom by phylum
-
+###TABLE 1###
+#Create table with summary of reads, ASVs, and species by phyla
 
 #Remove all unclassified ASVs and condense to phylum level
 physeq_totalreads = tax_glom(physeq_summed, taxrank="Phylum", NArm=TRUE)
@@ -789,6 +785,8 @@ Phyla_Reads = data.frame(Phyla = tax_table(physeq_totalreads)[,2],
 ```
 
 ```{r Figure 4 -- Phylogenetic Tree, message = FALSE, warning = FALSE, results = FALSE, error = FALSE}
+###Figure 4###
+#Create phylogenetic tree for all taxonomic assignments
 
 options(getClass.msg=FALSE)
 
@@ -925,6 +923,7 @@ save_pdf_png(plot = p, path = path, w = 169, h = 169, u = "mm", bg = "transparen
 #### 3.2 Individual-Level Differences Between Locations
 
 ```{r Euler Diagrams}
+###Euler Diagrams###
 
 eulerr_options(quantities = list(fontsize = 10), legend = list(fontsize = 14))
 
@@ -975,14 +974,24 @@ E_taxa <- euler(list(S1 = S1_taxa, S2 = S2_taxa, N = N_taxa), shape = "ellipse")
 E_taxa_plot = plot(E_taxa, quantities = list(type = c("counts", "percent"), cex=1), legend = list(side ="right", nrow = 1, ncol = 3, cex = 1))
 E_taxa_plot = add_quantity_line_break(E_taxa_plot)
 
+unique_taxa_location <- (E_taxa$original.values["S1"] + 
+                   E_taxa$original.values["S2"] + 
+                   E_taxa$original.values["N"])/sum(E_taxa$original.values)
+
 
 E_ASV <- euler(list(S1 = S1_ASV, S2 = S2_ASV, N = N_ASV), shape="ellipse")
 E_ASV_plot = plot(E_ASV, quantities = list(type = c("counts", "percent"), cex=1), legend = list(side ="right", nrow = 1, ncol = 3, cex = 1))
 E_ASV_plot = add_quantity_line_break(E_ASV_plot)
 
+unique_ASV_location <- (E_ASV$original.values["S1"] + 
+                   E_ASV$original.values["S2"] + 
+                   E_ASV$original.values["N"])/sum(E_ASV$original.values)
+
+
+
 ```
 
-Across both taxa (n=`r unique["Species"]``unique["Species"]`) and ASVs (n=`r processed_ASVs` `processed_ASVs`), all three locations had unique elements, suggesting that there was not complete mixing of eDNA across micro-habitats. 33.2% of taxa and 80% of ASVs were unique to one of the three locations (Figure 5). At both the taxa and ASV level, S1 had more unique elements than S2 and nearshore, although this effect was more pronounced across ASVs. ASVs and taxa shared across pairs of two locations were the least common elements. 
+Across both taxa (n=`r unique["Species"]``unique["Species"]`) and ASVs (n=`r processed_ASVs` `processed_ASVs`), all three locations had unique elements, suggesting that there was not complete mixing of eDNA across micro-habitats. `r sprintf("%0.1f%%", unique_taxa_location * 100)` `sprintf("%0.1f%%", unique_taxa_location * 100)` of taxa and `r sprintf("%0.1f%%", unique_ASV_location * 100)` `sprintf("%0.1f%%", unique_ASV_location * 100)` of ASVs were unique to one of the three locations (Figure 5). At both the taxa and ASV level, S1 had more unique elements than S2 and nearshore, although this effect was more pronounced across ASVs. ASVs and taxa shared across pairs of two locations were the least common elements. 
 
 ```{r Figure 5}
 
@@ -1003,7 +1012,6 @@ save_pdf_png(plot = euler, path = path, w = 169, h = 110, u = "mm", bg = "transp
 
 
 
-*Indicator Species Analysis*
 ```{r Indicator Species Analysis, warning = FALSE, message=FALSE}
 
 #Function for creating indicator species heatmap from physeq data
@@ -1108,6 +1116,24 @@ heatmap_ASV = indicator_heatmap(data_physeq, TRUE)
 
 indicator_ASVs = data_amp$tax[heatmap_ASV$all_indicators,]
 unassigned_indicator_ASVs = indicator_ASVs %>% group_by(Kingdom) %>% summarise(n = n()) %>% mutate (freq = n / sum(n))
+
+
+identify_new_indicators = function(data_amp, top_ASVs, top_taxa) {
+  top_ASVs = data_amp$tax[top_ASVs,]
+  top_taxa = data_amp$tax[top_taxa,]
+  
+  top_ASVs = top_ASVs$Species[top_ASVs$Species != ""]
+  top_taxa = top_taxa$Species
+  
+  top_ASVs = remove_NCBInums(top_ASVs)
+  top_taxa = remove_NCBInums(top_taxa)
+  return(setdiff(top_ASVs, top_taxa))
+}
+
+N_ASV_extra = sort(identify_new_indicators(data_amp, heatmap_ASV$top_N, heatmap_taxa$top_N))
+S1_ASV_extra = sort(identify_new_indicators(data_amp, heatmap_ASV$top_S1, heatmap_taxa$top_S1))
+S2_ASV_extra = sort(identify_new_indicators(data_amp, heatmap_ASV$top_S2, heatmap_taxa$top_S2))
+
 ```
 
 
@@ -1122,7 +1148,7 @@ save_pdf_png(plot = heatmap_taxa$plot, path = path, w = 169, h = 100, u = "mm", 
 
 </center>
 
-Using an indicator species framework produced similar trends to the analysis of unique taxa and ASVs; all three locations had indicator taxa and ASVs, and S1 had more indicator elements than other locations. By taxa, we identified `r length(heatmap_taxa$all_indicators)` indicator taxa:  `r length(heatmap_taxa$top_S1)` for S1, `r length(heatmap_taxa$top_S2)` for S2, and `r length(heatmap_taxa$top_N)` for nearshore (Figure 6). By ASVs, we found more indicators overall. We identified `r length(heatmap_ASV$all_indicators)` indicator ASVs: `r length(heatmap_ASV$top_S1)` for S1, `r length(heatmap_ASV$top_S2)` for S2, and `r length(heatmap_ASV$top_N)` for nearshore (Supplemental Figure X). Most (`r sprintf("%0.1f%%", unassigned_indicator_ASVs[unassigned_indicator_ASVs$Kingdom == "",]$freq * 100)`) indicator ASVs had no taxonomic assignment, but the ones that did included several species beyond the original indicator taxa, at S1 (Scorpaenichthys marmoratus, Corallina confusa, Leathesia difformis, Bossiella frondescens, Myrionema balticum, Bossiella plumosa), S2 (Bossiella frondescens, Smithora naiadum), and nearshore (Mazzaella splendens, Strongylocentrotus purpuratus, Halichondria panicea, Smithora naiadum). 
+Using an indicator species framework produced similar trends to the analysis of unique taxa and ASVs; all three locations had indicator taxa and ASVs, and S1 had more indicator elements than other locations. By taxa, we identified `r length(heatmap_taxa$all_indicators)` `length(heatmap_taxa$all_indicators)` indicator taxa:  `r length(heatmap_taxa$top_S1)` `length(heatmap_taxa$top_S1)` for S1, `r length(heatmap_taxa$top_S2)` `length(heatmap_taxa$top_S2)` for S2, and `r length(heatmap_taxa$top_N)` `length(heatmap_taxa$top_N)` for nearshore (Figure 6). By ASVs, we found more indicators overall. We identified `r length(heatmap_ASV$all_indicators)` `length(heatmap_ASV$all_indicators)` indicator ASVs: `r length(heatmap_ASV$top_S1)` `length(heatmap_ASV$top_S1)` for S1, `r length(heatmap_ASV$top_S2)` `length(heatmap_ASV$top_S2)` for S2, and `r length(heatmap_ASV$top_N)` `length(heatmap_ASV$top_N)` for nearshore (Supplemental Figure X). Most (`r sprintf("%0.1f%%", unassigned_indicator_ASVs[unassigned_indicator_ASVs$Kingdom == "",]$freq * 100)` `sprintf("%0.1f%%", unassigned_indicator_ASVs[unassigned_indicator_ASVs$Kingdom == "",]$freq * 100)`) indicator ASVs had no taxonomic assignment, but the ones that did included several species beyond the original indicator taxa, at S1 (*`r toString(S1_ASV_extra)`*  `toString(S1_ASV_extra)`), S2 (*`r toString(S2_ASV_extra)`*  `toString(S2_ASV_extra)`), and nearshore (*`r toString(N_ASV_extra)`*  `toString(N_ASV_extra)`). 
 
 #### 3.3.	Community-Level Differences between Locations
 
@@ -1292,7 +1318,7 @@ path = "Figures/Figure7."
 save_pdf_png(plot = NMDS_PAM_combined, path = path, w = 169, h = 169, u = "mm", bg = "transparent", dpi = 600)
 ```
 
-Community composition also differed across locations, as supported by multiple analyses. Variation in community composition was significantly explained by location, even when accounting for variation due to time of sampling and variation between replicates (ASVs: PERMANOVA  p < 0.001, betadisper p > 0.5; Taxa: PERMANOVA  p < 0.001, betadisper p > 0.5). As visualized using NMDS ordination, S1 and S2 samples collected around low tide were most dissimilar from the offshore samples (Figures 7A, 7C). These patterns persisted in the optimal clusters identified using the partitioning among medoids (PAM) algorithm, without assuming a priori that location drives the clusters (Figure 7B, 7D). When analyzed by ASV, PAM identified three optimal clusters, primarily composed of: 1) nearshore samples with additional samples from S1 and S2 at early time points, 2) the remaining S1 samples, and 3) the remaining S2 samples (Figure 7B). When analyzing by taxa, PAM additionally differentiated between samples from the three locations collected at early time points. Thus, multiple analyses with different initial assumptions all demonstrated differentiable eDNA signals across micro-habitats. 
+Community composition also differed across locations, as supported by multiple analyses. Variation in community composition was significantly explained by location, even when accounting for variation due to time of sampling and variation between replicates (ASVs: PERMANOVA  p < 0.001, betadisper p > 0.05; Taxa: PERMANOVA  p < 0.001, betadisper p > 0.05). As visualized using NMDS ordination, S1 and S2 samples collected around low tide were most dissimilar from the offshore samples (Figures 7A, 7C). These patterns persisted in the optimal clusters identified using the partitioning among medoids (PAM) algorithm, without assuming a priori that location drives the clusters (Figure 7B, 7D). When analyzed by ASV, PAM identified three optimal clusters, primarily composed of: 1) nearshore samples with additional samples from S1 and S2 at early time points, 2) the remaining S1 samples, and 3) the remaining S2 samples (Figure 7B). When analyzing by taxa, PAM additionally differentiated between samples from the three locations collected at early time points. Thus, multiple analyses with different initial assumptions all demonstrated differentiable eDNA signals across micro-habitats. 
 
 <center>
 
@@ -1406,6 +1432,7 @@ The extent of the Jaccard dissimilarity between samples from different locations
 #### 3.4.	Ecological Significance
 
 ```{r Ecological Significance, message = FALSE, warning = FALSE, results = FALSE}
+###Ecological Significance###
 
 #NOT DONE YET 
 
@@ -1449,9 +1476,10 @@ full_taxa_list = cbind(full_taxa_list, synonyms)
 
 write.csv(full_taxa_list, "Data/Analysis Products/BPT_Analysis.csv", row.names=FALSE)
 
-#make combined PDF of whole book
+#make combined PDF of Part I, Part II, Part III, Part IV
 #for combined PDF, find every page number where names occur
-#in each group of PDFs, search for all the names in the list
+#compare page numbers to 
+
 
 #Ecological Significance 
 #Add section here where I import/read data rather than just pull the numbers
@@ -1502,7 +1530,7 @@ overlap_table
 write.csv(overlap_table, "Data/Analysis Products/TableS1.csv", row.names=TRUE)
 ```
 
-By analyzing occurrence data from the Global Biodiversity Information Facility (on `r Sys.Date()` `Sys.Date()`), we confirmed that `r percentages$count[6]` `r percentages$count[6]` of `r sum(percentages$count)``sum(percentages$count)` identified species (`r sprintf("%0.1f%%", percentages$count[6] * 100)` `sprintf("%0.1f%%", percentages$count[6] * 100)`) have occurrence records at Pillar Point, specifically. An additional `r percentages$count[5]` `r percentages$count[5]` identified species (`r sprintf("%0.1f%%", percentages$count[5] * 100)` `sprintf("%0.1f%%", percentages$count[5] * 100)`) have occurrence records in the California Current System (CCS) and known ranges that encompass Pillar Point. Of the remaining species, some only fulfilled one of two criteria; `r percentages$count[4]` `r percentages$count[4]` identified species (`r sprintf("%0.1f%%", percentages$count[4] * 100)` `sprintf("%0.1f%%", percentages$count[4] * 100)`) had occurrence records in the CCS but known ranges that did not encompass Pillar Point and `r percentages$count[3]` `r percentages$count[3]` identified species (`r sprintf("%0.1f%%", percentages$count[3] * 100)` `sprintf("%0.1f%%", percentages$count[3] * 100)`) had ranges that encompass Pillar Point but no occurrence records in the CCS. Additionally, `r percentages$count[1]` `r percentages$count[1]` identified species (`r sprintf("%0.1f%%", percentages$count[1] * 100)` `sprintf("%0.1f%%", percentages$count[1] * 100)`) had neither occurrence records in the CCS nor known ranges that encompassed Pillar Point. Finally, `r percentages$count[2]` `r percentages$count[2]` identified species (`r sprintf("%0.1f%%", percentages$count[2] * 100)` `sprintf("%0.1f%%", percentages$count[2] * 100)`) lacked sufficient occurrence records in GBIF to make any designation, and `r percentages$count[7]` `r percentages$count[7]` identified species (`r sprintf("%0.1f%%", percentages$count[7] * 100)` `sprintf("%0.1f%%", percentages$count[7] * 100)`) did not have species-level records in GBIF. Full details by species can be found in Table S2.
+By analyzing occurrence data from the Global Biodiversity Information Facility (on `r Sys.Date()` `Sys.Date()`), we confirmed that `r percentages$count[6]` `percentages$count[6]` of `r sum(percentages$count)``sum(percentages$count)` identified species (`r sprintf("%0.1f%%", percentages$per[6] * 100)` `sprintf("%0.1f%%", percentages$per[6] * 100)`) have occurrence records at Pillar Point, specifically. An additional `r percentages$count[5]` `percentages$count[5]` identified species (`r sprintf("%0.1f%%", percentages$per[5] * 100)` `sprintf("%0.1f%%", percentages$per[5] * 100)`) have occurrence records in the California Current System (CCS) and known ranges that encompass Pillar Point. Of the remaining species, some only fulfilled one of two criteria; `r percentages$count[4]` `percentages$count[4]` identified species (`r sprintf("%0.1f%%", percentages$per[4] * 100)` `sprintf("%0.1f%%", percentages$per[4] * 100)`) had occurrence records in the CCS but known ranges that did not encompass Pillar Point and `r percentages$count[3]` `percentages$count[3]` identified species (`r sprintf("%0.1f%%", percentages$per[3] * 100)` `sprintf("%0.1f%%", percentages$per[3] * 100)`) had ranges that encompass Pillar Point but no occurrence records in the CCS. Additionally, `r percentages$count[1]` `percentages$count[1]` identified species (`r sprintf("%0.1f%%", percentages$per[1] * 100)` `sprintf("%0.1f%%", percentages$per[1] * 100)`) had neither occurrence records in the CCS nor known ranges that encompassed Pillar Point. Finally, `r percentages$count[2]` `percentages$count[2]` identified species (`r sprintf("%0.1f%%", percentages$per[2] * 100)` `sprintf("%0.1f%%", percentages$per[2] * 100)`) lacked sufficient occurrence records in GBIF to make any designation, and `r percentages$count[7]` `percentages$count[7]` identified species (`r sprintf("%0.1f%%", percentages$per[7] * 100)` `sprintf("%0.1f%%", percentages$per[7] * 100)`) did not have species-level records in GBIF. Full details by species can be found in Table S2.
 
 ```{r Supporting Table 2}
 ##Supporting Table 2###
@@ -1582,6 +1610,7 @@ ggsave(
   bg='transparent')
 ```
 
+*Figure 6*
 ```{r, Figure 6 For Powerpoint, message = FALSE, warning = FALSE, results = FALSE, class.source = 'fold-hide'}
 ###Version of Figure 6 optimized for PowerPoint slides/animations###
 
