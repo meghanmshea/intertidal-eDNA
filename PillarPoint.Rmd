@@ -16,7 +16,6 @@ knitr::opts_chunk$set(echo = TRUE, tidy = "styler")
 
 ```{r, Loading Packages, message = FALSE, warning = FALSE, results = FALSE}
 ###Loading Packages###
-#test#
 #Check if all required packages have been installed and loaded, and if not, install and load them. 
 
 options(repos = list(CRAN="http://cran.rstudio.com/"))
@@ -181,12 +180,13 @@ p2 <- ggplot(data=Tides, aes(x=datetime, y = Pred, group=1)) +
         axis.ticks = element_line(color = "black"),
         axis.text.y = element_text(color="black"),
         panel.border = element_rect(colour = "black", fill=NA, linewidth=1)) +
-  xlab("") +
+  theme(axis.title.x = element_blank()) + 
   ylab("MLLW Tide Prediction (m)") +
-  scale_x_datetime(date_breaks = "30 min", date_labels = "%H:%M", expand = c(0, 0))
+  scale_x_datetime(date_breaks = "30 min", date_labels = "%H:%M", expand = c(0, 0)) +
+  theme(plot.margin = margin(b=0))
 
 #Stitch plots together using patchwork
-p_patch <- p1 / p2 & ylab(NULL) & theme(plot.margin = margin(5.5, 5.5, 5.5, 0), plot.background = element_rect(fill = "transparent", colour = NA_character_))
+p_patch <- p1 / (p2 & theme(plot.margin=margin(0,0,0,0, "pt"))) & ylab(NULL) & theme(plot.background = element_rect(fill = "transparent", colour = NA_character_))
 
 # Use the tag label as a y-axis label
 p_patch = wrap_elements(p_patch) +
@@ -465,15 +465,11 @@ data_amp_taxa$abund = aggregate_abund(data_amp$abund, data_amp$tax, tax_aggregat
 
 ```{r, Figure 3 --Continued, message = FALSE, warning = FALSE, results = FALSE, fig.width= 169, fig.height = 200}
 ###Figure 3--Continued###
-#Finish the bottom portion of Figure 3 not that data has been loaded
+#Finish the bottom portion of Figure 3 now that data has been loaded
 
 data_forchart = amp$metadata[!is.na(amp$metadata$Time),]
 
 data_forchart = data_forchart %>% group_by(SiteByTime) %>% mutate(chart_num = ceiling(row_number()/3))
-
-data_forchart$datetime <- lubridate::ymd_hm(paste("2022/01/28", data_forchart$Time), tz = "US/Pacific")
-data_forchart$LocNumTime = as.factor(paste(data_forchart$Location, data_forchart$chart_num, data_forchart$Time))
-
 
 facet.labs =  c("Tide Pool 1\n (S1)", "Tide Pool 2\n (S2)", "Nearshore\n (N)", "Field Blank")
 names(facet.labs) = c("S1", "S2", "N", "FB")
@@ -491,20 +487,20 @@ sample_schema = ggplot(data = data_forchart, aes(x = Time, y = chart_num, shape 
                ymax = after_stat(y) + 0.45),
            radius = unit(5, "pt")) +
   scale_shape_manual(values = c(15, 17, 16, 18)) + 
-  scale_color_viridis_d(direction = -1) +
+  scale_color_viridis_d(direction = -1, begin = 0, end = .97) +
   facet_grid(Location ~., scales = "free_y", space = "free_y", 
              switch = "y", labeller = labeller(Location = facet.labs)) +
   theme_void(base_size = 12) + 
   theme(legend.position = "none",
-        strip.text.y.left = element_text(angle = 0, hjust = 1, vjust = .9))  
+        strip.text.y.left = element_text(angle = 0, hjust = 1, vjust = .9),
+        plot.margin=margin(0,0,0,0, "pt"))  
 
 
+combined = (plot_spacer() + p_patch + plot_spacer() + plot_layout(widths = c(3,50,1)))/(plot_spacer() + sample_schema + plot_layout(widths = c(1,50))) & theme(plot.margin=margin(0,0,0,0, "pt"))
 
-
-##Still need to line up axes between two plots, probably by changing date format for both
 
 path = "Figures/Figure3_full."
-save_pdf_png(plot = p_patch/sample_schema, path = path, w = 169, h = 180, u = "mm", bg = "transparent", dpi = 600)
+save_pdf_png(plot = combined, path = path, w = 169, h = 180, u = "mm", bg = "transparent", dpi = 600)
 
 ```
 
