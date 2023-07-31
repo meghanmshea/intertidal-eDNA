@@ -48,16 +48,17 @@ packages <- c("tidyverse",
 install.packages(setdiff(packages, rownames(installed.packages())))
 invisible(lapply(packages, library, character.only = TRUE))
 
-BM_packages <- c("phyloseq", 
+BM_packages <- c("phyloseq",
+                 "ggtree",
                  "ggtreeExtra")
 
-BiocManager::install(setdiff(BM_packages, rownames(installed.packages())))
+BiocManager::install(setdiff(BM_packages, rownames(installed.packages())), force=T, type = 'source')
 
 if(!require("ampvis2", quietly=TRUE))
   remotes::install_github("kasperskytte/ampvis2")
 
-if(!require("tidytree", quietly=TRUE))
-  install_version("tidytree", version = "0.4.2")
+#if(!require("tidytree", quietly=TRUE))
+  #install_version("tidytree", version = "0.4.2")
 
 packages = append(packages, BM_packages)
 packages = append(packages, "ampvis2")
