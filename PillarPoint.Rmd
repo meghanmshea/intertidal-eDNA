@@ -48,16 +48,17 @@ packages <- c("tidyverse",
 install.packages(setdiff(packages, rownames(installed.packages())))
 invisible(lapply(packages, library, character.only = TRUE))
 
-BM_packages <- c("phyloseq", 
+BM_packages <- c("phyloseq",
+                 "ggtree",
                  "ggtreeExtra")
 
-BiocManager::install(setdiff(BM_packages, rownames(installed.packages())))
+BiocManager::install(setdiff(BM_packages, rownames(installed.packages())), force=T, type = 'source')
 
 if(!require("ampvis2", quietly=TRUE))
   remotes::install_github("kasperskytte/ampvis2")
 
-if(!require("tidytree", quietly=TRUE))
-  install_version("tidytree", version = "0.4.2")
+#if(!require("tidytree", quietly=TRUE))
+  #install_version("tidytree", version = "0.4.2")
 
 packages = append(packages, BM_packages)
 packages = append(packages, "ampvis2")
@@ -195,6 +196,8 @@ p_patch = wrap_elements(p_patch) +
     plot.background = element_rect(fill = "transparent", colour = NA_character_)
   )
 
+
+if (!dir.exists("Figures")) {dir.create("Figures")}
 path = "Figures/Figure3."
 save_pdf_png(plot = p_patch, path = path, w = 169, h = 90, u = "mm", bg = "transparent", dpi = 600)
 ```
@@ -387,9 +390,12 @@ names(GBIF_export$tax)[names(GBIF_export$tax) == "AnacapaDetailed[, \"sequence\"
 col_order = c("Sequence", "Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
 GBIF_export$tax = GBIF_export$tax[,col_order]
 
-write.csv(GBIF_export$abund, "Data/GBIF/ASVTable.csv", row.names=TRUE)
-write.csv(GBIF_export$tax, "Data/GBIF/TaxTable.csv", row.names=TRUE)
-write.csv(GBIF_export$metadata, "Data/GBIF/SampleData.csv", row.names=FALSE)
+
+
+if (!dir.exists("Analysis Products/Processed eDNA/GBIF")) {dir.create("Analysis Products/Processed eDNA/GBIF", recursive = TRUE)}
+write.csv(GBIF_export$abund, "Analysis Products/Processed eDNA/GBIF/ASVTable.csv", row.names=TRUE)
+write.csv(GBIF_export$tax, "Analysis Products/Processed eDNA/GBIF/TaxTable.csv", row.names=TRUE)
+write.csv(GBIF_export$metadata, "Analysis Products/Processed eDNA/GBIF/SampleData.csv", row.names=FALSE)
 
 ```
 
@@ -457,6 +463,12 @@ data_physeq = amp_to_phyloseq(data_amp, NULL, NULL, NULL)
 
 data_amp_taxa = data_amp
 data_amp_taxa$abund = aggregate_abund(data_amp$abund, data_amp$tax, tax_aggregate = "Species", format = "abund")
+
+
+if (!dir.exists("Analysis Products/Processed eDNA/Manuscript Analysis")) {dir.create("Analysis Products/Processed eDNA/Manuscript Analysis", recursive = TRUE)}
+write.csv(data_amp$abund, "Analysis Products/Processed eDNA/Manuscript Analysis/ASVTable.csv", row.names=TRUE)
+write.csv(data_amp$tax, "Analysis Products/Processed eDNA/Manuscript Analysis/TaxTable.csv", row.names=TRUE)
+write.csv(data_amp$metadata, "Analysis Products/Processed eDNA/Manuscript Analysis/SampleData.csv", row.names=FALSE)
 
 ```
 
@@ -779,7 +791,8 @@ Phyla_Reads = data.frame(Phyla = tax_table(physeq_totalreads)[,2],
   
   full_sorted = full_sorted[,col_order]
   
-  write.csv(full_sorted, "Data/Analysis Products/TaxonDiversity.csv", row.names=TRUE)
+
+  write.csv(full_sorted, "Analysis Products/Table1.csv", row.names=FALSE)
   
   full_sorted
 ```
@@ -1172,9 +1185,7 @@ adonis2(jaccard_taxa ~ Location + Time + Dereplicated_Sample_Name, data = data_a
 
 ```
 
-```{r Figure 7, message=FALSE, cache = TRUE, warning = FALSE, results = FALSE}
-
-#NMDS
+```{r NMDS Scree, message=FALSE, cache = TRUE, warning = FALSE, results = FALSE}
 
 #Check the stress vs. dimension plot
 
@@ -1190,7 +1201,9 @@ NMDS.scree <- function(x) { #where x is the name of the data frame variable
 NMDS.scree(jaccard_full)
 NMDS.scree(jaccard_taxa)
 
+```
 
+```{r PAM Preparation, message=FALSE, cache = TRUE, warning = FALSE, results = FALSE}
 #Establish functions for PAM clustering algorithm
 
 PAM_validation <- function(dist) {
@@ -1255,7 +1268,9 @@ PAM_silhouette_viz_3 <- function(PAM, sample_data) {
           panel.border=element_rect(colour="black",size=1, fill = NA)) + 
     scale_y_discrete(expand = expansion(add = 40))
 }
+```
 
+```{r Figure 7, message=FALSE, cache = TRUE, warning = FALSE, results = FALSE}
 
 NMDS_PAM <- function(amp, jaccard, dim, PAM_logical) {
   set.seed(0)
@@ -1474,7 +1489,7 @@ for (s in full_taxa_list$Species) {
 
 full_taxa_list = cbind(full_taxa_list, synonyms)
 
-write.csv(full_taxa_list, "Data/Analysis Products/BPT_Analysis.csv", row.names=FALSE)
+write.csv(full_taxa_list, "Analysis Products/BPT_Analysis.csv", row.names=FALSE)
 
 #make combined PDF of Part I, Part II, Part III, Part IV
 #for combined PDF, find every page number where names occur
@@ -1527,7 +1542,7 @@ save_pdf_png(plot = heatmap_ASV$plot, path = path, w = 169, h = 300, u = "mm", b
 ##Supporting Table 1###
 
 overlap_table
-write.csv(overlap_table, "Data/Analysis Products/TableS1.csv", row.names=TRUE)
+write.csv(overlap_table, "Analysis Products/TableS1.csv", row.names=FALSE)
 ```
 
 By analyzing occurrence data from the Global Biodiversity Information Facility (on `r Sys.Date()` `Sys.Date()`), we confirmed that `r percentages$count[6]` `percentages$count[6]` of `r sum(percentages$count)``sum(percentages$count)` identified species (`r sprintf("%0.1f%%", percentages$per[6] * 100)` `sprintf("%0.1f%%", percentages$per[6] * 100)`) have occurrence records at Pillar Point, specifically. An additional `r percentages$count[5]` `percentages$count[5]` identified species (`r sprintf("%0.1f%%", percentages$per[5] * 100)` `sprintf("%0.1f%%", percentages$per[5] * 100)`) have occurrence records in the California Current System (CCS) and known ranges that encompass Pillar Point. Of the remaining species, some only fulfilled one of two criteria; `r percentages$count[4]` `percentages$count[4]` identified species (`r sprintf("%0.1f%%", percentages$per[4] * 100)` `sprintf("%0.1f%%", percentages$per[4] * 100)`) had occurrence records in the CCS but known ranges that did not encompass Pillar Point and `r percentages$count[3]` `percentages$count[3]` identified species (`r sprintf("%0.1f%%", percentages$per[3] * 100)` `sprintf("%0.1f%%", percentages$per[3] * 100)`) had ranges that encompass Pillar Point but no occurrence records in the CCS. Additionally, `r percentages$count[1]` `percentages$count[1]` identified species (`r sprintf("%0.1f%%", percentages$per[1] * 100)` `sprintf("%0.1f%%", percentages$per[1] * 100)`) had neither occurrence records in the CCS nor known ranges that encompassed Pillar Point. Finally, `r percentages$count[2]` `percentages$count[2]` identified species (`r sprintf("%0.1f%%", percentages$per[2] * 100)` `sprintf("%0.1f%%", percentages$per[2] * 100)`) lacked sufficient occurrence records in GBIF to make any designation, and `r percentages$count[7]` `percentages$count[7]` identified species (`r sprintf("%0.1f%%", percentages$per[7] * 100)` `sprintf("%0.1f%%", percentages$per[7] * 100)`) did not have species-level records in GBIF. Full details by species can be found in Table S2.
@@ -1537,7 +1552,7 @@ By analyzing occurrence data from the Global Biodiversity Information Facility (
 
 GBIF_summary
 
-write.csv(GBIF_summary, "Data/Analysis Products/TableS2.csv", row.names=TRUE)
+write.csv(GBIF_summary, "Analysis Products/TableS2.csv", row.names=TRUE)
 ```
 
 
@@ -1551,8 +1566,10 @@ write.csv(GBIF_summary, "Data/Analysis Products/TableS2.csv", row.names=TRUE)
 
 graph = sample_schema 
 
-filename = paste("sample_schema_full.pdf")
-  path = paste("Figures/PowerPointFigure/", filename)
+if (!dir.exists("Figures/PowerPoint")) {dir.create("Figures/PowerPoint", recursive = TRUE)}
+
+filename = paste0("sample_schema_full.pdf")
+  path = paste0("Figures/PowerPoint/", filename)
   pdf(path, width = 13, height = 4.3)
   print(graph)
   dev.off()
@@ -1566,8 +1583,8 @@ for (i in 1:12) {
   graph <- graph + 
     scale_color_viridis_d(direction = -1, alpha = alpha) +
      scale_fill_viridis_d(direction = -1, alpha = alpha)
-  filename = paste("sample_schema", i, ".pdf")
-  path = paste("Figures/PowerPointFigure/", filename)
+  filename = paste0("sample_schema", i, ".pdf")
+  path = paste0("Figures/PowerPoint/", filename)
   pdf(path, width = 13, height = 4.3)
   print(graph)
   dev.off()
@@ -1602,7 +1619,7 @@ p = p +
   )
 
 ggsave(
-  "Figures/PowerPointFigure/phylo.pdf",
+  "Figures/PowerPoint/phylo.pdf",
   plot = p,
   width = 4.49,
   height = 7.06,
@@ -1616,7 +1633,7 @@ ggsave(
 
  graph = heatmap_taxa$plot 
 
-  path = "Figures/PowerPointFigure/indicator_figure.png"
+  path = "Figures/PowerPoint/indicator_figure.png"
   ggsave(filename = path, plot = graph, width = 13, height = 6.69)
   
 ```
@@ -1631,7 +1648,7 @@ graph = NMDS_PAM_full$NMDS +
   theme_classic(base_size = 18)
 
 filename = paste("NMDS_figure_full.pdf")
-  path = paste("Figures/PowerPointFigure/", filename)
+  path = paste("Figures/PowerPoint/", filename)
   pdf(path, width = 11.97, height = 6.14)
   print(graph)
   dev.off()
@@ -1650,7 +1667,7 @@ for (i in 1:12) {
                                  direction = -1, 
                                  alpha = alpha) 
   filename = paste("NMDS_figure", i, ".pdf")
-  path = paste("Figures/PowerPointFigure/", filename)
+  path = paste("Figures/PowerPoint/", filename)
   pdf(path, width = 11.97, height = 6.14)
   print(graph)
   dev.off()
