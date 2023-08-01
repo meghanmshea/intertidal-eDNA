@@ -53,7 +53,7 @@ cd bycatch
 Rscript R/bycatch.R
 ```
 
-**Note:** All of these analyses were run on a personal computer, and should be easy to reproduce. Analyses that require repeated access to an API (e.g. the GBIF range analysis) may take a long time to run. When running R code chunks, we recommend running these analyses as RStudio jobs using `job::job()` from the `job` package [more here](https://lindeloev.github.io/job/).
+**Note:** All of these analyses were run on a personal computer, and should be easy to reproduce. Analyses that require repeated access to an API (e.g. the GBIF range analysis) may take a long time to run. When running R code chunks, we recommend running these analyses as RStudio jobs using `job::job()` from the `job` package ([more here](https://lindeloev.github.io/job/)).
 
 ## Problems
 
@@ -65,4 +65,4 @@ The software code contained within this repository is made available under the [
 
 ## Acknowledgements
 
-We are grateful to many researchers who have modeled good practices for reproducibility and reporting in their own GitHub repos. Thanks especially to Grant McDermott ([bycatch project](https://github.com/grantmcdermott/bycatch/tree/master)), Alexa Fredston ([marine_heatwaves_trawl project](https://github.com/afredston/marine_heatwaves_trawl)),and Ramon Gallego ([eDNA.and.Ocean.Acidification.Gallego.et.al.2020 project](https://github.com/ramongallego/eDNA.and.Ocean.Acidification.Gallego.et.al.2020))
+We are grateful to many researchers who have modeled good practices for reproducibility and reporting in their own GitHub repos. Thanks especially to Grant McDermott ([bycatch project](https://github.com/grantmcdermott/bycatch/tree/master)), Alexa Fredston ([marine_heatwaves_trawl project](https://github.com/afredston/marine_heatwaves_trawl)),and Ramon Gallego ([eDNA.and.Ocean.Acidification.Gallego.et.al.2020 project](https://github.com/ramongallego/eDNA.and.Ocean.Acidification.Gallego.et.al.2020)).
