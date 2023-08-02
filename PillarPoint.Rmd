@@ -18,6 +18,65 @@ knitr::opts_chunk$set(echo = TRUE, tidy = "styler")
 renv::restore()
 ```
 
+
+```{r, Loading Packages (without renv)}
+#If you're not able to use "renv", you can also install the appropriate packages manually with this code:
+
+###Loading Packages###
+#Check if all required packages have been installed and loaded, and if not, install and load them. 
+
+#options(repos = list(CRAN="http://cran.rstudio.com/"))
+
+#packages <- c("tidyverse", 
+              #"sf",
+              #"patchwork", 
+              #"stringr", 
+              #"BiocManager", 
+              #"remotes", 
+              #"eulerr", 
+              #"indicspecies", 
+              #"cluster",
+              #"vegan",
+              #"chisq.posthoc.test", 
+              #"taxize",
+              #"Polychrome",
+              #"pals", 
+              #"spocc",
+              #"mregions",
+              #"rgbif",
+              #"mapview",
+              #"ggbeeswarm",
+              #"ggh4x",
+              #"chunkhooks",
+              #"devtools", 
+              #"grid",
+              #"styler")
+
+#install.packages(setdiff(packages, rownames(installed.packages())))
+#invisible(lapply(packages, library, character.only = TRUE))
+
+#BM_packages <- c("phyloseq",
+                 #"ggtree",
+                 #"ggtreeExtra")
+
+#BiocManager::install(setdiff(BM_packages, rownames(installed.packages())), force=T, type = 'source')
+
+#if(!require("ampvis2", quietly=TRUE))
+  #remotes::install_github("kasperskytte/ampvis2")
+
+#if(!require("tidytree", quietly=TRUE))
+  #install_version("tidytree", version = "0.4.2")
+
+#packages = append(packages, BM_packages)
+#packages = append(packages, "ampvis2")
+#packages = append(packages, "tidytree")
+
+#invisible(lapply(packages, library, character.only = TRUE))
+
+#hook_figure_unit()
+```
+
+
 ```{r, Core Functions}
 ###Core Functions###
 #Collection of functions used across analyses
