@@ -16,16 +16,13 @@ knitr::opts_chunk$set(echo = TRUE, tidy = "styler")
 
 ```{r, Loading Packages, message = FALSE, warning = FALSE, results = FALSE}
 ###Loading Packages###
-#Check if all required packages have been installed and loaded, and if not, install and load them. 
 
-options(repos = list(CRAN="http://cran.rstudio.com/"))
+renv::restore()
 
 packages <- c("tidyverse", 
               "sf",
               "patchwork", 
               "stringr", 
-              "BiocManager", 
-              "remotes", 
               "eulerr", 
               "indicspecies", 
               "cluster",
@@ -43,29 +40,14 @@ packages <- c("tidyverse",
               "chunkhooks",
               "devtools", 
               "grid",
-              "styler")
-
-install.packages(setdiff(packages, rownames(installed.packages())))
-invisible(lapply(packages, library, character.only = TRUE))
-
-BM_packages <- c("phyloseq",
-                 "ggtree",
-                 "ggtreeExtra")
-
-BiocManager::install(setdiff(BM_packages, rownames(installed.packages())), force=T, type = 'source')
-
-if(!require("ampvis2", quietly=TRUE))
-  remotes::install_github("kasperskytte/ampvis2")
-
-#if(!require("tidytree", quietly=TRUE))
-  #install_version("tidytree", version = "0.4.2")
-
-packages = append(packages, BM_packages)
-packages = append(packages, "ampvis2")
-packages = append(packages, "tidytree")
+              "styler",
+              "phyloseq",
+              "ggtree",
+              "ggtreeExtra",
+              "ampvis2")
 
 invisible(lapply(packages, library, character.only = TRUE))
-
+              
 hook_figure_unit()
 ```
 
