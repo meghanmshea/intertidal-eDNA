@@ -11,7 +11,7 @@
 "10","Corallina confusa","Corallina confusa",FALSE,FALSE,FALSE,FALSE,FALSE
 "11","Chloroparvula pacifica",NA,NA,NA,NA,NA,TRUE
 "12","Leathesia difformis","Leathesia difformis",FALSE,FALSE,TRUE,FALSE,FALSE
-"13","Bossiella hakaiensis",NA,NA,NA,NA,NA,TRUE
+"13","Bossiella hakaiensis","Bossiella hakaiensis",FALSE,FALSE,FALSE,FALSE,FALSE
 "14","Acrochaetium plumosum","Acrochaetium plumosum",FALSE,TRUE,TRUE,FALSE,FALSE
 "15","Naineris dendritica CMC01","Naineris dendritica",FALSE,TRUE,TRUE,FALSE,FALSE
 "16","Calliarthron tuberculosum","Calliarthron tuberculosum",TRUE,TRUE,TRUE,FALSE,FALSE
@@ -102,7 +102,7 @@
 "101","Bossiella frondifera","Bossiella frondifera",FALSE,TRUE,TRUE,FALSE,FALSE
 "102","Scinaia confusa","Scinaia confusa",FALSE,TRUE,TRUE,FALSE,FALSE
 "103","Coilodesme japonica",NA,NA,NA,NA,NA,TRUE
-"104","Dictyocha speculum","Octactis speculum",FALSE,FALSE,FALSE,FALSE,FALSE
+"104","Dictyocha speculum","Dictyocha speculum",FALSE,TRUE,TRUE,FALSE,FALSE
 "105","Chloropicon sieburthii",NA,NA,NA,NA,NA,TRUE
 "106","Hexagrammos decagrammus","Hexagrammos decagrammus",TRUE,TRUE,TRUE,FALSE,FALSE
 "107","Pseudochattonella farcimen","Pseudochattonella farcimen",FALSE,FALSE,TRUE,FALSE,FALSE
@@ -284,7 +284,7 @@
 "283","Acrochaetium catenulatum","Acrochaetium catenulatum",FALSE,FALSE,TRUE,FALSE,FALSE
 "284","Pachychalina tenera","Pachychalina tenera",FALSE,FALSE,FALSE,TRUE,FALSE
 "285","Myxicola infundibulum CMC02","Myxicola infundibulum",FALSE,TRUE,TRUE,FALSE,FALSE
-"286","Petrospongium rugosum","Petrospongium rugosum",FALSE,FALSE,FALSE,FALSE,FALSE
+"286","Petrospongium rugosum","Cylindrocarpus rugosum",TRUE,TRUE,TRUE,FALSE,FALSE
 "287","Celleporina ventricosa","Celleporina ventricosa",FALSE,TRUE,TRUE,FALSE,FALSE
 "288","Prorocentrum minimum","Prorocentrum cordatum",FALSE,TRUE,TRUE,FALSE,FALSE
 "289","Deroceras reticulatum","Deroceras reticulatum",FALSE,TRUE,TRUE,FALSE,FALSE
@@ -317,7 +317,7 @@
 "316","Mitrocoma cellularia","Mitrocoma cellularia",FALSE,TRUE,TRUE,FALSE,FALSE
 "317","Pisaster giganteus","Pisaster giganteus",TRUE,TRUE,TRUE,FALSE,FALSE
 "318","Callithamnion rupicola","Callithamnion rupicolum",FALSE,TRUE,TRUE,FALSE,FALSE
-"319","Brada villosa CMC02","Brada villosa",FALSE,FALSE,FALSE,FALSE,FALSE
+"319","Brada villosa CMC02","Bradabyssa villosa",FALSE,TRUE,TRUE,FALSE,FALSE
 "320","Callophyllis variegata","Callophyllis variegata",FALSE,TRUE,TRUE,FALSE,FALSE
 "321","Discorsopagurus schmitti","Discorsopagurus schmitti",FALSE,TRUE,TRUE,FALSE,FALSE
 "322","Rhodotorula mucilaginosa","Rhodotorula mucilaginosa",FALSE,TRUE,TRUE,FALSE,FALSE
@@ -333,7 +333,7 @@
 "332","Bangia fuscopurpurea","Bangia fuscopurpurea",FALSE,TRUE,TRUE,FALSE,FALSE
 "333","Mopalia spectabilis","Mopalia spectabilis",FALSE,TRUE,TRUE,FALSE,FALSE
 "334","Megaselia rufipes","Megaselia rufipes",FALSE,FALSE,TRUE,FALSE,FALSE
-"335","Rhopalosiphum insertum","Rhopalosiphum sanguinarium",FALSE,FALSE,FALSE,FALSE,FALSE
+"335","Rhopalosiphum insertum",NA,NA,NA,NA,NA,TRUE
 "336","Prionitis filiformis","Prionitis filiformis",FALSE,TRUE,TRUE,FALSE,FALSE
 "337","Xiphister mucosus","Xiphister mucosus",FALSE,TRUE,TRUE,FALSE,FALSE
 "338","Aaptos nuda","Aaptos nuda",FALSE,FALSE,FALSE,TRUE,FALSE

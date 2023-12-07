@@ -30,14 +30,21 @@ The processed eDNA dataset represents the core dataset analyzed in the manuscrip
 
 ### Anacapa Container (modified)
 
-The modified Anacapa Container, [published to Zenodo](https://doi.org/10.5281/zenodo.8201140) and found in the "Related Works" on Dryad, is the workflow used to process FASTQ_Files.zip. The output from this workflow is Anacapa_Toolkit_Output.zip. More details on the Anacapa Container and how it works can be found on [its Zenodo page](https://doi.org/10.5281/zenodo.8201140). 
+The modified Anacapa Container, published to Zenodo and found in the "Related Works" on Dryad, is the workflow used to process FASTQ_Files.zip. The output from this workflow is Anacapa_Toolkit_Output.zip. More details on the Anacapa Container and how it works can be found on its Zenodo page. 
 
 ### Intertidal-eDNA GitHub Repository
 
-The Intertidal-eDNA GitHub repository, [published to Zenodo](https://doi.org/10.5281/zenodo.8213050) and found in the "Related Works" on Dryad, contains all of the data and code needed to reproduce the analyses in the manuscript, starting from Anacapa_Toolkit_Output.zip (which is already included in the repo). Using PillarPoint.Rmd, you can generate the processed eDNA dataset saved here as Processed_eDNA_Data.zip and use that dataset to reproduce all of the analyses, as well as most of the figures, in the manuscript. More details on the Intertidal-eDNA GitHub repository can be found on [its Zenodo page](https://doi.org/10.5281/zenodo.8213050). 
+The Intertidal-eDNA GitHub repository, published to Zenodo and found in the "Related Works" on Dryad, contains all of the data and code needed to reproduce the analyses in the manuscript, starting from Anacapa_Toolkit_Output.zip (which is already included in the repo). Using PillarPoint.Rmd, you can generate the processed eDNA dataset saved here as Processed_eDNA_Data.zip and use that dataset to reproduce all of the analyses, as well as most of the figures, in the manuscript. More details on the Intertidal-eDNA GitHub repository can be found on its Zenodo page. 
 
 
 ## Sharing/Access information
 
-This is a section for linking to other ways to access the data, and for linking to sources the data is derived from, if any. *MORE INFORMATION COMING SOON*
+This is a section for linking to other ways to access the data, and for linking to sources the data is derived from, if any.
+
+Links to other publicly accessible locations of the data:
+  * 
+
+Data was derived from the following sources:
+  * 
+
 
