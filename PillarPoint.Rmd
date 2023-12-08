@@ -1530,6 +1530,9 @@ toc_cleaned_max[nrow(toc_cleaned)] = NA
 
 toc_cleaned$max_page = toc_cleaned_max
 
+#remove everything not referring to rocky shores
+toc_cleaned = toc_cleaned[1:17,]
+
 #Remove just rows with zone
 toc_zones = toc_cleaned %>% filter(grepl('Zone', text))
 toc_zones$text = gsub("\\..*", "", toc_zones$text)
@@ -1615,23 +1618,83 @@ condense = condense %>% relocate(Site, Unique, Indicator, name, 'Zone 4', 'Zone 
 condense = condense %>% rename(Zone_1 = 'Zone 1', Zone_2 = 'Zone 2',  Zone_3 = 'Zone 3', Zone_4 = 'Zone 4')
 
 
-#FIX ORDERING
+
 condense_no_pages = condense 
-condense_no_pages$Zone_1 = !sapply(condense_no_pages$Zone_4, is.null)
-condense_no_pages$Zone_2 = !sapply(condense_no_pages$Zone_3, is.null)
-condense_no_pages$Zone_3 = !sapply(condense_no_pages$Zone_2, is.null)
-condense_no_pages$Zone_4 = !sapply(condense_no_pages$Zone_1, is.null)
+condense_no_pages$Zone_1 = !sapply(condense_no_pages$Zone_1, is.null)
+condense_no_pages$Zone_2 = !sapply(condense_no_pages$Zone_2, is.null)
+condense_no_pages$Zone_3 = !sapply(condense_no_pages$Zone_3, is.null)
+condense_no_pages$Zone_4 = !sapply(condense_no_pages$Zone_4, is.null)
+
+
+#Adjust Based on Manual Checking
+
+#remove "Proboscidactyla flavicirrata" because search identified the wrong abbreviated synonym
+condense_no_pages = condense_no_pages %>% filter(name != "Proboscidactyla flavicirrata")
+
+#add "Laminaria setchellii" because it was found manually and only appears in a diagram (so not in text search)
+condense_no_pages = condense_no_pages %>% add_row(Site = "N", Unique = "N", Indicator = NA, name = "Laminaria setchellii", Zone_4 = TRUE, Zone_3 = FALSE, Zone_2 = FALSE, Zone_1 = FALSE)
+
+#add "Egregia menziesii" because it was found manually through the index, but only appears by genus in the text
+condense_no_pages = condense_no_pages %>% add_row(Site = "S2", Unique = "S2", Indicator = NA, name = "Egregia menziesii", Zone_4 = TRUE, Zone_3 = TRUE, Zone_2 = TRUE, Zone_1 = FALSE)
+
+#add "Pandalus danae" because it was found manually through the index, but only appears by genus in the text
+condense_no_pages = condense_no_pages %>% add_row(Site = "S2", Unique = "S2", Indicator = NA, name = "Pandalus danae", Zone_4 = TRUE, Zone_3 = FALSE, Zone_2 = FALSE, Zone_1 = FALSE)
+
+#Adjust "Ectopleura marina" to include Zone_3 (found manually because mentioned on that page with genus only, but linked in the index)
+condense_no_pages = condense_no_pages %>% mutate(Zone_3 = replace(Zone_3, name == "Ectopleura marina", TRUE))
+
+#Adjust "Halosydna brevisetosa" to include Zone_4 (found manually because mentioned on that page with genus only, but linked in the index)
+condense_no_pages = condense_no_pages %>% mutate(Zone_4 = replace(Zone_4, name == "Halosydna brevisetosa", TRUE))
+
+
 
 condense_no_pages = condense_no_pages %>% arrange(name)
-condense_no_pages = condense_no_pages %>% arrange(desc(Zone_4)) %>% arrange(desc(Zone_3)) %>% arrange(desc(Zone_2)) %>% arrange(desc(Zone_1))
-condense_no_pages = condense_no_pages %>% arrange(Site)
+condense_no_pages = condense_no_pages %>% arrange(desc(Zone_1), desc(Zone_2), desc(Zone_3), desc(Zone_4)) 
+condense_no_pages = condense_no_pages %>% arrange(factor(Site, levels = c("S1", "S2", "N")))
 
 
 
 
-#Ecological Significance 
+
+
+
+contingency_table = condense_no_pages %>% group_by(Site) %>% summarise(High = sum(Zone_1 == TRUE | Zone_2 == TRUE | Zone_3 == TRUE), Low = sum(Zone_1 == FALSE & Zone_2 == FALSE & Zone_3 == FALSE))
+contingency_table = contingency_table %>% select(-Site) %>% as.matrix()
+rownames(contingency_table) = c("N", "S1", "S2")
+
+
+
+
+
+
+
+
+
 #Add section here where I import/read data rather than just pull the numbers
 
+
+S1_hm = 12
+S1_no_hm = 6
+
+S2_hm = 2
+S2_no_hm = 10
+
+N_hm = 2
+N_no_hm = 8
+
+S1 = c(Yes = S1_hm, No = S1_no_hm)
+S2 = c(Yes = S2_hm, No = S2_no_hm)
+N = c(Yes = N_hm, No = N_no_hm)
+
+counts = rbind(S1, S2, N)
+
+
+
+
+
+
+
+##OLD
 S1_hm = 12
 S1_no_hm = 5
 
@@ -1646,6 +1709,8 @@ S2 = c(Yes = S2_hm, No = S2_no_hm)
 N = c(Yes = N_hm, No = N_no_hm)
 
 counts = rbind(S1, S2, N)
+
+set.seed(1)
 
 test = chisq.test(counts, correct = FALSE, simulate.p.value = TRUE)
 
