@@ -1811,7 +1811,7 @@ save_pdf_png(plot = heatmap_ASV$plot, path = path, w = 169, h = 300, u = "mm", b
 
 <center>
 
-![*Figure S1: Heat map of identified indicator ASVs for all three locations over time, scaled by the number of replicates that detected that species.*]('r paste0(path, "png"))
+![*Figure S1: Heat map of identified indicator ASVs for all three locations over time, scaled by the number of replicates that detected that species.*](`r paste0(path, "png")`)
 
 </center>
 
