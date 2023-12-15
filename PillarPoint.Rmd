@@ -131,7 +131,7 @@ xmax = Tides$datetime[69]
 ymin = -.5
 ymax = .5
 
-box_color = "#EDEDED"
+box_color = "#C0C0C0"
 
 #Create plot of full tidal cycle with sampling period highlighted
 p1 <- ggplot(data=Tides, aes(x=datetime, y = Pred, group=1)) + 
@@ -170,7 +170,7 @@ p2 <- ggplot(data=Tides, aes(x=datetime, y = Pred, group=1)) +
   theme(plot.margin = margin(b=0))
 
 #Stitch plots together using patchwork
-p_patch <- p1 / (p2 & theme(plot.margin=margin(0,0,0,0, "pt"))) & ylab(NULL) & theme(plot.background = element_rect(fill = "transparent", colour = NA_character_))
+p_patch <- p1 / (p2 & theme(plot.margin=ggplot2::margin(0,0,0,0, "pt"))) & ylab(NULL) & theme(plot.background = element_rect(fill = "transparent", colour = NA_character_))
 
 # Use the tag label as a y-axis label
 p_patch = wrap_elements(p_patch) +
@@ -487,10 +487,13 @@ sample_schema = ggplot(data = data_forchart, aes(x = Time, y = chart_num, shape 
   theme_void(base_size = 12) + 
   theme(legend.position = "none",
         strip.text.y.left = element_text(angle = 0, hjust = 1, vjust = .9),
-        plot.margin=margin(0,0,0,0, "pt"))  
+        plot.margin=ggplot2::margin(0,0,0,0, "pt"))  +
+  theme(axis.ticks.x  = element_line(linewidth = .5)) +
+    theme(axis.ticks.length.x  = unit(0.15, "cm")) +
+  scale_x_discrete(position = "top") 
 
 
-combined = (plot_spacer() + p_patch + plot_spacer() + plot_layout(widths = c(3,50,1)))/(plot_spacer() + sample_schema + plot_layout(widths = c(1,50))) & theme(plot.margin=margin(0,0,0,0, "pt"))
+combined = (plot_spacer() + p_patch + plot_spacer() + plot_layout(widths = c(3,50,1.2)))/(plot_spacer())/(plot_spacer() + sample_schema + plot_layout(widths = c(1,50))) + plot_layout(heights = c(4, -.05, 5)) & theme(plot.margin=ggplot2::margin(0,0,0,0, "pt"))
 
 
 path = "Figures/Figure3_full."
