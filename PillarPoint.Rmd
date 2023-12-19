@@ -1431,15 +1431,12 @@ The extent of the Jaccard dissimilarity between samples from different locations
 
 #### 3.4. Ecological Significance
 
-```{r Ecological Significance, message = FALSE, warning = FALSE, results = FALSE}
-###Ecological Significance###
+```{r Ecological Significance Preparation, message = FALSE, warning = FALSE, results = FALSE}
 
-#NOT DONE YET 
-
+#Create data frame with unique and indicator species from each site
 S1_unique = setdiff(S1_taxa, union(S2_taxa,N_taxa) ) 
 S2_unique = setdiff(S2_taxa, union(S1_taxa,N_taxa) ) 
 N_unique = setdiff(N_taxa, union(S2_taxa,S1_taxa) ) 
-
 
 S1 = data.frame(list(Species = remove_NCBInums(S1_unique), Unique = "S1"))
 S2 = data.frame(list(Species = remove_NCBInums(S2_unique), Unique = "S2"))
@@ -1454,10 +1451,7 @@ indicators = rbind(S1_i, S2_i, N_i)
 df_list = list(unique, indicators)
 full_taxa_list = df_list %>% reduce(full_join, by='Species')
 
-
-
-
-
+#Identify taxonomic synonyms for all species in above data frame
 synonyms = c()
 for (s in full_taxa_list$Species) {
   print(s)
@@ -1471,8 +1465,9 @@ for (s in full_taxa_list$Species) {
   synonyms = rbind(synonyms, syns)
 }
 
-
 full_taxa_list = cbind(full_taxa_list, synonyms)
+
+#Clean species text in data frame
 
 #Remove anything in parentheticals 
 full_taxa_list$synonyms <- gsub("\\s*\\([^\\)]+\\)", "", full_taxa_list$synonyms)
@@ -1494,16 +1489,33 @@ for(syn in 1:length(full_taxa_list$synonyms)) {
   full_taxa_list$synonyms[syn] = syns
 }
 
-
 write.csv(full_taxa_list, "Analysis Products/BPT_Analysis.csv", row.names=FALSE)
+```
 
 
-#Read in needed text of Between Pacific Tides (file not given on GitHub due to copyright)
+```{r Ecological Significance PDF Reading, message = FALSE, warning = FALSE, results = FALSE}
+#Read in needed text of Between Pacific Tides (files not given on GitHub due to copyright)
+#PDFs obtained from 5th Edition of Between Pacific Tides available digitally through DeGruyter
+#Link to Access: https://doi-org.stanford.idm.oclc.org/10.1515/9781503621329
+
+#BetweenPacificTides_TextForSeaching.pdf is a compilation of the following PDF sections from DeGruyter, aligned so the PDF page numbers match the text page numbers
+#Introduction, 1 Outer-Coast Rocky Shores, 2 Outer-Coast Sandy Beaches, 3 Open-Coast Rocky Shores, 4 Open-Coast Sandy Beaches, 5 Rocky Shores of Bays and Estuaries, 6 Sand Flats, 7 Eelgrass Flats, 8 Mud Flats, 9 Exposed Piles, 10 Protected Piles
+
+#BetweenPacificTides_TOC.pdf is the Contents PDF section from DeGruyter
+
+
+#Check to only run these steps if you have the proper PDFs in your Data folder
+if(file.exists("Data/BetweenPacificTides_TextForSearching.pdf") & file.exists("Data/BetweenPacificTides_TOC.pdf")) {
+
 txt <-pdf_text("Data/BetweenPacificTides_TextForSearching.pdf")
 toc <-pdf_text("Data/BetweenPacificTides_TOC.pdf")
 
-#first remove hyphenated situations "-\n"
-#then remove all line breaks "\n"
+## POTENTIAL DATA FRAME SAVING MOMENT (uncleaned full text in txt and toc)
+
+#Clean up PDF text
+
+#First remove places where there's a hyphen added over a line break "-\n"
+#Then remove all line breaks "\n"
 txt = gsub('-\n', '', txt)
 txt = gsub('\n', ' ', txt)
 
@@ -1513,12 +1525,13 @@ toc = c(toc[[1]], toc[[2]], toc[[3]])
 page_nums = grepl("[1234567890,]$", toc)
 toc = toc[page_nums]
 
+###POTENTIAL DATA FRAME SAVING MOMENT (post initial cleaning of txt and toc)
+
 #Fix the couple of strings that are split over multiple lines
 toc_cleaned = c(toc[1:14], paste0(toc[15], toc[16]), toc[17:21], paste0(toc[22], toc[23]), toc[24:53])
 toc_cleaned = as.data.frame(toc_cleaned)
 toc_cleaned = extract(toc_cleaned, toc_cleaned, into = c('text', 'page'), '(.*)\\s+([^ ]+)$')
 toc_cleaned$page = as.numeric(toc_cleaned$page)
-
 
 toc_cleaned_max = vector()
 for(x in 1:(nrow(toc_cleaned)-1)) {
@@ -1533,7 +1546,7 @@ toc_cleaned_max[nrow(toc_cleaned)] = NA
 
 toc_cleaned$max_page = toc_cleaned_max
 
-#remove everything not referring to rocky shores
+#Remove everything not referring to rocky shores
 toc_cleaned = toc_cleaned[1:17,]
 
 #Remove just rows with zone
@@ -1541,6 +1554,17 @@ toc_zones = toc_cleaned %>% filter(grepl('Zone', text))
 toc_zones$text = gsub("\\..*", "", toc_zones$text)
 toc_zones$text = trimws(toc_zones$text)
 
+###POTENTIAL DATA FRAME SAVING MOMENT (txt still contains full text, toc is basically unrecognizable from original)
+
+}
+
+```
+
+
+```{r Ecological Significance Text Searching, message = FALSE, warning = FALSE, results = FALSE}
+
+#Check to only run these steps if you've been able to properly run the above text importing
+if(exists("toc_zones") & exists("txt")) {
 
 output = c()
 for (x in 1:length(full_taxa_list$Species)) {
@@ -1597,30 +1621,32 @@ for(x in 1:length(full_taxa_list$pages)) {
 }
 
 final_1 = as.data.frame(cbind(name, zone, page))
+}
+
+write.csv(final_1, "Analysis Products/BPT_Analysis_Intermediate.csv", row.names=FALSE)
+
+```
+
+
+```{r Ecological Significance Cleaning + Statistical Analysis, message = FALSE, warning = FALSE, results = FALSE}
+
+final_1 = read.csv("Analysis Products/BPT_Analysis_Intermediate.csv")
 
 #Split "Zones 1 and 2" into two entries
 to_split = final_1 %>% filter(zone == "Zones 1 and 2") %>% mutate(zone = "Zone 1")
 final_2 = final_1 %>% mutate(zone = replace(zone, zone == "Zones 1 and 2", "Zone 2"))
 final_2 = rbind(final_2, to_split)
 
-
 #Split "Zones 2 and 3" into two entries
 to_split = final_1 %>% filter(zone == "Zones 2 and 3") %>% mutate(zone = "Zone 2")
 final_2 = final_2 %>% mutate(zone = replace(zone, zone == "Zones 2 and 3", "Zone 3"))
 final_2 = rbind(final_2, to_split)
                                
-                              
 condense = final_2 %>% pivot_wider(names_from = zone, values_from = page, values_fn = unique(list()))
-
-
 condense = left_join(condense, full_taxa_list[,c("Species", "Unique", "Indicator")], by = join_by(name == Species))
-
 condense = condense %>% mutate(Site = coalesce(Unique, Indicator))
 condense = condense %>% relocate(Site, Unique, Indicator, name, 'Zone 4', 'Zone 3', 'Zone 2', 'Zone 1')
-
 condense = condense %>% rename(Zone_1 = 'Zone 1', Zone_2 = 'Zone 2',  Zone_3 = 'Zone 3', Zone_4 = 'Zone 4')
-
-
 
 condense_no_pages = condense 
 condense_no_pages$Zone_1 = !sapply(condense_no_pages$Zone_1, is.null)
@@ -1628,19 +1654,18 @@ condense_no_pages$Zone_2 = !sapply(condense_no_pages$Zone_2, is.null)
 condense_no_pages$Zone_3 = !sapply(condense_no_pages$Zone_3, is.null)
 condense_no_pages$Zone_4 = !sapply(condense_no_pages$Zone_4, is.null)
 
+#Adjust Based on Manual Checking in BPT
 
-#Adjust Based on Manual Checking
-
-#remove "Proboscidactyla flavicirrata" because search identified the wrong abbreviated synonym
+#Remove "Proboscidactyla flavicirrata" because search identified the wrong abbreviated synonym
 condense_no_pages = condense_no_pages %>% filter(name != "Proboscidactyla flavicirrata")
 
-#add "Laminaria setchellii" because it was found manually and only appears in a diagram (so not in text search)
+#Add "Laminaria setchellii" because it was found manually and only appears in a diagram (so not in text search)
 condense_no_pages = condense_no_pages %>% add_row(Site = "N", Unique = "N", Indicator = NA, name = "Laminaria setchellii", Zone_4 = TRUE, Zone_3 = FALSE, Zone_2 = FALSE, Zone_1 = FALSE)
 
-#add "Egregia menziesii" because it was found manually through the index, but only appears by genus in the text
+#Add "Egregia menziesii" because it was found manually through the index, but only appears by genus in the text
 condense_no_pages = condense_no_pages %>% add_row(Site = "S2", Unique = "S2", Indicator = NA, name = "Egregia menziesii", Zone_4 = TRUE, Zone_3 = TRUE, Zone_2 = TRUE, Zone_1 = FALSE)
 
-#add "Pandalus danae" because it was found manually through the index, but only appears by genus in the text
+#Add "Pandalus danae" because it was found manually through the index, but only appears by genus in the text
 condense_no_pages = condense_no_pages %>% add_row(Site = "S2", Unique = "S2", Indicator = NA, name = "Pandalus danae", Zone_4 = TRUE, Zone_3 = FALSE, Zone_2 = FALSE, Zone_1 = FALSE)
 
 #Adjust "Ectopleura marina" to include Zone_3 (found manually because mentioned on that page with genus only, but linked in the index)
@@ -1649,35 +1674,26 @@ condense_no_pages = condense_no_pages %>% mutate(Zone_3 = replace(Zone_3, name =
 #Adjust "Halosydna brevisetosa" to include Zone_4 (found manually because mentioned on that page with genus only, but linked in the index)
 condense_no_pages = condense_no_pages %>% mutate(Zone_4 = replace(Zone_4, name == "Halosydna brevisetosa", TRUE))
 
-
-
+#Sort the species list
 condense_no_pages = condense_no_pages %>% arrange(name)
 condense_no_pages = condense_no_pages %>% arrange(desc(Zone_1), desc(Zone_2), desc(Zone_3), desc(Zone_4)) 
 condense_no_pages = condense_no_pages %>% arrange(factor(Site, levels = c("S1", "S2", "N")))
 
-
-
-
-
-
-
+#Organize species list for chi square test
 contingency_table = condense_no_pages %>% group_by(Site) %>% summarise(High = sum(Zone_1 == TRUE | Zone_2 == TRUE | Zone_3 == TRUE), Low = sum(Zone_1 == FALSE & Zone_2 == FALSE & Zone_3 == FALSE))
 contingency_table = contingency_table %>% select(-Site) %>% as.matrix()
 rownames(contingency_table) = c("N", "S1", "S2")
 
-
 set.seed(1)
-
 test = chisq.test(contingency_table, correct = FALSE, simulate.p.value = TRUE)
-
 test_post_hoc = chisq.posthoc.test(contingency_table, method = "bonferroni", simulate.p.value = TRUE)
+```
 
+```{r Ecological Significance Table, message = FALSE, warning = FALSE, results = FALSE}
 
+#Create table showcasing results
 for_plotting = condense_no_pages
 for_plotting = for_plotting %>% mutate(Unique = replace(Unique, !is.na(Unique), "X"), Unique = replace(Unique, is.na(Unique), ""), Indicator = replace(Indicator, !is.na(Indicator), "X"), Indicator = replace(Indicator, is.na(Indicator), ""))
-
-
-
 
 for_plotting = for_plotting %>% 
   gt(groupname_col = "Site", id = "mygt") %>%
@@ -1784,15 +1800,8 @@ for_plotting = for_plotting %>%
     style = cell_text(align = "center"),
     locations = cells_column_labels(columns = name))
 
- 
-  
 path = "Figures/Figure9.png"
 gtsave(for_plotting, filename = path)
-
-
-
-
-
 ```
 
 Identified unique and indicator taxa reflected known ecological differences between locations. Only a subset of unique and indicator taxa were described in Between Pacific Tides: 18.8% (9/48) of nearshore taxa, 32.1% (17/53) of S1 taxa, and 31.1% (14/45) of S2. However, across the described subset, more taxa from S1 were categorized to high and middle intertidal zones than S2 and N (Figure 9; not made in R). The proportion of taxa from the high and middle intertidal varied significantly across locations (χ2 =11.67, p\<0.05), matching the environmental characteristics of the sites.
