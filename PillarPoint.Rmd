@@ -514,55 +514,50 @@ write.csv(SRA_metadata, "Analysis Products/Processed eDNA/NCBI/SRA_metadata.csv"
 
 #Make defaultValues data frame for variables that are the same for all samples
 
-#env_medium
-#env_broad_scale
-#env_local_scale
-#project_name
-#target_gene = COI
-#pcr_primer_forward
-#pcr_primer_name_forward
-#pcr_primer_reverse
-#pcr_primer_name_reverse
-#sop = https://www.biorxiv.org/content/10.1101/2023.08.03.551543v1
-#seq_meth = Illumina MiSeq
-#otu_db
-#samplingProtocol = dx.doi.org/10.17504/protocols.io.bp2l69y7klqe/v2
-#samp_collec_device = "Covidien single-use enteral feeding pouch"
-#samp_collec_method
-#samp_mat_process
-#size_frac
-#samp_vol_we_dna_ext
-#annealingTemp = 69.5
-#annealingTempUnit = Degrees celsius
-#ampliconSize
-#amplificationReactionVolume
-#amplicationReactionVolumeUnit = µl
-#nucl_acid_ext = dx.doi.org/10.17504/protocols.io.ewov1qyyygr2/v1
-#nucl_acid_amp = dx.doi.org/10.17504/protocols.io.dm6gp3wpdvzp/v1
-#lib_layout = paired
-#verbatimDepth = Surface
-#basisOfRecord = Material sample
-#institutionID = https://ror.org/00f54p054
-#institutionCode = Stanford University
-#organismQuantityType = DNA sequence reads
+defaultValues = as.data.frame(matrix(ncol = 2, nrow=0))
+colnames(defaultValues) <- c('term', 'value')
+defaultValues = as_tibble(defaultValues) %>% mutate(term = as.character(term), value = as.character(value))
 
-
-
-
-
-
-
-
+defaultValues = defaultValues %>% 
+  add_row(term = "env_medium", value = "coastal sea water [ENVO_00002150]") %>%
+  add_row(term = "env_broad_scale", value = "marine biome [ENVO:00000447]") %>%
+  add_row(term = "env_local_scale", value = "shoreline [ENVO:00000486]|intertidal zone [ENVO:00000316]") %>%
+  add_row(term = "project_name", value = "Environmental DNA metabarcoding differentiates between micro-habitats within the rocky intertidal") %>%
+  add_row(term = "target_gene", value = "COI") %>%
+  add_row(term = "pcr_primer_forward", value = "GGWACWGGWTGAACWGTWTAYCCYCC") %>%
+  add_row(term = "pcr_primer_name_forward", value = "mlCOIintF") %>%
+  add_row(term = "pcr_primer_reverse", value = "TAIACYTCIGGRTGICCRAARAAYCA") %>%
+  add_row(term = "pcr_primer_name_reverse", value = "jgHCO2198") %>%
+  add_row(term = "sop", value = "https://www.biorxiv.org/content/10.1101/2023.08.03.551543v1") %>%
+  add_row(term = "seq_meth", value = "Illumina MiSeq") %>%
+  add_row(term = "samplingProtocol", value = "dx.doi.org/10.17504/protocols.io.bp2l69y7klqe/v2") %>%
+  add_row(term = "size_frac", value = "0.22 micrometer") %>%
+  add_row(term = "samp_vol_we_dna_ext", value = "1000 mL") %>%
+  add_row(term = "samp_collec_device", value = "Covidien single-use enteral feeding pouch") %>%
+  add_row(term = "samp_collec_method", value = "Covidien single-use enteral feeding pouch: dx.doi.org/10.17504/protocols.io.bp2l69y7klqe/v2") %>%
+  add_row(term = "samp_mat_process", value = "Gravity filtered through Sterivex (0.22-µm): dx.doi.org/10.17504/protocols.io.bp2l69y7klqe/v2") %>%
+  add_row(term = "annealingTemp", value = "69.5") %>%
+  add_row(term = "annealingTempUnit", value = "Degrees Celsius") %>%
+  add_row(term = "ampliconSize", value = "313") %>%
+  add_row(term = "amplificationReactionVolume", value = "25") %>%
+  add_row(term = "amplicationReactionVolumeUnit", value = "µl") %>%
+  add_row(term = "nucl_acid_ext", value = "dx.doi.org/10.17504/protocols.io.ewov1qyyygr2/v1") %>%
+  add_row(term = "nucl_acid_amp", value = "dx.doi.org/10.17504/protocols.io.dm6gp3wpdvzp/v1") %>%
+  add_row(term = "lib_layout", value = "paired") %>%
+  add_row(term = "verbatimDepth", value = "Surface") %>%
+  add_row(term = "basisOfRecord", value = "Material sample") %>%
+  add_row(term = "institutionID", value = "https://ror.org/00f54p054") %>%
+  add_row(term = "institutionCode", value = "Stanford University") %>%
+  add_row(term = "organismQuantityType", value = "DNA sequence reads") %>%
+  add_row(term = "otu_db", value = "MIDORI2 reference database,v. GB253 (20 December 2022): https://www.reference-midori.info/download.php") 
+  
 
 #Make taxa, samples, and OTU table files
-
-##Add associatedSequences (SRA)
-##Add materialSampleID (BioSample)
-
-
+  
 GBIF_export = amp_nocontrols_FD
 
 GBIF_export$metadata = merge(GBIF_export$metadata, Location, all=T)
+
 
 #Add date + time
 
@@ -579,10 +574,25 @@ GBIF_export$metadata$eventDate = Zulu(GBIF_export$metadata$eventDate)
 PST <- stamp("2020-04-04T18:05:00PST")
 GBIF_export$metadata$verbatimEventDate = PST(GBIF_export$metadata$verbatimEventDate)
 
-names(GBIF_export$metadata)[names(GBIF_export$metadata) == 'Sample'] <- 'Sequencing_Sample_Name'
+names(GBIF_export$metadata)[names(GBIF_export$metadata) == 'Sample'] <- 'id'
 
-col_order = c("Sequencing_Sample_Name", "Sample_Name", "Location", "Latitude", "Longitude", "CRS", "eventDate", "verbatimEventDate", "T", "S")
+col_order = c("id", "Sample_Name", "Location", "Latitude", "Longitude", "CRS", "eventDate", "verbatimEventDate", "T", "S")
 GBIF_export$metadata = GBIF_export$metadata[,col_order]
+
+
+#If you have SRA metadata records from successful NCBI submission, process them here
+
+if (dir.exists("Analysis Products/Processed eDNA/NCBI/NCBI Upload Record")) {
+  SRA = read.delim("Analysis Products/Processed eDNA/NCBI/NCBI Upload Record/metadata-14288727-processed-ok.tsv", sep="\t")
+  SRA = SRA[c("accession", "biosample_accession", "sample_name")]
+  SRA$biosample_accession=paste0("https://www.ncbi.nlm.nih.gov/biosample/?term=", SRA$biosample_accession)
+  SRA$accession=paste0("https://www.ncbi.nlm.nih.gov/sra/?term=", SRA$accession)
+
+  GBIF_export$metadata = left_join(GBIF_export$metadata, SRA, by = join_by(id == sample_name))
+}
+
+GBIF_export$metadata = GBIF_export$metadata %>% rename(associatedSequences = accession, materialSampleID = biosample_accession, temperature = T, salinity = S)
+
 
 #Add sequences to file
 
@@ -608,9 +618,10 @@ GBIF_export$tax = GBIF_export$tax[,col_order]
 
 
 if (!dir.exists("Analysis Products/Processed eDNA/GBIF")) {dir.create("Analysis Products/Processed eDNA/GBIF", recursive = TRUE)}
-write.csv(GBIF_export$abund, "Analysis Products/Processed eDNA/GBIF/ASVTable.csv", row.names=TRUE)
-write.csv(GBIF_export$tax, "Analysis Products/Processed eDNA/GBIF/TaxTable.csv", row.names=TRUE)
-write.csv(GBIF_export$metadata, "Analysis Products/Processed eDNA/GBIF/SampleData.csv", row.names=FALSE)
+write.csv(GBIF_export$abund, "Analysis Products/Processed eDNA/GBIF/OTUtable.csv", row.names=TRUE)
+write.csv(GBIF_export$tax, "Analysis Products/Processed eDNA/GBIF/taxa.csv", row.names=TRUE)
+write.csv(GBIF_export$metadata, "Analysis Products/Processed eDNA/GBIF/samples.csv", row.names=FALSE)
+write.csv(defaultValues, "Analysis Products/Processed eDNA/GBIF/defaultValues.csv", row.names=FALSE)
 
 ```
 
