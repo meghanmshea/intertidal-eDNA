@@ -339,23 +339,249 @@ amp_nocontrols_FD_R = rarefaction(amp_nocontrols_FD)
 amp_nocontrols_NS_FD_R = rarefaction(amp_nocontrols_NS_FD)
 ```
 
+```{r Making NCBI Data Frames, warning = FALSE}
+###Making NCBI Data Frames###
+##Create data frames for submission to NCBI SRA based on required information in BioSample package MIMARKS: survey, water; version 6.0 as well as additional suggested detailed from the NOAA Omics Data Management Guide (https://noaa-omics-dmg.readthedocs.io/en/latest/contributors.html)
+
+##BioSample attributes
+
+NCBI_export = merge(amp$metadata, Location, all=T)
+
+#Latitude + Longitude
+lat_lon = do.call(paste, list(NCBI_export$Latitude, "N", gsub("-", "", NCBI_export$Longitude), "W", sep=" "))
+lat_lon[lat_lon == "NA N NA W"] = "NA"
+NCBI_export = cbind(NCBI_export, lat_lon)
+
+#Date and time
+Date = "2022-01-28"
+NCBI_export = cbind(NCBI_export, Date)
+
+NCBI_export$collection_date_local <- lubridate::ymd_hm(paste(NCBI_export$Date, "T", NCBI_export$Time), tz = "US/Pacific")
+
+NCBI_export$collection_date <- with_tz(NCBI_export$collection_date_local, "Zulu")
+
+Zulu <- stamp("2020-04-04T18:05:00Z")
+NCBI_export$collection_date = Zulu(NCBI_export$collection_date)
+
+PST <- stamp("2020-04-04T18:05:00PST")
+NCBI_export$collection_date_local = PST(NCBI_export$collection_date_local)
+
+#Rename columns
+NCBI_export = NCBI_export[c("Sample", "Sample_Name", "Type", "Location", "T", "S", "CRS", "lat_lon", "collection_date", "collection_date_local")]
+NCBI_export = NCBI_export %>% rename(sample_name = Sample, sample_title = Sample_Name, sample_control = Type, salinity = S, temperature = T, geodeticDatum = CRS)
+
+NCBI_export$unique_sample_identifier = NCBI_export$sample_title
+
+#Add units to temperature & salinity
+NCBI_export$temperature[!is.na(NCBI_export$temperature)] = paste(NCBI_export$temperature[!is.na(NCBI_export$temperature)], "°C", sep = " ")
+NCBI_export$salinity[!is.na(NCBI_export$salinity)] = paste(NCBI_export$salinity[!is.na(NCBI_export$salinity)], "ppt", sep = " ")
+
+#Depth
+depth = c()
+depth[NCBI_export$sample_control == "control"] = "NA"
+depth[NCBI_export$sample_control == "sample"] = "Surface"
+NCBI_export = cbind(NCBI_export, depth)
+
+#Size fraction
+size_frac = c()
+size_frac[NCBI_export$sample_control == "control"] = "NA"
+size_frac[NCBI_export$sample_control == "sample"] = "0.22 micrometer"
+size_frac[NCBI_export$Location == "FB"] = "0.22 micrometer"
+NCBI_export = cbind(NCBI_export, size_frac)
+
+#Sample volume
+samp_vol_we_dna_ext = c()
+samp_vol_we_dna_ext[NCBI_export$sample_control == "control"] = "NA"
+samp_vol_we_dna_ext[NCBI_export$sample_control == "sample"] = "1000 mL"
+samp_vol_we_dna_ext[NCBI_export$Location == "FB"] = "1000 mL"
+NCBI_export = cbind(NCBI_export, samp_vol_we_dna_ext)
+
+#Organism
+organism = c()
+organism[NCBI_export$sample_control == "sample"] = "seawater metagenome"
+organism[NCBI_export$Location == "MC"] = "synthetic metagenome"
+organism[NCBI_export$Location == "EB"] = "metagenome"
+organism[NCBI_export$Location == "FB"] = "metagenome"
+organism[NCBI_export$Location == "NTC"] = "metagenome"
+NCBI_export = cbind(NCBI_export, organism)
+
+#Environmental Context
+env_broad_scale = c()
+env_broad_scale[NCBI_export$sample_control == "sample"] = "marine biome [ENVO:00000447]"
+NCBI_export = cbind(NCBI_export, env_broad_scale)
+
+env_local_scale = c()
+env_local_scale[NCBI_export$sample_control == "sample"] = "shoreline [ENVO:00000486]|intertidal zone [ENVO:00000316]"
+NCBI_export = cbind(NCBI_export, env_local_scale)
+
+env_medium = c()
+env_medium[NCBI_export$sample_control == "sample"] = "coastal sea water [ENVO_00002150]"
+NCBI_export = cbind(NCBI_export, env_medium)
+
+geo_loc_name = c()
+geo_loc_name[NCBI_export$sample_control == "sample"] = "USA: California, Half Moon Bay, Pillar Point, Intertidal"
+NCBI_export = cbind(NCBI_export, geo_loc_name)
+
+#Sampling Methods
+samp_mat_process= c()
+samp_mat_process[NCBI_export$sample_control == "sample"] = "Gravity filtered through Sterivex (0.22-µm): dx.doi.org/10.17504/protocols.io.bp2l69y7klqe/v2"
+samp_mat_process[NCBI_export$Location == "MC"] = "Mock community from equimolar combination of 5 tisue DNA extraction: Mytilus edulis, Mizuhopecten yessoensis, Xiphias gladius, Mercenaria mercenaria, Lutjanus campechanus"
+samp_mat_process[NCBI_export$Location == "EB"] = "DNA extraction from a sterile Sterivex: dx.doi.org/10.17504/protocols.io.ewov1qyyygr2/v1"
+samp_mat_process[NCBI_export$Location == "FB"] = "Gravity filtered through Sterivex (0.22-µm): dx.doi.org/10.17504/protocols.io.bp2l69y7klqe/v2"
+samp_mat_process[NCBI_export$Location == "NTC"] = "PCR no-template control for first PCR reaction: dx.doi.org/10.17504/protocols.io.dm6gp3wpdvzp/v1"
+NCBI_export = cbind(NCBI_export, samp_mat_process)
+
+samp_collect_device= c()
+samp_collect_device[NCBI_export$sample_control == "sample"] = "Covidien single-use enteral feeding pouch"
+samp_collect_device[NCBI_export$Location == "FB"] = "Covidien single-use enteral feeding pouch"
+NCBI_export = cbind(NCBI_export, samp_collect_device)
+
+amplicon_sequenced = "COI"
+NCBI_export = cbind(NCBI_export, amplicon_sequenced)
+
+NCBI_export$sample_title[NCBI_export$sample_control == "sample"] = paste("Pillar Point intertidal seawater sample", NCBI_export$sample_title[NCBI_export$sample_control == "sample"], sep = " ")
+
+NCBI_export$sample_title[NCBI_export$Location == "EB"] = paste("Extraction blank", NCBI_export$sample_title[NCBI_export$Location == "EB"], sep = " ")
+
+NCBI_export$sample_title[NCBI_export$Location == "FB"] = paste("MilliQ water field blank", NCBI_export$sample_title[NCBI_export$Location == "FB"], sep = " ")
+
+NCBI_export$sample_title[NCBI_export$Location == "NTC"] = paste("PCR no-template control", NCBI_export$sample_title[NCBI_export$Location == "NTC"], sep = " ")
+
+NCBI_export$sample_title[NCBI_export$Location == "MC"] = paste("Custom mock community sample", NCBI_export$sample_title[NCBI_export$Location == "MC"], sep = " ")
+
+#Sample Storage
+sample_storage_duration= c()
+sample_storage_duration[NCBI_export$sample_control == "sample"] = "18 days"
+sample_storage_duration[NCBI_export$Location == "FB"] = "18 days"
+NCBI_export = cbind(NCBI_export, sample_storage_duration)
+
+sample_storage_location= c()
+sample_storage_location[NCBI_export$sample_control == "sample"] = "Stanford Y2E2 Building, Environmental Engineering and Science Lab, Walk-In -20 °C Freezer"
+sample_storage_location[NCBI_export$Location == "FB"] = "Stanford Y2E2 Building, Environmental Engineering and Science Lab, Walk-In -20 °C Freezer"
+NCBI_export = cbind(NCBI_export, sample_storage_location)
+
+sample_storage_temperature= c()
+sample_storage_temperature[NCBI_export$sample_control == "sample"] = "-20 °C"
+sample_storage_temperature[NCBI_export$Location == "FB"] = "-20 °C"
+NCBI_export = cbind(NCBI_export, sample_storage_temperature)
+
+
+NCBI_export = NCBI_export %>% rename(specific_intertidal_location = Location)
+NCBI_export$specific_intertidal_location = as.character(NCBI_export$specific_intertidal_location)
+NCBI_export$specific_intertidal_location[NCBI_export$sample_control == "control"] = "NA"
+
+NCBI_export[is.na(NCBI_export)] <- "not applicable"
+NCBI_export[NCBI_export == "NA"] <- "not applicable"
+
+##SRA Metadata
+
+SRA_metadata = NCBI_export[c("sample_name", "unique_sample_identifier")]
+SRA_metadata = SRA_metadata %>% rename(library_ID = unique_sample_identifier)
+
+SRA_metadata$title = "COI amplicon metabarcoding of seawater for marine metazoa: Pillar Point, Half Moon Bay, CA (USA)"
+
+SRA_metadata$library_strategy = "AMPLICON"
+SRA_metadata$library_source = "METAGENOMIC"
+SRA_metadata$library_selection = "PCR"
+SRA_metadata$library_layout = "paired"
+SRA_metadata$platform = "ILLUMINA"
+SRA_metadata$instrument_model = "Illumina MiSeq"
+SRA_metadata$design_description = "Water samples were gravity filtered onto Sterivex 0.22 µm filter cartridges (dx.doi.org/10.17504/protocols.io.bp2l69y7klqe/v2). DNA was extracted using a modified version of the DNeasy Blood and Tissue Kit (Qiagen, Germantown, MD, USA), in methods described here (dx.doi.org/10.17504/protocols.io.ewov1qyyygr2/v1). Samples were PCR amplified using the mlCOIintF/ jgHCO2198 primer set targeting a 313 bp fragment of the mitochondrial COI region optimized by Leray et al. (2013) (Forward: GGWACWGGWTGAACWGTWTAYCCYCC; Reverse: TAIACYTCIGGRTGICCRAARAAYCA) with Nextera modifications. Full PCR methods can be found here (dx.doi.org/10.17504/protocols.io.dm6gp3wpdvzp/v1). PCR products were sent for library preparation and sequencing at the Georgia Genomics and Bioinformatics Core (GGBC, UG Athens, GA, RRID:SCR_010994). In short, provided PCR amplicons were cleaned using AMPure XP magnetic beads (Beckman Coulter, Indianapolis, IN, USA), barcoded with Nextera adapters (Illumina, San Diego, CA, USA) during a second PCR (3 min at 95 °C; 15 cycles of 30 sec at 95 °C, 30 sec at 67 °C, and 30 sec at 72 °C; and 4 min at 72 °C), cleaned again using AMPureXP magnetic beads, and pooled in equimolar ratio. The resulting library was sequenced on a MiSeq PE 2x250bp (500 cycles) using Reagent Kit V2 with 25% PhiX spike-in (Illumina, San Diego, CA, USA)." 
+SRA_metadata$filetype = "fastq"
+
+filename = gsub(".*_","",SRA_metadata$sample_name)
+filename = sub("\\.L001", "_L001", filename)
+filename = sub("\\.S", "_S", filename)
+filename = gsub("\\.", "-", filename)
+
+
+SRA_metadata$filename = paste0(filename, "_R1_001.fastq.gz")
+SRA_metadata$filename2 = paste0(filename, "_R2_001.fastq.gz")
+  
+
+
+if (!dir.exists("Analysis Products/Processed eDNA/NCBI")) {dir.create("Analysis Products/Processed eDNA/NCBI", recursive = TRUE)}
+write.csv(NCBI_export, "Analysis Products/Processed eDNA/NCBI/BioSample_Attributes.csv", row.names=FALSE)
+write.csv(SRA_metadata, "Analysis Products/Processed eDNA/NCBI/SRA_metadata.csv", row.names=FALSE)
+
+```
+
 ```{r Making GBIF Data Frames, warning = FALSE}
 ###Making GBIF Data Frames###
 ##Create data frames for submission to GBIF
 #Export version of data with decontamination and controls removed but no additional processing
 
+
+#Make defaultValues data frame for variables that are the same for all samples
+
+#env_medium
+#env_broad_scale
+#env_local_scale
+#project_name
+#target_gene = COI
+#pcr_primer_forward
+#pcr_primer_name_forward
+#pcr_primer_reverse
+#pcr_primer_name_reverse
+#sop = https://www.biorxiv.org/content/10.1101/2023.08.03.551543v1
+#seq_meth = Illumina MiSeq
+#otu_db
+#samplingProtocol = dx.doi.org/10.17504/protocols.io.bp2l69y7klqe/v2
+#samp_collec_device = "Covidien single-use enteral feeding pouch"
+#samp_collec_method
+#samp_mat_process
+#size_frac
+#samp_vol_we_dna_ext
+#annealingTemp = 69.5
+#annealingTempUnit = Degrees celsius
+#ampliconSize
+#amplificationReactionVolume
+#amplicationReactionVolumeUnit = µl
+#nucl_acid_ext = dx.doi.org/10.17504/protocols.io.ewov1qyyygr2/v1
+#nucl_acid_amp = dx.doi.org/10.17504/protocols.io.dm6gp3wpdvzp/v1
+#lib_layout = paired
+#verbatimDepth = Surface
+#basisOfRecord = Material sample
+#institutionID = https://ror.org/00f54p054
+#institutionCode = Stanford University
+#organismQuantityType = DNA sequence reads
+
+
+
+
+
+
+
+
+
+#Make taxa, samples, and OTU table files
+
+##Add associatedSequences (SRA)
+##Add materialSampleID (BioSample)
+
+
 GBIF_export = amp_nocontrols_FD
 
 GBIF_export$metadata = merge(GBIF_export$metadata, Location, all=T)
 
-TimeZone = "UTC−08:00"
-Date = "28 January 2022"
-GBIF_export$metadata = cbind(GBIF_export$metadata, TimeZone)
+#Add date + time
+
+Date = "2022-01-28"
 GBIF_export$metadata = cbind(GBIF_export$metadata, Date)
+
+GBIF_export$metadata$verbatimEventDate <- lubridate::ymd_hm(paste(GBIF_export$metadata$Date, "T", GBIF_export$metadata$Time), tz = "US/Pacific")
+
+GBIF_export$metadata$eventDate <- with_tz(GBIF_export$metadata$verbatimEventDate, "Zulu")
+
+Zulu <- stamp("2020-04-04T18:05:00Z")
+GBIF_export$metadata$eventDate = Zulu(GBIF_export$metadata$eventDate)
+
+PST <- stamp("2020-04-04T18:05:00PST")
+GBIF_export$metadata$verbatimEventDate = PST(GBIF_export$metadata$verbatimEventDate)
 
 names(GBIF_export$metadata)[names(GBIF_export$metadata) == 'Sample'] <- 'Sequencing_Sample_Name'
 
-col_order = c("Sequencing_Sample_Name", "Sample_Name", "Location", "Latitude", "Longitude", "CRS", "Date", "Time", "TimeZone", "T", "S")
+col_order = c("Sequencing_Sample_Name", "Sample_Name", "Location", "Latitude", "Longitude", "CRS", "eventDate", "verbatimEventDate", "T", "S")
 GBIF_export$metadata = GBIF_export$metadata[,col_order]
 
 #Add sequences to file
@@ -366,12 +592,17 @@ filepath = paste0(current_subfolder,
 
 AnacapaDetailed = read.table(filepath, header = TRUE, sep = "\t", dec = ".")
 sequences = as.data.frame(AnacapaDetailed[,c("sequence", "sequencesF", "sequencesR")])
+sequences$sequence_unmerged = paste0("[UNMERGED SEQUENCE COMBINATION] F: ", sequences$sequencesF, "; R: ", sequences$sequencesR)
+
+sequences <- sequences %>% mutate(sequence = ifelse(sequence=="", sequence_unmerged, sequence))
+
+
 rownames(sequences) = AnacapaDetailed$CO1_seq_number
 
 GBIF_export$tax = merge(sequences, GBIF_export$tax, by = "row.names", all.x = FALSE, all.y = TRUE, sort = FALSE)
 rownames(GBIF_export$tax) = GBIF_export$tax$Row.names
 
-col_order = c("sequence", "sequencesF", "sequencesR", "Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
+col_order = c("sequence", "Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
 GBIF_export$tax = GBIF_export$tax[,col_order]
 
 
@@ -382,6 +613,7 @@ write.csv(GBIF_export$tax, "Analysis Products/Processed eDNA/GBIF/TaxTable.csv",
 write.csv(GBIF_export$metadata, "Analysis Products/Processed eDNA/GBIF/SampleData.csv", row.names=FALSE)
 
 ```
+
 
 To ensure the accuracy of taxonomic assignments, we analyzed occurrence data from the Global Biodiversity Information Facility to investigate whether identified species had occurrence records in the California Current System and known ranges that encompassed Pillar Point, using the `spocc` (version `r packageVersion("spocc")` `packageVersion("spocc")`) (Chamberlain, 2021) package. A phylogenetic tree based on taxonomic assignments was created using the taxize (version `r packageVersion("taxize")` `packageVersion("taxize")`) (Chamberlain and Szöcs, 2013) and ggtreeExtra `r packageVersion("ggtreeExtra")` `packageVersion("ggtreeExtra")` (citation) packages.
 
@@ -1535,7 +1767,6 @@ toc_cleaned$page = as.numeric(toc_cleaned$page)
 
 toc_cleaned_max = vector()
 for(x in 1:(nrow(toc_cleaned)-1)) {
-  print(x)
   if (toc_cleaned$page[x] == toc_cleaned$page[x+1]) {
     toc_cleaned_max[x] = toc_cleaned$page[x]
   } else {
@@ -1681,7 +1912,7 @@ condense_no_pages = condense_no_pages %>% arrange(factor(Site, levels = c("S1", 
 
 #Organize species list for chi square test
 contingency_table = condense_no_pages %>% group_by(Site) %>% summarise(High = sum(Zone_1 == TRUE | Zone_2 == TRUE | Zone_3 == TRUE), Low = sum(Zone_1 == FALSE & Zone_2 == FALSE & Zone_3 == FALSE))
-contingency_table = contingency_table %>% select(-Site) %>% as.matrix()
+contingency_table = contingency_table %>% dplyr::select(-Site) %>% as.matrix()
 rownames(contingency_table) = c("N", "S1", "S2")
 
 set.seed(1)
