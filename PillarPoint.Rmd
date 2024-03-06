@@ -2479,9 +2479,10 @@ condense_no_pages = condense_no_pages %>%
   mutate(Zone_4 = replace(Zone_4, name == "Halosydna brevisetosa", TRUE))
 
 #Sort the species list
-condense_no_pages = condense_no_pages %>% arrange(name)
-condense_no_pages = condense_no_pages %>% arrange(desc(Zone_1), desc(Zone_2), desc(Zone_3), desc(Zone_4))
-condense_no_pages = condense_no_pages %>% arrange(factor(Site, levels = c("S1", "S2", "N")))
+condense_no_pages = condense_no_pages %>% 
+  arrange(name) %>%
+  arrange(desc(Zone_1), desc(Zone_2), desc(Zone_3), desc(Zone_4)) %>%
+  arrange(factor(Site, levels = c("S1", "S2", "N")))
 
 #Organize species list for chi square test
 contingency_table = condense_no_pages %>% group_by(Site) %>% summarise(
