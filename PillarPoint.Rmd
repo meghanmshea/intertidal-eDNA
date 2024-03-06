@@ -50,23 +50,6 @@ library(gt)
 library(gtExtras)
 library(webshot2)
 
-library(base64enc)
-library(digest)
-library(evaluate)
-library(glue)
-library(highr)
-library(htmltools)
-library(jsonlite)
-library(knitr)
-library(magrittr)
-library(markdown)
-library(mime)
-library(rmarkdown)
-library(stringi)
-library(stringr)
-library(xfun)
-library(yaml)
-
 hook_figure_unit()
 ```
 
@@ -235,7 +218,6 @@ p_patch = wrap_elements(p_patch) +
     plot.tag.position = "left",
     plot.background = element_rect(fill = "transparent", colour = NA_character_)
   )
-
 
 if (!dir.exists("Figures")) {
   dir.create("Figures")
@@ -572,9 +554,7 @@ NCBI_export = cbind(NCBI_export, samp_collect_device)
 amplicon_sequenced = "COI"
 NCBI_export = cbind(NCBI_export, amplicon_sequenced)
 
-NCBI_export$sample_title[NCBI_export$sample_control == "sample"] = paste("Pillar Point intertidal seawater sample",
-                                                                         NCBI_export$sample_title[NCBI_export$sample_control == "sample"],
-                                                                         sep = " ")
+NCBI_export$sample_title[NCBI_export$sample_control == "sample"] = paste("Pillar Point intertidal seawater sample", NCBI_export$sample_title[NCBI_export$sample_control == "sample"], sep = " ")
 
 NCBI_export$sample_title[NCBI_export$Location == "EB"] = paste("Extraction blank", NCBI_export$sample_title[NCBI_export$Location == "EB"], sep = " ")
 
@@ -629,31 +609,27 @@ filename = sub("\\.L001", "_L001", filename)
 filename = sub("\\.S", "_S", filename)
 filename = gsub("\\.", "-", filename)
 
-
 SRA_metadata$filename = paste0(filename, "_R1_001.fastq.gz")
 SRA_metadata$filename2 = paste0(filename, "_R2_001.fastq.gz")
-
-
 
 if (!dir.exists("Analysis Products/Processed eDNA/NCBI")) {
   dir.create("Analysis Products/Processed eDNA/NCBI", recursive = TRUE)
 }
+
 write.csv(
   NCBI_export,
   "Analysis Products/Processed eDNA/NCBI/BioSample_Attributes.csv",
-  row.names = FALSE
-)
+  row.names = FALSE)
+
 write.csv(SRA_metadata,
           "Analysis Products/Processed eDNA/NCBI/SRA_metadata.csv",
           row.names = FALSE)
-
 ```
 
 ```{r Making GBIF Data Frames, warning = FALSE, class.source = 'fold-hide'}
 ###Making GBIF Data Frames###
-##Create data frames for submission to GBIF
+##Create data frames for submission to GBIF through the beta eDNA data converter (https://edna-tool.gbif-uat.org/)
 #Export version of data with decontamination and controls removed but no additional processing
-
 
 #Make defaultValues data frame for variables that are the same for all samples
 
@@ -693,7 +669,6 @@ defaultValues = defaultValues %>%
   add_row(term = "institutionCode", value = "Stanford University") %>%
   add_row(term = "organismQuantityType", value = "DNA sequence reads") %>%
   add_row(term = "otu_db", value = "MIDORI2 reference database,v. GB253 (20 December 2022): https://www.reference-midori.info/download.php")
-
 
 #Make taxa, samples, and OTU table files
 
@@ -741,8 +716,8 @@ col_order = c(
   "T",
   "S"
 )
-GBIF_export$metadata = GBIF_export$metadata[, col_order]
 
+GBIF_export$metadata = GBIF_export$metadata[, col_order]
 
 #If you have SRA metadata records from successful NCBI submission, process them here
 
@@ -766,7 +741,6 @@ GBIF_export$metadata = GBIF_export$metadata %>% rename(
   salinity = S
 )
 
-
 #Add sequences to file
 
 current_subfolder = "Data/Anacapa Pipeline Output/Tide Pool 5184 - 31 January 2023"
@@ -788,7 +762,6 @@ sequences$sequence_unmerged = paste0(
 sequences <-
   sequences %>% mutate(sequence = ifelse(sequence == "", sequence_unmerged, sequence))
 
-
 rownames(sequences) = AnacapaDetailed$CO1_seq_number
 
 GBIF_export$tax = merge(
@@ -809,32 +782,32 @@ col_order = c("sequence",
               "Family",
               "Genus",
               "Species")
+
 GBIF_export$tax = GBIF_export$tax[, col_order]
-
-
 
 if (!dir.exists("Analysis Products/Processed eDNA/GBIF")) {
   dir.create("Analysis Products/Processed eDNA/GBIF", recursive = TRUE)
 }
+
 write.csv(
   GBIF_export$abund,
   "Analysis Products/Processed eDNA/GBIF/OTUtable.csv",
-  row.names = TRUE
-)
-write.csv(GBIF_export$tax,
-          "Analysis Products/Processed eDNA/GBIF/taxa.csv",
-          row.names = TRUE)
+  row.names = TRUE)
+
+write.csv(
+  GBIF_export$tax,
+  "Analysis Products/Processed eDNA/GBIF/taxa.csv",
+  row.names = TRUE)
+
 write.csv(
   GBIF_export$metadata,
   "Analysis Products/Processed eDNA/GBIF/samples.csv",
-  row.names = FALSE
-)
+  row.names = FALSE)
+
 write.csv(
   defaultValues,
   "Analysis Products/Processed eDNA/GBIF/defaultValues.csv",
-  row.names = FALSE
-)
-
+  row.names = FALSE)
 ```
 
 
@@ -910,21 +883,23 @@ data_amp_taxa$abund = aggregate_abund(data_amp$abund,
                                       tax_aggregate = "Species",
                                       format = "abund")
 
-
 if (!dir.exists("Analysis Products/Processed eDNA/Manuscript Analysis")) {
   dir.create("Analysis Products/Processed eDNA/Manuscript Analysis",
              recursive = TRUE)
 }
+
 write.csv(
   data_amp$abund,
   "Analysis Products/Processed eDNA/Manuscript Analysis/ASVTable.csv",
   row.names = TRUE
 )
+
 write.csv(
   data_amp$tax,
   "Analysis Products/Processed eDNA/Manuscript Analysis/TaxTable.csv",
   row.names = TRUE
 )
+
 write.csv(
   data_amp$metadata,
   "Analysis Products/Processed eDNA/Manuscript Analysis/SampleData.csv",
@@ -939,8 +914,9 @@ write.csv(
 
 data_forchart = amp$metadata[!is.na(amp$metadata$Time), ]
 
-data_forchart = data_forchart %>% group_by(SiteByTime) %>% mutate(chart_num = ceiling(row_number() /
-                                                                                        3))
+data_forchart = data_forchart %>% 
+  group_by(SiteByTime) %>% 
+  mutate(chart_num = ceiling(row_number()/3))
 
 facet.labs =  c("Tide Pool 1\n (S1)",
                 "Tide Pool 2\n (S2)",
@@ -999,7 +975,6 @@ combined = (plot_spacer() + p_patch + plot_spacer() + plot_layout(widths = c(3, 
   (plot_spacer()) / (plot_spacer() + sample_schema + plot_layout(widths = c(1, 50))) + plot_layout(heights = c(4,-.05, 5)) &
   theme(plot.margin = ggplot2::margin(0, 0, 0, 0, "pt"))
 
-
 path = "Figures/Figure3_full."
 save_pdf_png(
   plot = combined,
@@ -1010,7 +985,6 @@ save_pdf_png(
   bg = "transparent",
   dpi = 600
 )
-
 ```
 
 <center>
@@ -1032,13 +1006,14 @@ physeq_summed = amp_to_phyloseq(NULL, total, data_amp$tax[, 1:7], NULL)
 
 #Summarize the number of unassigned ASVs
 kingdom = as.data.frame(tax_table(physeq_summed)[, 1])
-unassigned_ASVs = kingdom %>% group_by(Kingdom) %>% summarise(n = n()) %>% mutate (freq = n / sum(n))
+unassigned_ASVs = kingdom %>% 
+  group_by(Kingdom) %>% 
+  summarise(n = n()) %>% 
+  mutate (freq = n / sum(n))
 
 #Summarize number of unique taxa at each taxonomic level
 unique = apply(tax_table(physeq_summed), 2, function(x)
   length(unique(x[x != ""])))
-
-  
 ```
 
 ```{r, GBIF Set-Up, message = FALSE, warning = FALSE}
@@ -1087,7 +1062,7 @@ distribution_check <-
       return(list(no_data = no_data, confirmed = confirmed))
     }
     
-    ##Function that checks GBIF to confirm whether a particular location is within the range of observations
+##Function that checks GBIF to confirm whether a particular location is within the range of observations
     range_function <- function(species) {
       CC.confirmed = c()
       CC.not_confirmed = c()
@@ -1191,7 +1166,6 @@ mapview(CC_shape_sp)
 ###GBIF Run###
 #Run function that does GBIF analysis (this takes a long time; recommend running with job::job() when working in chunks)
 
-
 distribution = distribution_check(c(-122.50, 37.49,-122.49, 37.50),
                                   CC_shape_sp,
                                   species_standardized,
@@ -1214,7 +1188,6 @@ df_CC = c()
 df_range = c()
 df_no_data = c()
 df_not_in_GBIF = c()
-
 
 for (s in species_both$species) {
   if (is.na(s)) {
@@ -1292,27 +1265,24 @@ otu_table(physeq_totalASVs)[otu_table(physeq_totalASVs) > 0] <- 1
 physeq_totalASVs = tax_glom(physeq_totalASVs, taxrank = "Phylum", NArm =
                               TRUE)
 
-
 Phyla_ASVs = data.frame(Phyla = tax_table(physeq_totalASVs)[, 2],
                         ASVs = rowSums(otu_table(physeq_totalASVs)))
 
-
 physeq_speciesbyphyla = physeq_summed
-physeq_speciesbytaxa = tax_glom(physeq_summed, taxrank = "Species", NArm =
-                                  TRUE)
-otu_table(physeq_speciesbytaxa)[otu_table(physeq_speciesbytaxa) > 0] <-
-  1
-physeq_speciesbytaxa = tax_glom(physeq_speciesbytaxa, taxrank = "Phylum", NArm =
-                                  TRUE)
+physeq_speciesbytaxa = tax_glom(physeq_summed, 
+                                taxrank = "Species", 
+                                NArm = TRUE)
+otu_table(physeq_speciesbytaxa)[otu_table(physeq_speciesbytaxa) > 0] <- 1
+physeq_speciesbytaxa = tax_glom(physeq_speciesbytaxa, 
+                                taxrank = "Phylum", 
+                                NArm = TRUE)
 
 Phyla_Species =  data.frame(Phyla = tax_table(physeq_speciesbytaxa)[, 2],
                             Species = rowSums(otu_table(physeq_speciesbytaxa)))
 
-
 list = list(Phyla_Reads, Phyla_ASVs, Phyla_Species)
 full = list %>% reduce(full_join, by = 'Phylum')
 full[is.na(full)] <- 0
-
 
 full_sorted = full[order(-full$Reads), ]
 
@@ -1336,7 +1306,6 @@ col_order = c(
 
 full_sorted = full_sorted[, col_order]
 
-
 write.csv(full_sorted, "Analysis Products/Table1.csv", row.names = FALSE)
 
 full_sorted
@@ -1350,28 +1319,21 @@ options(getClass.msg = FALSE)
 
 #Aggregate to species assignment and remove the NCBI identifiers
 pt_physeq = tax_glom(data_physeq, taxrank = "Species", NArm = FALSE)
-tax_table(pt_physeq) = tax_table(pt_physeq)[!tax_table(pt_physeq)[, "Kingdom"] ==
-                                              ""]
-
-
+tax_table(pt_physeq) = tax_table(pt_physeq)[!tax_table(pt_physeq)[, "Kingdom"] == ""]
 tax_table(pt_physeq)[tax_table(pt_physeq) == ""] = NA
 tax_table(pt_physeq) = tax_table(pt_physeq)[!is.na(tax_table(pt_physeq)[, "Phylum"])]
 numbers = sub(".*_", "", tax_table(pt_physeq))
 
-taxa = apply(numbers, 1, function(x)
-  tail(na.omit(x), 1))
+taxa = apply(numbers, 1, function(x) tail(na.omit(x), 1))
 
 tax_table(pt_physeq) = remove_NCBInums(tax_table(pt_physeq))
 
-
 taxa_classification = classification(taxa, db = "ncbi")
-
 
 taxa_tree = class2tree(taxa_classification, check = TRUE)
 
 #Change the tip labels to match phyloseq objects (code only works if order is the same)
 taxa_tree$phylo$tip.label = row.names(tax_table(pt_physeq))
-
 
 phyla = unique(tax_table(pt_physeq)[, "Phylum"])
 
@@ -1548,7 +1510,6 @@ S1_ASV = unique(amp_S1$tax$OTU)
 S2_ASV = unique(amp_S2$tax$OTU)
 N_ASV = unique(amp_N$tax$OTU)
 
-
 #Using eulerr, create euler diagrams for taxa and ASVs
 
 add_quantity_line_break = function(v) {
@@ -1562,7 +1523,6 @@ add_quantity_line_break = function(v) {
     full = bquote(atop(NA, atop(atop(
       textstyle(.(before)), textstyle(italic(.(after)))
     ), NA)))
-    
     
     x$children[[2]]$label <- full
     x$children[[2]]$just <- NULL
@@ -1654,6 +1614,7 @@ save_pdf_png(
 </center>
 
 ```{r Indicator Species Analysis, warning = FALSE, message=FALSE}
+###Indicator Species Analysis###
 
 #Function for creating indicator species heatmap from physeq data
 
@@ -1662,7 +1623,6 @@ indicator_heatmap <- function(physeq, asv) {
   if (asv == FALSE) {
     physeq = tax_glom(physeq, taxrank = "Species", NArm = TRUE)
     tax_table(physeq) = remove_NCBInums(tax_table(physeq))
-    #tax_table(physeq) = gsub("\\_.*","",tax_table(physeq))
   } else {
     tax_table(physeq) = remove_NCBInums(tax_table(physeq))
   }
@@ -1677,9 +1637,19 @@ indicator_heatmap <- function(physeq, asv) {
     control = how(nperm = 999),
     duleg = TRUE
   )
-  top_N = rownames(indval$sign %>% filter(p.value < 0.05) %>% filter(s.N == 1)  %>% filter(stat > .7))
-  top_S1 = rownames(indval$sign %>% filter(p.value < 0.05) %>% filter(s.S1 == 1)  %>% filter(stat > .7))
-  top_S2 = rownames(indval$sign %>% filter(p.value < 0.05) %>% filter(s.S2 == 1)  %>% filter(stat > .7))
+  
+  top_N = rownames(indval$sign %>% 
+                     filter(p.value < 0.05) %>% 
+                     filter(s.N == 1)  %>% 
+                     filter(stat > .7))
+  top_S1 = rownames(indval$sign %>% 
+                      filter(p.value < 0.05) %>% 
+                      filter(s.S1 == 1)  %>% 
+                      filter(stat > .7))
+  top_S2 = rownames(indval$sign %>% 
+                      filter(p.value < 0.05) %>% 
+                      filter(s.S2 == 1)  %>% 
+                      filter(stat > .7))
   
   indicators_all = c(top_N, top_S1, top_S2)
   
@@ -1687,7 +1657,11 @@ indicator_heatmap <- function(physeq, asv) {
   physeq_merge = merge_samples(physeq, "SiteByTime")
   
   #Update metadata accordingly
-  updated_metadata = as.matrix(sample_data(physeq)[, c("SiteByTime", "Time", "Location", "T", "S")])
+  updated_metadata = as.matrix(sample_data(physeq)[, c("SiteByTime", 
+                                                       "Time", 
+                                                       "Location", 
+                                                       "T", 
+                                                       "S")])
   updated_metadata = as.data.frame(updated_metadata)
   updated_metadata$SiteByTime = as.factor(updated_metadata$SiteByTime)
   updated_metadata$Time = as.factor(updated_metadata$Time)
@@ -1789,7 +1763,10 @@ heatmap_taxa = indicator_heatmap(data_physeq, FALSE)
 heatmap_ASV = indicator_heatmap(data_physeq, TRUE)
 
 indicator_ASVs = data_amp$tax[heatmap_ASV$all_indicators, ]
-unassigned_indicator_ASVs = indicator_ASVs %>% group_by(Kingdom) %>% summarise(n = n()) %>% mutate (freq = n / sum(n))
+unassigned_indicator_ASVs = indicator_ASVs %>% 
+  group_by(Kingdom) %>% 
+  summarise(n = n()) %>% 
+  mutate (freq = n / sum(n))
 
 identify_new_indicators = function(data_amp, top_ASVs, top_taxa) {
   top_ASVs = data_amp$tax[top_ASVs, ]
@@ -1832,19 +1809,22 @@ Using an indicator species framework produced similar trends to the analysis of 
 
 #### 3.3. Community-Level Differences between Locations
 
-```{r Jaccard Dissimilariy}
+```{r Jaccard Dissimilarity}
+###Jaccard Dissimilarity###
+
 #Calculate Jaccard dissimilarity matrices
 jaccard_full = vegdist(t(data_amp$abund), binary = TRUE, method = "jaccard")
 jaccard_taxa = vegdist(t(data_amp_taxa$abund), binary = TRUE, method = "jaccard")
 ```
 
 ```{r PERMANOVA}
+###PERMANOVA###
 
 set.seed(0)
 
 #PERMANOVA on full data set
 permutest(betadisper(jaccard_full, data_amp$metadata$Location))
-adonis2(jaccard_full ~ Location + Time + Dereplicated_Sample_Name ,
+adonis2(jaccard_full ~ Location + Time + Dereplicated_Sample_Name,
         data = data_amp$metadata)
 
 #PERMANOVA on taxa data set
@@ -1855,6 +1835,7 @@ adonis2(jaccard_taxa ~ Location + Time + Dereplicated_Sample_Name,
 ```
 
 ```{r NMDS Scree, message=FALSE, cache = TRUE, warning = FALSE, results = FALSE}
+###NMDS Scree###
 
 #Check the stress vs. dimension plot
 
@@ -1886,6 +1867,8 @@ NMDS.scree(jaccard_taxa)
 ```
 
 ```{r PAM Preparation, message=FALSE, cache = TRUE, warning = FALSE, results = FALSE}
+###PAM Preparation###
+
 #Establish functions for PAM clustering algorithm
 
 PAM_validation <- function(dist) {
@@ -1980,6 +1963,7 @@ PAM_silhouette_viz_3 <- function(PAM, sample_data) {
 ```
 
 ```{r Figure 7, message=FALSE, cache = TRUE, warning = FALSE, results = FALSE}
+###Figure 7###
 
 NMDS_PAM <- function(amp, jaccard, dim, PAM_logical) {
   set.seed(0)
@@ -2081,6 +2065,7 @@ Community composition also differed across locations, as supported by multiple a
 </center>
 
 ```{r Figure 8}
+###Figure 8###
 
 distmat <- as.matrix(jaccard_full)
 
@@ -2204,6 +2189,7 @@ The extent of the Jaccard dissimilarity between samples from different locations
 #### 3.4. Ecological Significance
 
 ```{r Ecological Significance Preparation, message = FALSE, warning = FALSE, results = FALSE}
+###Ecological Significance Preparation###
 
 #Create data frame with unique and indicator species from each site
 S1_unique = setdiff(S1_taxa, union(S2_taxa, N_taxa))
@@ -2278,6 +2264,8 @@ write.csv(full_taxa_list,
 
 
 ```{r Ecological Significance PDF Reading, message = FALSE, warning = FALSE, results = FALSE}
+###Ecological Significance PDF Reading###
+
 #Read in needed text of Between Pacific Tides (files not given on GitHub due to copyright)
 #PDFs obtained from 5th Edition of Between Pacific Tides available digitally through DeGruyter
 #Link to Access: https://doi-org.stanford.idm.oclc.org/10.1515/9781503621329
@@ -2340,6 +2328,7 @@ if (file.exists("Data/BetweenPacificTides_TextForSearching.pdf") &
 
 
 ```{r Ecological Significance Text Searching, message = FALSE, warning = FALSE, results = FALSE}
+###Ecological Significance Text Searching###
 
 #Check to only run these steps if you've been able to properly run the above text importing
 if (exists("toc_zones") & exists("txt")) {
@@ -2405,6 +2394,7 @@ if (exists("toc_zones") & exists("txt")) {
 
 
 ```{r Ecological Significance Cleaning + Statistical Analysis, message = FALSE, warning = FALSE, results = FALSE}
+###Ecological Signifiance Cleaning + Statistical Analysis###
 
 final_1 = read.csv("Analysis Products/BPT_Analysis_Intermediate.csv")
 
@@ -2481,10 +2471,12 @@ condense_no_pages = condense_no_pages %>% add_row(
 )
 
 #Adjust "Ectopleura marina" to include Zone_3 (found manually because mentioned on that page with genus only, but linked in the index)
-condense_no_pages = condense_no_pages %>% mutate(Zone_3 = replace(Zone_3, name == "Ectopleura marina", TRUE))
+condense_no_pages = condense_no_pages %>% 
+  mutate(Zone_3 = replace(Zone_3, name == "Ectopleura marina", TRUE))
 
 #Adjust "Halosydna brevisetosa" to include Zone_4 (found manually because mentioned on that page with genus only, but linked in the index)
-condense_no_pages = condense_no_pages %>% mutate(Zone_4 = replace(Zone_4, name == "Halosydna brevisetosa", TRUE))
+condense_no_pages = condense_no_pages %>% 
+  mutate(Zone_4 = replace(Zone_4, name == "Halosydna brevisetosa", TRUE))
 
 #Sort the species list
 condense_no_pages = condense_no_pages %>% arrange(name)
@@ -2510,7 +2502,9 @@ test_post_hoc = chisq.posthoc.test(contingency_table,
                                    simulate.p.value = TRUE)
 ```
 
-```{r Ecological Significance Table, message = FALSE, warning = FALSE, results = FALSE}
+```{r Figure 9, message = FALSE, warning = FALSE, results = FALSE}
+###Figure 9###
+
 #Create table to display results
 for_plotting = condense_no_pages
 for_plotting = for_plotting %>% mutate(
@@ -2795,5 +2789,7 @@ for (i in 1:12) {
 ### Session Info
 
 ```{r}
+#If renv::restore() isn't working for you, this is where you can final the version numbers of the packages we used, so you can try to create a similar working environment.
+
 sessionInfo()
 ```

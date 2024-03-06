@@ -51,9 +51,9 @@ Follow the tutorial [here](https://docs.github.com/en/repositories/creating-and-
 
 #### Step 3: Load all of the necessary packages
 
-We use [**renv**](https://rstudio.github.io/renv/) to snapshot the project environment. As long as you've downloaded our full GitHub repo and are running our `PillarPoint.Rmd` file, the `renv::restore()` function at the beginning of the RMarkdown file will make sure you have the same packages that we do. If for some reason you've set up the project differently, you might need to run `renv::init()` in the console to properly initialize `renv`. 
+We use [**renv**](https://rstudio.github.io/renv/) to snapshot the project environment. When you open the project for the first time, before you do anything else, you should call `renv::restore()` to install all of the packages you need. 
 
-If for some reason you're having issues with `renv`, you can also try loading the packages manually using the following code:
+If for some reason you're having issues with `renv`, you can also try loading the necessary packages manually using the following code:
 
 ```
 options(repos = list(CRAN = "http://cran.rstudio.com/"))
