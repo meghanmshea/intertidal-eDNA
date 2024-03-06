@@ -682,7 +682,13 @@ defaultValues = defaultValues %>%
 GBIF_export = amp_nocontrols_FD
 
 GBIF_export$metadata = merge(GBIF_export$metadata, Location, all = T)
-GBIF_export$taxa = remove_NCBInums(GBIF_export$taxa)
+GBIF_export$tax$Kingdom = remove_NCBInums(GBIF_export$tax$Kingdom)
+GBIF_export$tax$Phylum = remove_NCBInums(GBIF_export$tax$Phylum)
+GBIF_export$tax$Class = remove_NCBInums(GBIF_export$tax$Class)
+GBIF_export$tax$Order = remove_NCBInums(GBIF_export$tax$Order)
+GBIF_export$tax$Family = remove_NCBInums(GBIF_export$tax$Family)
+GBIF_export$tax$Genus = remove_NCBInums(GBIF_export$tax$Genus)
+GBIF_export$tax$Species = remove_NCBInums(GBIF_export$tax$Species)
 
 #Add date + time
 
@@ -1767,7 +1773,6 @@ heatmap_ASV = indicator_heatmap(data_physeq, TRUE)
 indicator_ASVs = data_amp$tax[heatmap_ASV$all_indicators, ]
 unassigned_indicator_ASVs = indicator_ASVs %>% group_by(Kingdom) %>% summarise(n = n()) %>% mutate (freq = n / sum(n))
 
-
 identify_new_indicators = function(data_amp, top_ASVs, top_taxa) {
   top_ASVs = data_amp$tax[top_ASVs, ]
   top_taxa = data_amp$tax[top_taxa, ]
@@ -1860,7 +1865,6 @@ NMDS.scree <-
 # Use NMDS.scree function to choose the optimal nr of dimensions
 NMDS.scree(jaccard_full)
 NMDS.scree(jaccard_taxa)
-
 ```
 
 ```{r PAM Preparation, message=FALSE, cache = TRUE, warning = FALSE, results = FALSE}
@@ -1911,7 +1915,6 @@ PAM_silhouette_viz_3 <- function(PAM, sample_data) {
   PAM_df <- merge(PAM_df, sample_data, by = "X")
   PAM_df$cluster <- as.factor(PAM_df$cluster)
   PAM_df$random = sample(1000, size = nrow(PAM_df), replace = FALSE)
-  
   
   ggplot(data = PAM_df,
          aes(
@@ -1997,7 +2000,6 @@ NMDS_PAM <- function(amp, jaccard, dim, PAM_logical) {
       alpha = 1
     )
   
-  
   plot1 = plot1 +
     geom_text(data = annotations1,
               aes(
@@ -2024,12 +2026,9 @@ NMDS_PAM <- function(amp, jaccard, dim, PAM_logical) {
         PAM_validation = PAM_validation
       )
     )
-    
   }
-  
   return(plot1)
 }
-
 
 NMDS_PAM_full = NMDS_PAM(data_amp, jaccard_full, 2, TRUE)
 NMDS_PAM_full$PAM_validation
@@ -2132,7 +2131,6 @@ summary$Combo2[summary$Combo2 == "S2:S2"] = "Within Site"
 summary$Combo2[summary$Combo2 == "N:N"] = "Within Site"
 
 stats = summary %>% filter(Combo2 == "Within Site") %>% summarize(mean = mean(Jaccard), max = max(Jaccard))
-
 
 g2.5 = ggplot(summary, aes(
   x = Time,
@@ -2271,14 +2269,12 @@ write.csv(full_taxa_list,
 
 #BetweenPacificTides_TOC.pdf is the Contents PDF section from DeGruyter
 
-
 #Check to only run these steps if you have the proper PDFs in your Data folder
 if (file.exists("Data/BetweenPacificTides_TextForSearching.pdf") &
     file.exists("Data/BetweenPacificTides_TOC.pdf")) {
+
   txt <- pdf_text("Data/BetweenPacificTides_TextForSearching.pdf")
   toc <- pdf_text("Data/BetweenPacificTides_TOC.pdf")
-  
-  ## POTENTIAL DATA FRAME SAVING MOMENT (uncleaned full text in txt and toc)
   
   #Clean up PDF text
   
@@ -2292,8 +2288,6 @@ if (file.exists("Data/BetweenPacificTides_TextForSearching.pdf") &
   toc = c(toc[[1]], toc[[2]], toc[[3]])
   page_nums = grepl("[1234567890,]$", toc)
   toc = toc[page_nums]
-  
-  ###POTENTIAL DATA FRAME SAVING MOMENT (post initial cleaning of txt and toc)
   
   #Fix the couple of strings that are split over multiple lines
   toc_cleaned = c(toc[1:14], paste0(toc[15], toc[16]), toc[17:21], paste0(toc[22], toc[23]), toc[24:53])
@@ -2323,15 +2317,11 @@ if (file.exists("Data/BetweenPacificTides_TextForSearching.pdf") &
   toc_zones = toc_cleaned %>% filter(grepl('Zone', text))
   toc_zones$text = gsub("\\..*", "", toc_zones$text)
   toc_zones$text = trimws(toc_zones$text)
-  
-
 }
-
 ```
 
 
 ```{r Ecological Significance Text Searching, message = FALSE, warning = FALSE, results = FALSE}
-
 
 #Check to only run these steps if you've been able to properly run the above text importing
 if (exists("toc_zones") & exists("txt")) {
@@ -2358,9 +2348,7 @@ if (exists("toc_zones") & exists("txt")) {
   full_taxa_list$pages = output
   full_taxa_list$pages[sapply(full_taxa_list$pages, function(x)
     length(x) == 0)] <- NA
-  
-  
-  
+
   zones = unique(toc_zones$text)
   df = data.frame(matrix(ncol = length(zones), nrow = 0))
   colnames(df) = zones
@@ -2391,12 +2379,10 @@ if (exists("toc_zones") & exists("txt")) {
   }
   
   final_1 = as.data.frame(cbind(name, zone, page))
-}
-
-write.csv(final_1,
+  write.csv(final_1,
           "Analysis Products/BPT_Analysis_Intermediate.csv",
           row.names = FALSE)
-
+}
 ```
 
 
@@ -2507,8 +2493,7 @@ test_post_hoc = chisq.posthoc.test(contingency_table,
 ```
 
 ```{r Ecological Significance Table, message = FALSE, warning = FALSE, results = FALSE}
-
-#Create table showcasing results
+#Create table to display results
 for_plotting = condense_no_pages
 for_plotting = for_plotting %>% mutate(
   Unique = replace(Unique,!is.na(Unique), "X"),
@@ -2550,7 +2535,6 @@ for_plotting = for_plotting %>%
                 sides = c("bottom"),
                 color = "black",
                 weight = px(3)
-                
               ),
               locations = list(cells_column_spanners(), cells_column_labels())
             ) %>% tab_style(
@@ -2558,7 +2542,6 @@ for_plotting = for_plotting %>%
                 sides = "all",
                 color = "black",
                 weight = px(3)
-                
               ),
               locations = list(cells_row_groups())
             ) %>%
@@ -2569,7 +2552,6 @@ for_plotting = for_plotting %>%
                 sides = "bottom",
                 color = "black",
                 weight = px(3)
-                
               ),
               locations = cells_body(rows = c(18, 31, 41))
             ) %>% tab_style(
@@ -2577,7 +2559,6 @@ for_plotting = for_plotting %>%
                 sides = "right",
                 color = "black",
                 weight = px(3)
-                
               ),
               locations = cells_body(columns = 8)
             ) %>%
@@ -2601,7 +2582,7 @@ path = "Figures/Figure9.png"
 gtsave(for_plotting, filename = path)
 ```
 
-Identified unique and indicator taxa reflected known ecological differences between locations. Only a subset of unique and indicator taxa were described in Between Pacific Tides: 18.8% (9/48) of nearshore taxa, 32.1% (17/53) of S1 taxa, and 31.1% (14/45) of S2. However, across the described subset, more taxa from S1 were categorized to high and middle intertidal zones than S2 and N (Figure 9; not made in R). The proportion of taxa from the high and middle intertidal varied significantly across locations (χ2 =11.67, p\<0.05), matching the environmental characteristics of the sites.
+Identified unique and indicator taxa reflected known ecological differences between locations. Only a subset of unique and indicator taxa were described in Between Pacific Tides: `r sprintf("%0.1f%%", length(which(condense_no_pages$Site=="N"))/length(which(full_taxa_list$Unique=="N" | full_taxa_list$Indicator=="N")) * 100)` `sprintf("%0.1f%%", length(which(condense_no_pages$Site=="N"))/length(which(full_taxa_list$Unique=="N" | full_taxa_list$Indicator=="N")) * 100)` (`r length(which(condense_no_pages$Site=="N"))` `length(which(condense_no_pages$Site=="N"))`/`r length(which(full_taxa_list$Unique=="N" | full_taxa_list$Indicator=="N"))` `length(which(full_taxa_list$Unique=="N" | full_taxa_list$Indicator=="N"))`) of nearshore taxa, `r sprintf("%0.1f%%", length(which(condense_no_pages$Site=="S1"))/length(which(full_taxa_list$Unique=="S1" | full_taxa_list$Indicator=="S1")) * 100)` `sprintf("%0.1f%%", length(which(condense_no_pages$Site=="S1"))/length(which(full_taxa_list$Unique=="S1" | full_taxa_list$Indicator=="S1")) * 100)` (`r length(which(condense_no_pages$Site=="S1"))` `length(which(condense_no_pages$Site=="S1"))`/`r length(which(full_taxa_list$Unique=="S1" | full_taxa_list$Indicator=="S1"))` `length(which(full_taxa_list$Unique=="S1" | full_taxa_list$Indicator=="S1"))`) of S1 taxa, and `r sprintf("%0.1f%%", length(which(condense_no_pages$Site=="S2"))/length(which(full_taxa_list$Unique=="S2" | full_taxa_list$Indicator=="S2")) * 100)` `sprintf("%0.1f%%", length(which(condense_no_pages$Site=="S2"))/length(which(full_taxa_list$Unique=="S2" | full_taxa_list$Indicator=="S2")) * 100)` (`r length(which(condense_no_pages$Site=="S2"))` `length(which(condense_no_pages$Site=="S2"))`/`r length(which(full_taxa_list$Unique=="S2" | full_taxa_list$Indicator=="S2"))` `length(which(full_taxa_list$Unique=="S2" | full_taxa_list$Indicator=="S2"))`) of S2. However, across the subset present in Between Pacific Tides, more taxa from S1 were categorized to the highest intertidal zones (Zone 1 - uppermost horizon, Zone 2 - high, and Zone 3 - middle) than S2 and N (Figure 9). The proportion of taxa from highest intertidal zones varied significantly across locations (χ2 =`r test$statistic` `test$statistic`, p = `r test$p.value` `test$p.value`), matching the environmental characteristics of the sites.
 
 <center>
 
@@ -2746,7 +2727,6 @@ ggsave(
   width = 13,
   height = 6.69
 )
-  
 ```
 
 *Figure 7*
