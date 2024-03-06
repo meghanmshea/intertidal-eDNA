@@ -38,7 +38,7 @@
 "37","Parallorchestes cowani","Parallorchestes cowani",FALSE,FALSE,TRUE,FALSE,FALSE
 "38","Prionitis lanceolata","Prionitis lanceolata",TRUE,TRUE,TRUE,FALSE,FALSE
 "39","Nereis vexillosa","Nereis vexillosa",FALSE,TRUE,TRUE,FALSE,FALSE
-"40","Myrionema balticum","Myrionema balticum",FALSE,FALSE,TRUE,FALSE,FALSE
+"40","Myrionema balticum","Myrionema balticum",FALSE,TRUE,TRUE,FALSE,FALSE
 "41","Myriotrichia claviformis","Myriotrichia claviformis",FALSE,FALSE,FALSE,FALSE,FALSE
 "42","Callithamnion pikeanum","Callithamnion pikeanum",TRUE,TRUE,TRUE,FALSE,FALSE
 "43","Corallina vancouveriensis","Corallina vancouveriensis",TRUE,TRUE,TRUE,FALSE,FALSE
@@ -54,7 +54,7 @@
 "53","Osmundea spectabilis","Osmundea spectabilis",TRUE,TRUE,TRUE,FALSE,FALSE
 "54","Naineris dendritica","Naineris dendritica",FALSE,TRUE,TRUE,FALSE,FALSE
 "55","Hemimycale columella","Hemimycale columella",FALSE,FALSE,FALSE,FALSE,FALSE
-"56","Biddulphia alternans","Amphipentas alternans",FALSE,TRUE,TRUE,FALSE,FALSE
+"56","Biddulphia alternans","Amphipentas alternans",FALSE,FALSE,TRUE,FALSE,FALSE
 "57","Ascidia ahodori","Ascidia ahodori",FALSE,FALSE,FALSE,FALSE,FALSE
 "58","Mazzaella oregona","Mazzaella oregona",FALSE,TRUE,TRUE,FALSE,FALSE
 "59","Cancer productus","Cancer productus",TRUE,TRUE,TRUE,FALSE,FALSE
@@ -70,7 +70,7 @@
 "69","Syllis alternata CMC04","Syllis alternata",FALSE,TRUE,TRUE,FALSE,FALSE
 "70","Chthamalus dalli","Chthamalus dalli",TRUE,TRUE,TRUE,FALSE,FALSE
 "71","Hecatonema maculans","Hecatonema terminale",FALSE,TRUE,TRUE,FALSE,FALSE
-"72","Jassa staudei","Jassa staudei",FALSE,FALSE,FALSE,FALSE,FALSE
+"72","Jassa staudei","Jassa staudei",FALSE,TRUE,FALSE,FALSE,FALSE
 "73","Crepidula perforans","Crepidula perforans",FALSE,TRUE,TRUE,FALSE,FALSE
 "74","Pagurus hirsutiusculus","Pagurus hirsutiusculus",TRUE,TRUE,TRUE,FALSE,FALSE
 "75","Cylindrotheca closterium","Cylindrotheca closterium",FALSE,TRUE,TRUE,FALSE,FALSE
@@ -172,8 +172,8 @@
 "171","Lottia alveus","Lottia alveus",FALSE,FALSE,TRUE,FALSE,FALSE
 "172","Tetraclita rubescens","Tetraclita rubescens",TRUE,TRUE,TRUE,FALSE,FALSE
 "173","Phoronis vancouverensis","Phoronis ijimai",FALSE,TRUE,TRUE,FALSE,FALSE
-"174","Homo sapiens","Homo sapiens",FALSE,FALSE,TRUE,FALSE,FALSE
-"175","Emplectonema viride","Emplectonema viride",FALSE,FALSE,FALSE,FALSE,FALSE
+"174","Homo sapiens","Homo sapiens",FALSE,FALSE,FALSE,FALSE,FALSE
+"175","Emplectonema viride","Emplectonema viride",FALSE,TRUE,FALSE,FALSE,FALSE
 "176","Sarcodiotheca furcata","Sarcodiotheca furcata",FALSE,TRUE,TRUE,FALSE,FALSE
 "177","Biecheleriopsis adriatica",NA,NA,NA,NA,NA,TRUE
 "178","Plakina jani","Plakina jani",FALSE,FALSE,FALSE,FALSE,FALSE
@@ -189,8 +189,8 @@
 "188","Tegula brunnea","Tegula brunnea",TRUE,TRUE,TRUE,FALSE,FALSE
 "189","Membranoptera platyphylla","Membranoptera platyphylla",FALSE,TRUE,TRUE,FALSE,FALSE
 "190","Oncorhynchus tshawytscha","Oncorhynchus tshawytscha",FALSE,TRUE,TRUE,FALSE,FALSE
-"191","Colaconema daviesii","Colaconema daviesii",FALSE,FALSE,TRUE,FALSE,FALSE
-"192","Atherinops affinis","Atherinops affinis",FALSE,TRUE,TRUE,FALSE,FALSE
+"191","Colaconema daviesii","Colaconema daviesii",FALSE,TRUE,TRUE,FALSE,FALSE
+"192","Atherinops affinis","Atherinops affinis",TRUE,TRUE,TRUE,FALSE,FALSE
 "193","Chthamalus fissus","Chthamalus fissus",FALSE,TRUE,FALSE,FALSE,FALSE
 "194","Leathesia marina","Leathesia marina",FALSE,TRUE,TRUE,FALSE,FALSE
 "195","Mycedium robokaki","Mycedium robokaki",FALSE,FALSE,FALSE,FALSE,FALSE
@@ -339,12 +339,12 @@
 "338","Aaptos nuda","Aaptos nuda",FALSE,FALSE,FALSE,TRUE,FALSE
 "339","Glycera americana","Glycera americana",FALSE,TRUE,TRUE,FALSE,FALSE
 "340","Chaetoceros tenuissimus","Chaetoceros tenuissimus",FALSE,TRUE,TRUE,FALSE,FALSE
-"341","Pandalus danae","Pandalus danae",FALSE,TRUE,FALSE,FALSE,FALSE
+"341","Pandalus danae","Pandalus danae",FALSE,TRUE,TRUE,FALSE,FALSE
 "342","Nucella ostrina","Nucella ostrina",TRUE,TRUE,TRUE,FALSE,FALSE
 "343","Laminaria setchellii","Laminaria setchellii",TRUE,TRUE,TRUE,FALSE,FALSE
 "344","Ophiopholis kennerlyi","Ophiopholis kennerlyi",FALSE,TRUE,TRUE,FALSE,FALSE
 "345","Liparis mucosus","Liparis mucosus",FALSE,TRUE,TRUE,FALSE,FALSE
-"346","Schizymenia dubyi","Schizymenia dubyi",FALSE,FALSE,TRUE,FALSE,FALSE
+"346","Schizymenia dubyi","Schizymenia dubyi",FALSE,TRUE,TRUE,FALSE,FALSE
 "347","Eudistoma psammion","Eudistoma psammion",FALSE,TRUE,TRUE,FALSE,FALSE
 "348","Ampithoe sectimanus","Ampithoe sectimana",FALSE,TRUE,TRUE,FALSE,FALSE
 "349","Microspongium alariae","Microspongium alariae",FALSE,FALSE,FALSE,FALSE,FALSE
@@ -353,7 +353,7 @@
 "352","Ammothea hilgendorfi","Ammothea hilgendorfi",FALSE,TRUE,TRUE,FALSE,FALSE
 "353","Eulalia aviculiseta","Eulalia aviculiseta",FALSE,TRUE,TRUE,FALSE,FALSE
 "354","Pugettia richii","Pugettia richii",TRUE,TRUE,TRUE,FALSE,FALSE
-"355","Clytia gregaria","Clytia gregaria",FALSE,FALSE,FALSE,FALSE,FALSE
+"355","Clytia gregaria","Clytia gregaria",FALSE,TRUE,FALSE,FALSE,FALSE
 "356","Cucumaria piperata","Cucumaria piperata",FALSE,TRUE,TRUE,FALSE,FALSE
 "357","Carcinonemertes errans","Carcinonemertes errans",FALSE,FALSE,FALSE,TRUE,FALSE
 "358","Limacia cockerelli","Limacia cockerelli",TRUE,TRUE,TRUE,FALSE,FALSE
@@ -382,7 +382,7 @@
 "381","Ozophora clevelandii","Ozophora clevelandi",FALSE,TRUE,TRUE,FALSE,FALSE
 "382","Acanthodoris rhodoceras","Acanthodoris rhodoceras",TRUE,TRUE,TRUE,FALSE,FALSE
 "383","Herposiphonia plumula","Herposiphonia plumula",FALSE,TRUE,TRUE,FALSE,FALSE
-"384","Mopalia ferreirai","Mopalia ferreirai",FALSE,FALSE,TRUE,FALSE,FALSE
+"384","Mopalia ferreirai","Mopalia ferreirai",FALSE,TRUE,TRUE,FALSE,FALSE
 "385","Halichondria coerulea","Halichondria coerulea",FALSE,FALSE,FALSE,FALSE,FALSE
 "386","Halicnemia gallica","Halicnemia gallica",FALSE,FALSE,FALSE,TRUE,FALSE
 "387","Neoptilota densa","Neoptilota densa",TRUE,TRUE,TRUE,FALSE,FALSE
@@ -410,7 +410,7 @@
 "409","Ceratostoma foliatum","Ceratostoma foliatum",TRUE,TRUE,TRUE,FALSE,FALSE
 "410","Heterosigma akashiwo","Heterosigma akashiwo",FALSE,TRUE,TRUE,FALSE,FALSE
 "411","Fredericqia chiton","Fredericqia chiton",FALSE,TRUE,TRUE,FALSE,FALSE
-"412","Callophyllis schneideri","Callophyllis schneideri",FALSE,FALSE,TRUE,FALSE,FALSE
+"412","Callophyllis schneideri","Callophyllis schneideri",FALSE,TRUE,TRUE,FALSE,FALSE
 "413","Dermasterias imbricata","Dermasterias imbricata",TRUE,TRUE,TRUE,FALSE,FALSE
 "414","Anoplarchus purpurescens","Anoplarchus purpurescens",TRUE,TRUE,TRUE,FALSE,FALSE
-"415","Eurydice longiantennata","Eurydice longiantennata",FALSE,FALSE,FALSE,TRUE,FALSE
+"415","Eurydice longiantennata","Eurydice longiantennata",FALSE,FALSE,FALSE,FALSE,FALSE

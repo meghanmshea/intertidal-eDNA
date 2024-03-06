@@ -427,7 +427,7 @@ amp_nocontrols_FD_R = rarefaction(amp_nocontrols_FD)
 amp_nocontrols_NS_FD_R = rarefaction(amp_nocontrols_NS_FD)
 ```
 
-```{r Making NCBI Data Frames, warning = FALSE, class.source = 'fold-hide'}
+```{r Making NCBI Data Frames, warning = FALSE}
 ###Making NCBI Data Frames###
 ##Create data frames for submission to NCBI SRA based on required information in BioSample package MIMARKS: survey, water; version 6.0 as well as additional suggested detailed from the NOAA Omics Data Management Guide (https://noaa-omics-dmg.readthedocs.io/en/latest/contributors.html)
 
@@ -625,7 +625,7 @@ write.csv(SRA_metadata,
           row.names = FALSE)
 ```
 
-```{r Making GBIF Data Frames, warning = FALSE, class.source = 'fold-hide'}
+```{r Making GBIF Data Frames, warning = FALSE}
 ###Making GBIF Data Frames###
 ##Create data frames for submission to GBIF through the beta eDNA data converter (https://edna-tool.gbif-uat.org/)
 #Export version of data with decontamination and controls removed but no additional processing
@@ -1155,9 +1155,13 @@ CC_shape_sp = st_transform(pnt, crs = '+proj=aeqd +lat_0=53.6 +lon_0=12.7')
 mapview(CC_shape_sp)
 CC_shape_sp = st_simplify(CC_shape_sp,
                           preserveTopology = FALSE,
-                          dTolerance = 10000)
+                          dTolerance = 20000)
 CC_shape_sp = st_transform(CC_shape_sp, crs = 4326)
 mapview(CC_shape_sp)
+
+#Reverse order for GBIF
+CC_shape_sp[[1]][[1]][,1] = rev(CC_shape_sp[[1]][[1]][,1])
+CC_shape_sp[[1]][[1]][,2] = rev(CC_shape_sp[[1]][[1]][,2])
 
 ```
 
