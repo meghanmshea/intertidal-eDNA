@@ -50,6 +50,23 @@ library(gt)
 library(gtExtras)
 library(webshot2)
 
+library(base64enc)
+library(digest)
+library(evaluate)
+library(glue)
+library(highr)
+library(htmltools)
+library(jsonlite)
+library(knitr)
+library(magrittr)
+library(markdown)
+library(mime)
+library(rmarkdown)
+library(stringi)
+library(stringr)
+library(xfun)
+library(yaml)
+
 hook_figure_unit()
 ```
 
