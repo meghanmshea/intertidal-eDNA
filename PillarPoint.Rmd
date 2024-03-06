@@ -655,19 +655,19 @@ defaultValues = defaultValues %>%
   add_row(term = "pcr_primer_name_reverse", value = "jgHCO2198") %>%
   add_row(term = "sop", value = "https://www.biorxiv.org/content/10.1101/2023.08.03.551543v1") %>%
   add_row(term = "seq_meth", value = "Illumina MiSeq") %>%
-  add_row(term = "samplingProtocol", value = "dx.doi.org/10.17504/protocols.io.bp2l69y7klqe/v2") %>%
+  add_row(term = "samplingProtocol", value = "https://dx.doi.org/10.17504/protocols.io.bp2l69y7klqe/v2") %>%
   add_row(term = "size_frac", value = "0.22 micrometer") %>%
   add_row(term = "samp_vol_we_dna_ext", value = "1000 mL") %>%
   add_row(term = "samp_collec_device", value = "Covidien single-use enteral feeding pouch") %>%
-  add_row(term = "samp_collec_method", value = "Covidien single-use enteral feeding pouch: dx.doi.org/10.17504/protocols.io.bp2l69y7klqe/v2") %>%
-  add_row(term = "samp_mat_process", value = "Gravity filtered through Sterivex (0.22-µm): dx.doi.org/10.17504/protocols.io.bp2l69y7klqe/v2") %>%
+  add_row(term = "samp_collec_method", value = "Covidien single-use enteral feeding pouch: https://dx.doi.org/10.17504/protocols.io.bp2l69y7klqe/v2") %>%
+  add_row(term = "samp_mat_process", value = "Gravity filtered through Sterivex (0.22-µm): https://dx.doi.org/10.17504/protocols.io.bp2l69y7klqe/v2") %>%
   add_row(term = "annealingTemp", value = "69.5") %>%
   add_row(term = "annealingTempUnit", value = "Degrees Celsius") %>%
   add_row(term = "ampliconSize", value = "313") %>%
   add_row(term = "amplificationReactionVolume", value = "25") %>%
   add_row(term = "amplicationReactionVolumeUnit", value = "µl") %>%
-  add_row(term = "nucl_acid_ext", value = "dx.doi.org/10.17504/protocols.io.ewov1qyyygr2/v1") %>%
-  add_row(term = "nucl_acid_amp", value = "dx.doi.org/10.17504/protocols.io.dm6gp3wpdvzp/v1") %>%
+  add_row(term = "nucl_acid_ext", value = "https://dx.doi.org/10.17504/protocols.io.ewov1qyyygr2/v1") %>%
+  add_row(term = "nucl_acid_amp", value = "https://dx.doi.org/10.17504/protocols.io.dm6gp3wpdvzp/v1") %>%
   add_row(term = "lib_layout", value = "paired") %>%
   add_row(term = "verbatimDepth", value = "Surface") %>%
   add_row(term = "basisOfRecord", value = "Material sample") %>%
@@ -682,7 +682,7 @@ defaultValues = defaultValues %>%
 GBIF_export = amp_nocontrols_FD
 
 GBIF_export$metadata = merge(GBIF_export$metadata, Location, all = T)
-
+GBIF_export$taxa = remove_NCBInums(GBIF_export$taxa)
 
 #Add date + time
 
