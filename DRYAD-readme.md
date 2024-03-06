@@ -26,7 +26,7 @@ This archive contains processed versions of the ASVs, taxonomy assignments, and 
 The processed eDNA dataset represents the core dataset analyzed in the manuscript. 
 
 
-## Related Works: Software & Code
+## Related Works: Software, Code, and Data
 
 ### Anacapa Container (modified)
 
@@ -36,8 +36,7 @@ The modified Anacapa Container, [published to Zenodo](https://doi.org/10.5281/ze
 
 The Intertidal-eDNA GitHub repository, [published to Zenodo](https://doi.org/10.5281/zenodo.8213050) and found in the "Related Works" on Dryad, contains all of the data and code needed to reproduce the analyses in the manuscript, starting from Anacapa_Toolkit_Output.zip (which is already included in the repo). Using PillarPoint.Rmd, you can generate the processed eDNA dataset saved here as Processed_eDNA_Data.zip and use that dataset to reproduce all of the analyses, as well as most of the figures, in the manuscript. More details on the Intertidal-eDNA GitHub repository can be found on [its Zenodo page](https://doi.org/10.5281/zenodo.8213050). 
 
+### NCBI SRA Sequence Data Submission
 
-## Sharing/Access information
-
-This is a section for linking to other ways to access the data, and for linking to sources the data is derived from, if any. *MORE INFORMATION COMING SOON*
+The FASTQ files in FASTQ_Files.zip have also been submitted to the NCBI Sequence Read Archive; the BioProject containing all of these files can be found with [accession: PRJNA1083727](https://www.ncbi.nlm.nih.gov/bioproject/?term=PRJNA1083727).
 

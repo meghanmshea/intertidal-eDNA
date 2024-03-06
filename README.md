@@ -1,12 +1,12 @@
-# Environmental DNA (eDNA) metabarcoding differentiates between micro-habitats within the rocky intertidal
+# Environmental DNA metabarcoding differentiates between micro-habitats within the rocky intertidal
 
 *Meghan M. Shea & Alexandria B. Boehm*
 
 [![DOI](https://zenodo.org/badge/657403801.svg)](https://zenodo.org/badge/latestdoi/657403801)
 
-This GitHub repository contains data and R code for reproducing Shea & Boehm (TBD), "[Environmental DNA (eDNA) metabarcoding differentiates between micro-habitats within the rocky intertidal](https://www.biorxiv.org/content/10.1101/2023.08.03.551543v1)". If you reference this project or any results, please cite this paper (currently available as a pre-print above). If you reuse data or code from this repository, please additionally cite our [Zenodo archive](https://doi.org/10.5281/zenodo.8213050).
+This GitHub repository contains data and R code for reproducing Shea & Boehm (2024), "[Environmental DNA metabarcoding differentiates between micro-habitats within the rocky intertidal](https://www.biorxiv.org/content/10.1101/2023.08.03.551543v1)". If you reference this project or any results, please cite this paper (currently available as a pre-print above). If you reuse data or code from this repository, please additionally cite our [Zenodo archive](https://doi.org/10.5281/zenodo.8213050).
 
-> **Abstract:** While the utility of environmental DNA (eDNA) metabarcoding surveys for biodiversity monitoring continues to be demonstrated, the spatial and temporal variability of eDNA, and thus the limits of the differentiability of an eDNA signal, remains under-characterized. In this study, we collected eDNA samples from distinct micro-habitats (\~40 m apart) in a rocky intertidal ecosystem over their exposure period in a tidal cycle. During this period, the micro-habitats transitioned from being interconnected, to physically isolated, to interconnected again. Using a well-established eukaryotic (cytochrome oxidase subunit I) metabarcoding assay, we detected 415 species across 28 phyla. Across a variety of univariate and multivariate analyses, using just taxonomically-assigned data as well as all detected amplicon sequence variants (ASVs), we identified unique eDNA signals from the different micro-habitats sampled. This differentiability paralleled ecological expectations and increased as the sites became more physically disconnected. Our results demonstrate that eDNA biomonitoring can differentiate micro-habitats in the rocky intertidal only 40 m apart, that these differences are ecologically meaningful, and that physical connectivity informs the degree of differentiation possible. These findings showcase the potential power of eDNA biomonitoring to increase the spatial and temporal resolution of marine biodiversity data, aiding research, conservation, and management efforts.
+> **Abstract:** While the utility of environmental DNA (eDNA) metabarcoding surveys for biodiversity monitoring continues to be demonstrated, the spatial and temporal variability of eDNA, and thus the limits of the differentiability of an eDNA signal, remains under-characterized. In this study, we collected eDNA samples from distinct micro-habitats (~40 m apart) in a rocky intertidal ecosystem over their exposure period in a tidal cycle. During this period, the micro-habitats transitioned from being interconnected, to physically isolated, to interconnected again. Using a well-established eukaryotic (cytochrome oxidase subunit I) metabarcoding assay, we detected 415 species across 28 phyla. Across a variety of univariate and multivariate analyses, using exclusively taxonomically-assigned data as well as all detected amplicon sequence variants (ASVs), we identified unique eDNA signals from the different micro-habitats sampled. This differentiability paralleled expected ecological gradients and increased as the sites became more physically disconnected. Our results demonstrate that eDNA biomonitoring can differentiate micro-habitats in the rocky intertidal only 40 m apart, that these differences reflect known ecology in the area, and that physical connectivity informs the degree of differentiation possible. These findings showcase the potential power of eDNA biomonitoring to increase the spatial and temporal resolution of marine biodiversity data, aiding research, conservation, and management efforts.
 
 ## Where did the data used here come from?
 
@@ -19,7 +19,7 @@ This analysis also requires NOAA/NOS/CO-OPS daily tide predictions from Pillar P
 The repository contains:
 
 -   `Data`: the Anacapa Output and tide data described above
--   `PillarPoint.Rmd`: an RMarkdown file, which reproduces the full text of the Methods & Results sections of "[Environmental DNA (eDNA) metabarcoding differentiates between micro-habitats within the rocky intertidal](https://www.biorxiv.org/content/10.1101/2023.08.03.551543v1)".
+-   `PillarPoint.Rmd`: an RMarkdown file, which reproduces the full text of the Methods & Results sections of "[Environmental DNA metabarcoding differentiates between micro-habitats within the rocky intertidal](https://www.biorxiv.org/content/10.1101/2023.08.03.551543v1)".
 -   `Analysis Products`: the various tables and supplemental information outputs from `PillarPoint.Rmd` as well as the processed eDNA datasets used in the manuscript analysis, and prepared for submission to GBIF (link forthcoming)
 -   `Figures`: the image files generated by `PillarPoint.Rmd` for main text and supplemental figures
 -   `Intertidal eDNA.RProj`: this is the R project file, which you'll use to open the project locally in RStudio the first time you do so
@@ -28,7 +28,7 @@ The repository contains:
 
 ## How should I use this repository?
 
-The entire analysis can executed by running the **`PillarPoint.Rmd`** RMarkdown file, which reproduces the full text of the Methods & Results sections of "[Environmental DNA (eDNA) metabarcoding differentiates between micro-habitats within the rocky intertidal](https://www.biorxiv.org/content/10.1101/2023.08.03.551543v1)".
+The entire analysis can executed by running the **`PillarPoint.Rmd`** RMarkdown file, which reproduces the full text of the Methods & Results sections of "[Environmental DNA metabarcoding differentiates between micro-habitats within the rocky intertidal](https://www.biorxiv.org/content/10.1101/2023.08.03.551543v1)".
 
 #### Step 1: Install R and RStudio (if you haven't already)
 

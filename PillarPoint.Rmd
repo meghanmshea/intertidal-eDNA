@@ -1,5 +1,5 @@
 ---
-title: "Environmental DNA (eDNA) metabarcoding differentiates between micro-habitats within the rocky intertidal"
+title: "Environmental DNA metabarcoding differentiates between micro-habitats within the rocky intertidal"
 author: "Meghan M. Shea"
 date: "`r Sys.Date()`"
 output: 
