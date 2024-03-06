@@ -1,9 +1,5 @@
-phyloseq
-ggtree
-ggtreeExtra
-ggplot2
-ampvis2
 tidyverse
+ggplot2
 tibble
 tidyr
 readr
@@ -14,8 +10,6 @@ forcats
 lubridate
 sf
 patchwork
-BiocManager
-remotes
 eulerr
 permute
 indicspecies
@@ -32,8 +26,12 @@ rgbif
 mapview
 ggbeeswarm
 ggh4x
-tidytree
 chunkhooks
 usethis
 devtools
 styler
+phyloseq
+ggtree
+ggtreeExtra
+ampvis2
+pdftools
