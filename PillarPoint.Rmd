@@ -1262,8 +1262,9 @@ Phyla_Reads = data.frame(Phyla = tax_table(physeq_totalreads)[, 2],
 physeq_totalASVs = physeq_summed
 
 otu_table(physeq_totalASVs)[otu_table(physeq_totalASVs) > 0] <- 1
-physeq_totalASVs = tax_glom(physeq_totalASVs, taxrank = "Phylum", NArm =
-                              TRUE)
+physeq_totalASVs = tax_glom(physeq_totalASVs, 
+                            taxrank = "Phylum", 
+                            NArm =TRUE)
 
 Phyla_ASVs = data.frame(Phyla = tax_table(physeq_totalASVs)[, 2],
                         ASVs = rowSums(otu_table(physeq_totalASVs)))
@@ -2221,7 +2222,6 @@ full_taxa_list = df_list %>% reduce(full_join, by = 'Species')
 #Identify taxonomic synonyms for all species in above data frame
 synonyms = c()
 for (s in full_taxa_list$Species) {
-  print(s)
   worms_ID = get_wormsid(s)
   if (is.na(worms_ID)) {
     syns = NA
@@ -2242,15 +2242,11 @@ full_taxa_list$synonyms <-
 
 #Remove anything beyond two words in each comma separated section
 for (syn in 1:length(full_taxa_list$synonyms)) {
-  print(syn)
   all = unlist(strsplit(full_taxa_list$synonyms[syn], ","))
   if (!is.na(all[1])) {
-    print(all)
     for (i in 1:length(all)) {
-      print(all[i])
       all[i] = str_trim(all[i])
       all[i] <- sub("^(\\S*\\s+\\S+).*", "\\1", all[i])
-      print(all[i])
     }
   }
   syns = toString(unique(all))
@@ -2343,10 +2339,8 @@ if (exists("toc_zones") & exists("txt")) {
     
     all_pages = vector()
     for (y in all_to_search) {
-      print(y)
       pages = grep(y, txt, ignore.case = FALSE, fixed = TRUE)
       all_pages = c(all_pages, pages)
-      print(pages)
     }
     all_pages = unique(all_pages)
     output[x] = list(all_pages)
