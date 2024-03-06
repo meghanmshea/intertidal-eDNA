@@ -19,37 +19,36 @@ knitr::opts_chunk$set(echo = TRUE, tidy = "styler")
 
 renv::restore()
 
-packages <- c("tidyverse", 
-              "sf",
-              "patchwork", 
-              "stringr", 
-              "eulerr", 
-              "indicspecies", 
-              "cluster",
-              "vegan",
-              "chisq.posthoc.test", 
-              "taxize",
-              "Polychrome",
-              "pals", 
-              "spocc",
-              "mregions",
-              "rgbif",
-              "mapview",
-              "ggbeeswarm",
-              "ggh4x",
-              "chunkhooks",
-              "devtools", 
-              "grid",
-              "styler",
-              "phyloseq",
-              "ggtree",
-              "ggtreeExtra",
-              "ampvis2",
-              "pdftools",
-              "gt",
-              "gtExtras")
 
-invisible(lapply(packages, library, character.only = TRUE))
+library(tidyverse)
+library(sf)
+library(patchwork)
+library(stringr)
+library(eulerr)
+library(indicspecies)
+library(cluster)
+library(vegan)
+library(chisq.posthoc.test)
+library(taxize)
+library(Polychrome)
+library(pals)
+library(spocc)
+library(mregions)
+library(rgbif)
+library(mapview)
+library(ggbeeswarm)
+library(ggh4x)
+library(chunkhooks)
+library(devtools)
+library(grid)
+library(styler)
+library(phyloseq)
+library(ggtree)
+library(ggtreeExtra)
+library(ampvis2)
+library(pdftools)
+library(gt)
+library(gtExtras)
               
 hook_figure_unit()
 ```
