@@ -48,6 +48,7 @@ library(ampvis2)
 library(pdftools)
 library(gt)
 library(gtExtras)
+library(webshot2)
 
 hook_figure_unit()
 ```
