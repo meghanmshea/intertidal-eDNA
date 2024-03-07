@@ -49,6 +49,7 @@ library(pdftools)
 library(gt)
 library(gtExtras)
 library(webshot2)
+library(worrms)
 
 hook_figure_unit()
 ```
@@ -626,7 +627,7 @@ write.csv(SRA_metadata,
           row.names = FALSE)
 ```
 
-```{r Making GBIF Data Frames, warning = FALSE}
+```{r Making GBIF Data Frames, warning = FALSE, cache = TRUE}
 ###Making GBIF Data Frames###
 ##Create data frames for submission to GBIF through the beta eDNA data converter (https://edna-tool.gbif-uat.org/)
 #Export version of data with decontamination and controls removed but no additional processing
@@ -675,6 +676,16 @@ defaultValues = defaultValues %>%
 GBIF_export = amp_nocontrols_FD
 
 GBIF_export$metadata = merge(GBIF_export$metadata, Location, all = T)
+
+#taxonConceptID
+GBIF_export$tax$taxonConceptID = sub('.*\\_', '', GBIF_export$tax$Species)
+GBIF_export$tax$taxonConceptID <- ifelse(GBIF_export$tax$taxonConceptID == "", sub('.*\\_', '', GBIF_export$tax$Genus),GBIF_export$tax$taxonConceptID)
+GBIF_export$tax$taxonConceptID <- ifelse(GBIF_export$tax$taxonConceptID == "", sub('.*\\_', '', GBIF_export$tax$Family),GBIF_export$tax$taxonConceptID)
+GBIF_export$tax$taxonConceptID <- ifelse(GBIF_export$tax$taxonConceptID == "", sub('.*\\_', '', GBIF_export$tax$Order),GBIF_export$tax$taxonConceptID)
+GBIF_export$tax$taxonConceptID <- ifelse(GBIF_export$tax$taxonConceptID == "", sub('.*\\_', '', GBIF_export$tax$Class),GBIF_export$tax$taxonConceptID)
+GBIF_export$tax$taxonConceptID <- ifelse(GBIF_export$tax$taxonConceptID == "", sub('.*\\_', '', GBIF_export$tax$Phylum),GBIF_export$tax$taxonConceptID)
+GBIF_export$tax$taxonConceptID <- ifelse(GBIF_export$tax$taxonConceptID == "", sub('.*\\_', '', GBIF_export$tax$Kingdom),GBIF_export$tax$taxonConceptID)
+
 GBIF_export$tax$Kingdom = remove_NCBInums(GBIF_export$tax$Kingdom)
 GBIF_export$tax$Phylum = remove_NCBInums(GBIF_export$tax$Phylum)
 GBIF_export$tax$Class = remove_NCBInums(GBIF_export$tax$Class)
@@ -682,6 +693,215 @@ GBIF_export$tax$Order = remove_NCBInums(GBIF_export$tax$Order)
 GBIF_export$tax$Family = remove_NCBInums(GBIF_export$tax$Family)
 GBIF_export$tax$Genus = remove_NCBInums(GBIF_export$tax$Genus)
 GBIF_export$tax$Species = remove_NCBInums(GBIF_export$tax$Species)
+
+#Prepare to get WORMS Taxonomy
+Taxonomy = GBIF_export$tax[c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")]
+Taxonomy = unique(Taxonomy[c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")])
+
+Taxonomy[, "lsid"] = ""
+Taxonomy[, "rank"] = ""
+Taxonomy[, "scientificname"] = ""
+Taxonomy[, "kingdom"] = ""
+Taxonomy[, "phylum"] = ""
+Taxonomy[, "class"] = ""
+Taxonomy[, "order"] = ""
+Taxonomy[, "family"] = ""
+Taxonomy[, "genus"] = ""
+
+
+#tryCatch wrapper for wm_records_taxamatch
+wm_records_taxamatch_fixed <-function(id) {
+  tryCatch(
+    {
+      record = wm_records_taxamatch(id)
+      return(record)
+    },
+    
+    error = function(e){
+      return(NULL)
+    }
+    
+    
+  )
+}
+
+
+#Function that checks if this is a valid AphiaID for a record
+checkID = function(ncbi_id) {
+  if(ncbi_id == "") {
+    return(NULL)
+  } else {
+    
+    record = wm_name2id_(ncbi_id)
+    
+    if(length(record) == 0) {
+      record = wm_records_taxamatch_fixed(ncbi_id)
+      if(is.null(record)) {
+        return(NULL)
+      } else {
+        id = record[[1]]$AphiaID
+      }
+      
+    } else if (record[[1]] == -999) {
+      record = wm_records_taxamatch_fixed(ncbi_id)
+      id = record[[1]]$AphiaID
+    } else {
+      id = record[[1]]
+    }
+    
+    
+      if(length(record) !=0) {
+      return(id)
+    } else {
+      return(NULL)
+    }
+      
+  }
+  
+}
+    
+##Get valid worrms taxonomy
+for(i in 1:nrow(Taxonomy)) {
+  id = Taxonomy$Species[i]
+  print(id)
+  aphia = checkID(id)
+  
+  if(!is.null(aphia)) {
+   record = wm_record(aphia)
+    if(!is.null(record$lsid)) {Taxonomy$lsid[i] = record$lsid}
+    if(!is.null(record$rank)) {Taxonomy$rank[i] = record$rank}
+    if(!is.null(record$scientificname)) {Taxonomy$scientificname[i] = record$scientificname}
+    if(!is.null(record$kingdom)) {Taxonomy$kingdom[i] = record$kingdom}
+    if(!is.null(record$phylum)) {Taxonomy$phylum[i] = record$phylum}
+    if(!is.null(record$class)) {Taxonomy$class[i] = record$class}
+    if(!is.null(record$order))  {Taxonomy$order[i] = record$order}
+    if(!is.null(record$family)) {Taxonomy$family[i] = record$family}
+    if(!is.null(record$genus)) {Taxonomy$genus[i] = record$genus}
+    next
+  } 
+  
+  id = Taxonomy$Genus[i]
+  aphia = checkID(id)
+  
+  if(!is.null(aphia)) {
+    record = wm_record(aphia)
+    if(!is.null(record$lsid)) {Taxonomy$lsid[i] = record$lsid}
+    if(!is.null(record$rank)) {Taxonomy$rank[i] = record$rank}
+    if(!is.null(record$scientificname)) {Taxonomy$scientificname[i] = record$scientificname}
+    if(!is.null(record$kingdom)) {Taxonomy$kingdom[i] = record$kingdom}
+    if(!is.null(record$phylum)) {Taxonomy$phylum[i] = record$phylum}
+    if(!is.null(record$class)) {Taxonomy$class[i] = record$class}
+    if(!is.null(record$order))  {Taxonomy$order[i] = record$order}
+    if(!is.null(record$family)) {Taxonomy$family[i] = record$family}
+    if(!is.null(record$genus)) {Taxonomy$genus[i] = record$genus}
+    next
+  } 
+  
+  id = Taxonomy$Family[i]
+  aphia = checkID(id)
+  
+  if(!is.null(aphia)) {
+    record = wm_record(aphia)
+        if(!is.null(record$lsid)) {Taxonomy$lsid[i] = record$lsid}
+    if(!is.null(record$rank)) {Taxonomy$rank[i] = record$rank}
+    if(!is.null(record$scientificname)) {Taxonomy$scientificname[i] = record$scientificname}
+    if(!is.null(record$kingdom)) {Taxonomy$kingdom[i] = record$kingdom}
+    if(!is.null(record$phylum)) {Taxonomy$phylum[i] = record$phylum}
+    if(!is.null(record$class)) {Taxonomy$class[i] = record$class}
+    if(!is.null(record$order))  {Taxonomy$order[i] = record$order}
+    if(!is.null(record$family)) {Taxonomy$family[i] = record$family}
+
+    next
+  } 
+  
+   id = Taxonomy$Order[i]
+  aphia = checkID(id)
+  
+  if(!is.null(aphia)) {
+    record = wm_record(aphia)
+    if(!is.null(record$lsid)) {Taxonomy$lsid[i] = record$lsid}
+    if(!is.null(record$rank)) {Taxonomy$rank[i] = record$rank}
+    if(!is.null(record$scientificname)) {Taxonomy$scientificname[i] = record$scientificname}
+    if(!is.null(record$kingdom)) {Taxonomy$kingdom[i] = record$kingdom}
+    if(!is.null(record$phylum)) {Taxonomy$phylum[i] = record$phylum}
+    if(!is.null(record$class)) {Taxonomy$class[i] = record$class}
+    if(!is.null(record$order))  {Taxonomy$order[i] = record$order}
+    next
+  } 
+  
+  id = Taxonomy$Class[i]
+  aphia = checkID(id)
+  
+  if(!is.null(aphia)) {
+    record = wm_record(aphia)
+    if(!is.null(record$lsid)) {Taxonomy$lsid[i] = record$lsid}
+    if(!is.null(record$rank)) {Taxonomy$rank[i] = record$rank}
+    if(!is.null(record$scientificname)) {Taxonomy$scientificname[i] = record$scientificname}
+    if(!is.null(record$kingdom)) {Taxonomy$kingdom[i] = record$kingdom}
+    if(!is.null(record$phylum)) {Taxonomy$phylum[i] = record$phylum}
+    if(!is.null(record$class)) {Taxonomy$class[i] = record$class}
+
+
+    next
+  } 
+  
+   id = Taxonomy$Phylum[i]
+  aphia = checkID(id)
+  
+  if(!is.null(aphia)) {
+    record = wm_record(aphia)
+     if(!is.null(record$lsid)) {Taxonomy$lsid[i] = record$lsid}
+    if(!is.null(record$rank)) {Taxonomy$rank[i] = record$rank}
+    if(!is.null(record$scientificname)) {Taxonomy$scientificname[i] = record$scientificname}
+    if(!is.null(record$kingdom)) {Taxonomy$kingdom[i] = record$kingdom}
+    if(!is.null(record$phylum)) {Taxonomy$phylum[i] = record$phylum}
+
+    next
+  } 
+  
+   id = Taxonomy$Kingdom[i]
+  aphia = checkID(id)
+  
+  if(!is.null(aphia)) {
+    record = wm_record(aphia)
+    if(!is.null(record$lsid)) {Taxonomy$lsid[i] = record$lsid}
+    if(!is.null(record$rank)) {Taxonomy$rank[i] = record$rank}
+    if(!is.null(record$scientificname)) {Taxonomy$scientificname[i] = record$scientificname}
+    if(!is.null(record$kingdom)) {Taxonomy$kingdom[i] = record$kingdom}
+    next
+  } 
+
+}
+
+
+GBIF_export$tax = left_join(GBIF_export$tax, Taxonomy, by = c("Kingdom" = "Kingdom", "Phylum" = "Phylum", "Class"= "Class", "Order" = "Order", "Family" = "Family", "Genus" = "Genus", "Species" = "Species"))
+
+GBIF_export$tax$taxonConceptID[GBIF_export$tax$taxonConceptID == "NCBI:txid"] = NA
+GBIF_export$tax$verbatimIdentification[GBIF_export$tax$verbatimIdentification == "Kingdom: | Phylum: | Class: | Order: | Family:  | Genus:  | Species: "] = NA
+GBIF_export$tax$scientificname[GBIF_export$tax$scientificname == ""] = "incertae sedis"
+GBIF_export$tax$lsid[GBIF_export$tax$scientificname == "incertae sedis"] = "urn:lsid:marinespecies.org:taxname:12"
+GBIF_export$tax$rank[GBIF_export$tax$scientificname == "incertae sedis"] = "Kingdom"
+
+
+
+
+#Capture original NCBI identification
+
+GBIF_export$tax$verbatimIdentification = paste0("Kingdom: ", 
+                                                GBIF_export$tax$Kingdom,
+                                                "| Phylum: ",
+                                                GBIF_export$tax$Phylum,
+                                                "| Class: ",
+                                                GBIF_export$tax$Class,
+                                                "| Order: ",
+                                                GBIF_export$tax$Order,
+                                                "| Family: ",
+                                                GBIF_export$tax$Family,
+                                                " | Genus: ",
+                                                GBIF_export$tax$Genus,
+                                                " | Species: ",
+                                                GBIF_export$tax$Species)
+
 
 #Add date + time
 
@@ -719,6 +939,7 @@ col_order = c(
 
 GBIF_export$metadata = GBIF_export$metadata[, col_order]
 
+
 #If you have SRA metadata records from successful NCBI submission, process them here
 
 if (dir.exists("Analysis Products/Processed eDNA/NCBI/NCBI Upload Record")) {
@@ -738,7 +959,9 @@ GBIF_export$metadata = GBIF_export$metadata %>% rename(
   associatedSequences = accession,
   materialSampleID = biosample_accession,
   temperature = T,
-  salinity = S
+  salinity = S,
+  locationID = Location,
+  geodeticDatum = CRS
 )
 
 #Add sequences to file
@@ -775,15 +998,21 @@ GBIF_export$tax = merge(
 rownames(GBIF_export$tax) = GBIF_export$tax$Row.names
 
 col_order = c("sequence",
-              "Kingdom",
-              "Phylum",
-              "Class",
-              "Order",
-              "Family",
-              "Genus",
-              "Species")
+              "kingdom",
+              "phylum",
+              "class",
+              "order",
+              "family",
+              "genus",
+              "scientificname",
+              "taxonConceptID",
+              "verbatimIdentification",
+              "lsid",
+              "rank")
 
 GBIF_export$tax = GBIF_export$tax[, col_order]
+
+GBIF_export$tax$taxonConceptID = paste0("NCBI:txid", GBIF_export$tax$taxonConceptID)
 
 if (!dir.exists("Analysis Products/Processed eDNA/GBIF")) {
   dir.create("Analysis Products/Processed eDNA/GBIF", recursive = TRUE)

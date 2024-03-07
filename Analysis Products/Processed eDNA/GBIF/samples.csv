@@ -1,4 +1,4 @@
-"id","Sample_Name","Location","Latitude","Longitude","CRS","eventDate","verbatimEventDate","temperature","salinity","associatedSequences","materialSampleID"
+"id","Sample_Name","locationID","Latitude","Longitude","geodeticDatum","eventDate","verbatimEventDate","temperature","salinity","associatedSequences","materialSampleID"
 "CO1_H5.1021.b.S40.L001","1021.b","N",37.495288,-122.499198,"EPSG:4326","2022-01-28T22:00:00Z","2022-01-28T14:00:00PST",15.9,33.1,"https://www.ncbi.nlm.nih.gov/sra/?term=SRR28222233","https://www.ncbi.nlm.nih.gov/biosample/?term=SAMN40257580"
 "CO1_H6.1021.c.S48.L001","1021.c","N",37.495288,-122.499198,"EPSG:4326","2022-01-28T22:00:00Z","2022-01-28T14:00:00PST",15.9,33.1,"https://www.ncbi.nlm.nih.gov/sra/?term=SRR28222188","https://www.ncbi.nlm.nih.gov/biosample/?term=SAMN40257585"
 "CO1_F10.1035.a.S78.L001","1035.a","N",37.495288,-122.499198,"EPSG:4326","2022-01-28T21:30:00Z","2022-01-28T13:30:00PST",14.6,33.1,"https://www.ncbi.nlm.nih.gov/sra/?term=SRR28222332","https://www.ncbi.nlm.nih.gov/biosample/?term=SAMN40257569"
