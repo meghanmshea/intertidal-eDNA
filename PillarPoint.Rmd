@@ -686,6 +686,8 @@ GBIF_export$tax$taxonConceptID <- ifelse(GBIF_export$tax$taxonConceptID == "", s
 GBIF_export$tax$taxonConceptID <- ifelse(GBIF_export$tax$taxonConceptID == "", sub('.*\\_', '', GBIF_export$tax$Phylum),GBIF_export$tax$taxonConceptID)
 GBIF_export$tax$taxonConceptID <- ifelse(GBIF_export$tax$taxonConceptID == "", sub('.*\\_', '', GBIF_export$tax$Kingdom),GBIF_export$tax$taxonConceptID)
 
+GBIF_export$tax$taxonConceptID = paste0("NCBI:txid", GBIF_export$tax$taxonConceptID)
+
 GBIF_export$tax$Kingdom = remove_NCBInums(GBIF_export$tax$Kingdom)
 GBIF_export$tax$Phylum = remove_NCBInums(GBIF_export$tax$Phylum)
 GBIF_export$tax$Class = remove_NCBInums(GBIF_export$tax$Class)
@@ -876,31 +878,33 @@ for(i in 1:nrow(Taxonomy)) {
 
 GBIF_export$tax = left_join(GBIF_export$tax, Taxonomy, by = c("Kingdom" = "Kingdom", "Phylum" = "Phylum", "Class"= "Class", "Order" = "Order", "Family" = "Family", "Genus" = "Genus", "Species" = "Species"))
 
-GBIF_export$tax$taxonConceptID[GBIF_export$tax$taxonConceptID == "NCBI:txid"] = NA
-GBIF_export$tax$verbatimIdentification[GBIF_export$tax$verbatimIdentification == "Kingdom: | Phylum: | Class: | Order: | Family:  | Genus:  | Species: "] = NA
-GBIF_export$tax$scientificname[GBIF_export$tax$scientificname == ""] = "incertae sedis"
-GBIF_export$tax$lsid[GBIF_export$tax$scientificname == "incertae sedis"] = "urn:lsid:marinespecies.org:taxname:12"
-GBIF_export$tax$rank[GBIF_export$tax$scientificname == "incertae sedis"] = "Kingdom"
-
-
-
 
 #Capture original NCBI identification
 
 GBIF_export$tax$verbatimIdentification = paste0("Kingdom: ", 
                                                 GBIF_export$tax$Kingdom,
-                                                "| Phylum: ",
+                                                " | Phylum: ",
                                                 GBIF_export$tax$Phylum,
-                                                "| Class: ",
+                                                " | Class: ",
                                                 GBIF_export$tax$Class,
-                                                "| Order: ",
+                                                " | Order: ",
                                                 GBIF_export$tax$Order,
-                                                "| Family: ",
+                                                " | Family: ",
                                                 GBIF_export$tax$Family,
                                                 " | Genus: ",
                                                 GBIF_export$tax$Genus,
                                                 " | Species: ",
                                                 GBIF_export$tax$Species)
+
+
+
+GBIF_export$tax$verbatimIdentification[GBIF_export$tax$verbatimIdentification == "Kingdom: | Phylum: | Class: | Order: | Family:  | Genus:  | Species: "] = NA
+GBIF_export$tax$taxonConceptID[GBIF_export$tax$taxonConceptID == "NCBI:txid"] = NA
+GBIF_export$tax$scientificname[GBIF_export$tax$scientificname == ""] = "incertae sedis"
+GBIF_export$tax$lsid[GBIF_export$tax$scientificname == "incertae sedis"] = "urn:lsid:marinespecies.org:taxname:12"
+GBIF_export$tax$rank[GBIF_export$tax$scientificname == "incertae sedis"] = "Kingdom"
+
+row.names(GBIF_export$tax) = GBIF_export$tax$OTU
 
 
 #Add date + time
@@ -1012,7 +1016,6 @@ col_order = c("sequence",
 
 GBIF_export$tax = GBIF_export$tax[, col_order]
 
-GBIF_export$tax$taxonConceptID = paste0("NCBI:txid", GBIF_export$tax$taxonConceptID)
 
 if (!dir.exists("Analysis Products/Processed eDNA/GBIF")) {
   dir.create("Analysis Products/Processed eDNA/GBIF", recursive = TRUE)
