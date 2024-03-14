@@ -629,7 +629,7 @@ write.csv(SRA_metadata,
           row.names = FALSE)
 ```
 
-```{r Making GBIF Data Frames, warning = FALSE, cache = TRUE}
+```{r Making GBIF Data Frames, warning = FALSE, cache = TRUE,  results = 'hide'}
 ###Making GBIF Data Frames###
 ##Create data frames for submission to GBIF through the beta eDNA data converter (https://edna-tool.gbif-uat.org/)
 #Export version of data with decontamination and controls removed but no additional processing
@@ -662,7 +662,7 @@ defaultValues = defaultValues %>%
   add_row(term = "annealingTempUnit", value = "Degrees Celsius") %>%
   add_row(term = "ampliconSize", value = "313") %>%
   add_row(term = "amplificationReactionVolume", value = "25") %>%
-  add_row(term = "amplicationReactionVolumeUnit", value = "µl") %>%
+  add_row(term = "amplificationReactionVolumeUnit", value = "µl") %>%
   add_row(term = "nucl_acid_ext", value = "https://dx.doi.org/10.17504/protocols.io.ewov1qyyygr2/v1") %>%
   add_row(term = "nucl_acid_amp", value = "https://dx.doi.org/10.17504/protocols.io.dm6gp3wpdvzp/v1") %>%
   add_row(term = "lib_layout", value = "paired") %>%
@@ -900,7 +900,7 @@ GBIF_export$tax$verbatimIdentification = paste0("Kingdom: ",
 
 
 
-GBIF_export$tax$verbatimIdentification[GBIF_export$tax$verbatimIdentification == "Kingdom: | Phylum: | Class: | Order: | Family:  | Genus:  | Species: "] = NA
+GBIF_export$tax$verbatimIdentification[GBIF_export$tax$verbatimIdentification == "Kingdom:  | Phylum:  | Class:  | Order:  | Family:  | Genus:  | Species: "] = NA
 GBIF_export$tax$taxonConceptID[GBIF_export$tax$taxonConceptID == "NCBI:txid"] = NA
 GBIF_export$tax$scientificname[GBIF_export$tax$scientificname == ""] = "incertae sedis"
 GBIF_export$tax$lsid[GBIF_export$tax$scientificname == "incertae sedis"] = "urn:lsid:marinespecies.org:taxname:12"
