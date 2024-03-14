@@ -10,7 +10,7 @@ This GitHub repository contains data and R code for reproducing Shea & Boehm (20
 
 ## Where did the data used here come from?
 
-This analysis primarily relies on the output of the [Anacapa Toolkit](https://github.com/limey-bean/Anacapa), a pipeline for processing eDNA metabarcoding sequence data developed by Curd et al. You can read more about the Anacapa Toolkit [here](https://besjournals-onlinelibrary-wiley-com.stanford.idm.oclc.org/doi/10.1111/2041-210X.13214). We modified a [containerized (Singularity) version of the Anacapa Toolkit](https://github.com/dat-ecosystem-archive/anacapa-container) to run on the Stanford Sherlock computing cluster. The raw data (FASTQ sequencing files), modified container, and scripts needed to reproduce the output analyzed here can be found in our Dryad data repository (link forthcoming).
+This analysis primarily relies on the output of the [Anacapa Toolkit](https://github.com/limey-bean/Anacapa), a pipeline for processing eDNA metabarcoding sequence data developed by Curd et al. You can read more about the Anacapa Toolkit [here](https://besjournals-onlinelibrary-wiley-com.stanford.idm.oclc.org/doi/10.1111/2041-210X.13214). We modified a [containerized (Singularity) version of the Anacapa Toolkit](https://github.com/dat-ecosystem-archive/anacapa-container) to run on the Stanford Sherlock computing cluster; our modified version is archived on [Zenodo](https://zenodo.org/doi/10.5281/zenodo.8201140). The raw data (FASTQ sequencing files), modified container, and scripts needed to reproduce the output analyzed here can be found in our [Dryad data repository](https://doi.org/10.5061/dryad.pnvx0k6tf).
 
 This analysis also requires NOAA/NOS/CO-OPS daily tide predictions from Pillar Point Harbor on 28 January 2022, downloaded as a .txt [here](https://tidesandcurrents.noaa.gov/noaatidepredictions.html?id=9414131&units=metric&bdate=20220128&edate=20220128&timezone=LST/LDT&clock=24hour&datum=MLLW&interval=15&action=dailychart).
 
@@ -43,7 +43,7 @@ To ensure you're getting the permanent archived version of our repository, we re
 Alternatively, you can download the repository via GitHub, either in the RStudio IDE or in the terminal: 
 
 **In the RStudio IDE:** 
-Navigate to `File -> New Project...` and select `Version Control -> Git`. The `repository URL` is [https://github.com/meghanmshea/intertidal-eDNA](https://github.com/meghanmshea/intertidal-eDNA), the `Project directory name` is the name of the folder you'd like to save the project in, and `Create project as a subdirectory of` is the path to where on your computer you'd like that folder to live.
+Navigate to `File -> New Project...` and select `Version Control -> Git`. The `repository URL` is [https://github.com/meghanmshea/intertidal-eDNA.git](https://github.com/meghanmshea/intertidal-eDNA.git), the `Project directory name` is the name of the folder you'd like to save the project in, and `Create project as a subdirectory of` is the path to where on your computer you'd like that folder to live.
 
 **In the terminal:**
 Follow the tutorial [here](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository). 
